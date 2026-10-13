@@ -1,0 +1,58 @@
+/* Strong contrast for intervals that miss the population value. */
+.forest-row.outside .forest-range{background:#ff936b!important;color:#ff936b!important;height:4px!important;box-shadow:0 0 0 2px #ff936b33}
+.forest-row.outside .forest-range i{background:#ffb08e!important;box-shadow:0 0 0 2px #fff2}
+/* Small, plain-language help affordances for controls and visualizations. */
+.setup-card label,.result-controls label,.forest-head label{position:relative}
+.setup-card label::after,.result-controls label::after,.forest-head label::after{content:'?';display:inline-grid;place-items:center;width:15px;height:15px;margin-left:6px;border:1px solid #91ab8b;border-radius:50%;font-size:10px;color:#668563;cursor:help;vertical-align:middle}
+.setup-card label::after,.result-controls label::after,.forest-head label::after{position:absolute;right:0;top:0;margin:0}
+.setup-card label:hover::before,.setup-card label:focus-within::before,.result-controls label:hover::before,.result-controls label:focus-within::before,.forest-head label:hover::before,.forest-head label:focus-within::before{content:'Nastavení ovlivní průběh a výsledky simulace.';position:absolute;z-index:100000;left:0;top:calc(100% + 4px);width:220px;padding:9px 11px;background:#183c35;color:#f4f8ef;border-radius:4px;font-size:11px;line-height:1.4;box-shadow:0 8px 18px #183c3533;pointer-events:none}
+.setup-grid .setup-card:first-child label:nth-of-type(1):hover::before{content:'N určuje, kolik jednotek obsahuje celá známá populace. Větší populace lépe připomíná reálný svět, ale může vyžadovat více paměti.'}
+.setup-grid .setup-card:nth-child(2) label:nth-of-type(1):hover::before{content:'n je počet jednotek v jednom výběru. Každý výběr má přesně tuto velikost a jednotky se do něj vybírají bez vracení.'}
+.setup-grid .setup-card:nth-child(2) label:nth-of-type(2):hover::before{content:'Spolehlivost říká, jak často má metoda dlouhodobě zachytit skutečnou hodnotu. 95 % znamená, že přibližně 5 % jednotlivých intervalů může být mimo.'}
+.setup-grid .setup-card:nth-child(2) label:nth-of-type(3):hover::before{content:'Jedna dávka je malá skupina opakovaných výběrů. Díky ní vidíte, že počet chybných intervalů se mezi dávkami přirozeně mění.'}
+.setup-grid .setup-card:nth-child(2) label:nth-of-type(4):hover::before{content:'Počet dávek určuje, kolikrát experiment zopakujeme. Více dávek dává stabilnější obraz dlouhodobého chování.'}
+.chart-card h3{display:flex;align-items:center;gap:7px}
+.chart-card h3::after{content:'?';display:inline-grid;place-items:center;width:15px;height:15px;border:1px solid #91ab8b;border-radius:50%;font-size:10px;color:#668563;cursor:help}
+.chart-card h3:hover::before{content:'Graf pomáhá porovnat výběry se skutečnou hodnotou populace.';position:absolute;z-index:8;width:280px;margin-top:42px;padding:10px 12px;background:#183c35;color:#f4f8ef;border-radius:4px;font:11px/1.5 'DM Sans';box-shadow:0 8px 18px #183c3533}
+.plot-wrap .axis-label{cursor:help;font-weight:500}
+.kpi{position:relative;cursor:help}
+.kpi::after{content:'?';position:absolute;right:12px;top:10px;display:grid;place-items:center;width:15px;height:15px;border:1px solid #91ab8b;border-radius:50%;font-size:10px;color:#668563}
+.kpi:hover::before{content:'Tato karta shrnuje jednu důležitou vlastnost simulace.';position:absolute;z-index:8;left:10px;top:34px;width:220px;padding:10px 12px;background:#183c35;color:#f4f8ef;border-radius:4px;font:11px/1.5 'DM Sans';box-shadow:0 8px 18px #183c3533}
+.kpi-grid .kpi:nth-child(1):hover::before{content:'Počet všech výběrů, které už simulace zpracovala. Je to počet dávek krát počet výběrů v jedné dávce.'}
+.kpi-grid .kpi:nth-child(2):hover::before{content:'Kolik jednotlivých intervalů dosud nezahrnulo skutečnou populační hodnotu.'}
+.kpi-grid .kpi:nth-child(3):hover::before{content:'Podíl chybných intervalů mezi všemi dokončenými výběry. Při spolehlivosti 95 % čekáme dlouhodobě přibližně 5 %.'}
+.kpi-grid .kpi:nth-child(4):hover::before{content:'Hodnota, kterou známe z celé výukové populace a proti které porovnáváme výsledky náhodných výběrů.'}
+.forest-host{margin-top:16px!important}
+/* The interface exposes one sample size and the number of repetitions; processing chunks remain internal. */
+.setup-grid .setup-card:nth-child(2) .field-grid label:nth-child(3){display:none}
+.setup-grid .setup-card:nth-child(2) .field-grid label:nth-child(4){font-size:0}
+.setup-grid .setup-card:nth-child(2) .field-grid label:nth-child(4)::before{content:'Počet opakování R';font-size:12px;color:#53685c}
+.setup-grid .setup-card:nth-child(2) .field-grid label:nth-child(4) input{font-size:13px}
+.setup-grid .setup-card:nth-child(2) .field-grid::after{content:'Velikost vzorku n určuje přesnost jednoho odhadu: větší vzorek obvykle vytvoří užší interval. Počet opakování R určuje, jak stabilně změříme skutečné pokrytí: více opakování ukáže, zda se podíl chybných intervalů blíží α.';display:block;grid-column:1/-1;margin:6px 0 2px;padding:10px 12px;background:#f1f6ed;border-left:3px solid #9dbd78;color:#617466;font-size:11px;line-height:1.5}
+.setup-card label:has(input:hover)::before,.setup-card label:has(select:hover)::before{display:none!important}
+.chart-grid .chart-card:nth-child(1) h3:hover::before{content:'Každý sloupec ukazuje, jaké průměry vyšly v jednotlivých dávkách. Červená čára označuje skutečnou hodnotu v celé populaci. Sloupce by měly být kolem této čáry, ale kvůli náhodě se od ní budou trochu lišit.'}
+.chart-grid .chart-card:nth-child(2) h3:hover::before{content:'Tady počítáme, kolik intervalů v jedné dávce minulo skutečnou hodnotu. Při 95% spolehlivosti čekáme dlouhodobě asi 5 % chybných intervalů — u 20 výběrů tedy přibližně jeden, ale někdy nula a jindy dva nebo více.'}
+.chart-grid .chart-card:nth-child(3) h3:hover::before{content:'Konvergence ukazuje, jak se celkový podíl chybných intervalů mění s přibývajícími dávkami. Na začátku hodně kolísá. Čím více výběrů provedeme, tím více se obvykle přibližuje k očekávané hodnotě α, například 5 %. To je praktická ukázka zákona velkých čísel.'}
+.forest-panel h3:hover::before{content:'Každý řádek je jeden výběr z této dávky. Úsečka je interval spolehlivosti a tečka je odhad z výběru. Přerušovaná svislá čára je skutečná populační hodnota. Oranžové řádky ji neobsahují.'}
+
+.speed-control{display:flex;align-items:center;gap:8px;font-size:11px;color:#53685c;white-space:nowrap}.speed-control output{font-family:"DM Mono",monospace;color:#2a5c4b;min-width:36px}.speed-control input[type="range"]{width:110px;accent-color:#3f8866}
+
+.forest-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#53685c;white-space:nowrap}.forest-toggle input{width:auto;margin:0;accent-color:#3f8866}
+
+.forest-host:not(:has(.forest-panel)){margin:0!important;height:0;overflow:hidden}
+
+
+.sampling-method select{display:block;width:100%;margin-top:6px}.sampling-method .method-help{margin:8px 0 0;padding:10px 12px;background:#f1f6ed;border-left:3px solid #9dbd78;color:#617466;font-size:11px;line-height:1.5}
+
+.sampling-callout{display:block;margin-top:10px;padding:10px 12px;background:#f1f6ed;border-left:3px solid #9dbd78;color:#617466;font-size:11px;line-height:1.5}
+
+.sampling-method .method-help,.sampling-callout{display:none}
+
+/* Tooltips are provided by Tippy on the help icons; never show a second CSS tooltip. */
+.setup-card label:hover::before,.setup-card label:focus-within::before,.result-controls label:hover::before,.result-controls label:focus-within::before,.forest-head label:hover::before,.forest-head label:focus-within::before,.card-kicker:hover::before,.chart-card h3:hover::before,.kpi:hover::before,.forest-panel h3:hover::before{display:none!important;content:none!important}
+
+/* One help control per target: the interactive Tippy button from main.ts. */
+.setup-card label::after,.result-controls label::after,.forest-head label::after,.card-kicker::after,.chart-card h3::after,.kpi::after{display:none!important}
+
+.plot-wrap{position:relative;overflow:hidden!important}
+.plot-wrap svg{overflow:hidden!important;display:block}

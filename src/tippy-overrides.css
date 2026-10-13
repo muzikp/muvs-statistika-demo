@@ -1,0 +1,4 @@
+.setup-card label::after,.result-controls label::after,.forest-head label::after,.card-kicker::after,.chart-card h3::after,.kpi::after{display:none!important}
+.real-help{position:static!important;display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0 0 0 6px;border:1px solid #91ab8b;border-radius:50%;background:transparent;color:#668563;font:10px 'DM Sans';cursor:help;vertical-align:middle}
+.real-help:focus-visible{outline:2px solid #b56832;outline-offset:2px}
+.tippy-box{font:11px/1.45 'DM Sans';background:#183c35;color:#f4f8ef}.tippy-arrow{color:#183c35}

@@ -1,0 +1,6 @@
+/* The red tails carry the message on their own; keep the central area neutral. */
+.binomial-card svg rect:first-of-type{fill:transparent!important;stroke:none!important}
+.binomial-card svg line:nth-of-type(3),.binomial-card svg line:nth-of-type(4){display:none}
+.binomial-card svg text:nth-of-type(1),.binomial-card svg text:nth-of-type(2){font-size:9px;display:none}
+.binomial-note{font-size:11px!important}
+.binomial-card::after{content:'Červené výseče jsou ocasní oblasti rozdělení. Ukazují počty chybných intervalů, které jsou při tomto α méně pravděpodobné; společně odpovídají přibližně α. Neznamená to, že se tam výsledek nikdy nedostane.'}
