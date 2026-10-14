@@ -11,6 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
+    "fflate": "^0.8.3",
     "svelte": "^5.0.0",
     "tippy.js": "^6.3.7"
   },

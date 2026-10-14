@@ -1,4 +1,38 @@
 import type { BatchSummary } from './types';
+import type { SamplingIteration } from './sampling';
+
+export function samplingHistogram(history: SamplingIteration[], variable: 'apple' | 'minutes', truth: number) {
+  const scale = variable === 'apple' ? 100 : 1;
+  const reference = truth * scale;
+  const values = history.flatMap(entry => entry.estimates ? [entry.estimates[variable].estimate * scale] : []);
+  const mean = values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : reference;
+  const sd = values.length > 1 ? Math.sqrt(values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1)) : 0;
+  const minimumWidth = variable === 'apple' ? .5 : .1;
+  const low = Math.min(reference - 3 * sd, ...values), high = Math.max(reference + 3 * sd, ...values);
+  // Refine continuous estimates as more valid samples arrive, while keeping
+  // early histograms readable and the number of bars bounded.
+  const targetBins = variable === 'apple' ? 24 : Math.min(100, Math.max(32, Math.ceil(8 * Math.cbrt(values.length))));
+  const idealWidth = Math.max(minimumWidth, (high - low) / targetBins);
+  const magnitude = 10 ** Math.floor(Math.log10(idealWidth));
+  const steps = variable === 'apple' ? [1, 2, 5, 10] : [1, 2, 2.5, 5, 10];
+  const width = steps.find(step => step * magnitude >= idealWidth)! * magnitude;
+  // Minutes use their own unbounded scale; only proportions are limited to 100%.
+  const lower = Math.max(0, Math.floor(low / width) * width);
+  const upper = Math.min(variable === 'apple' ? 100 : Infinity, Math.ceil(high / width) * width + width);
+  const domain: [number, number] = [Math.min(lower, upper - width), upper];
+  const bins = Math.max(1, Math.round((domain[1] - domain[0]) / width));
+  const binWidth = (domain[1] - domain[0]) / bins;
+  const counts: number[] = Array(bins).fill(0);
+  for (const value of values) counts[Math.min(bins - 1, Math.max(0, Math.floor((value - domain[0]) / binWidth)))]++;
+  // As in the original experiment, center the comparison bell on the population
+  // truth, estimate its spread from the simulated estimates, and scale to counts.
+  const normal = sd > 1e-12 ? Array.from({ length: 121 }, (_, index) => {
+    const x = domain[0] + index / 120 * (domain[1] - domain[0]);
+    return { x, y: Math.exp(-.5 * ((x - reference) / sd) ** 2) / (sd * Math.sqrt(2 * Math.PI)) * values.length * binWidth };
+  }) : [];
+  return { points: counts.map((y, i) => ({ x: domain[0] + (i + .5) * binWidth, y })), domain, width: binWidth, normal, reference, count: values.length };
+}
+
 export function histogram(values: number[], reference: number, binSize = 1) {
   const minValue = Math.min(reference, ...values), maxValue = Math.max(reference, ...values);
   const min = Math.floor(minValue / binSize) * binSize;

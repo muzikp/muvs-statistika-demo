@@ -1,0 +1,1084 @@
+{
+  "hypothesis": {
+    "cardPopulationDifference": "Skutečný rozdíl v populaci: {value} min",
+    "cardDifferenceError": "Odchylka od populace: {value} min",
+    "directionLess": "B − A < Δ₀",
+    "directionTwoSided": "B − A ≠ Δ₀",
+    "directionGreater": "B − A > Δ₀",
+    "meanGraphTitle": "Průměry skupin a jejich nejistota",
+    "meanGraphAxis": "Průměrný čas řešení (min)",
+    "meanGraphSeries": "{group} · SE = {se} min",
+    "meanGraphPopulation": "Populační průměr {group}: {mean} min",
+    "meanGraphEstimate": "Výběrový odhad {group}: {mean} min",
+    "xlsxSeA": "SE odhadu průměru A (min)",
+    "xlsxSeB": "SE odhadu průměru B (min)",
+    "meanGraphNote": "Modrá = A · červená = B. Plná svislice je skutečný populační průměr, přerušovaná svislice odhad z tohoto výběru. Přerušované zvonové křivky jsou normální aproximace nejistoty průměrů, centrované na odhadech a se šířkou podle směrodatné chyby SE. Nejde o rozdělení časů jednotlivých lidí ani o výsledky opakované simulace. Při shodě populačních průměrů leží plné čáry na sobě.",
+    "displayedSampleSizes": "Zobrazený ukázkový výběr: nA = {nA}, nB = {nB}.",
+    "typeIConvergence": "Konvergence chyby I. druhu",
+    "typeIIConvergence": "Konvergence chyby II. druhu β",
+    "typeIExplanation": "V této populaci H₀ platí. Každé její zamítnutí je proto chyba I. druhu: falešný poplach, kdy test hlásí rozdíl ve směru H₁, ačkoli H₀ je pravdivá. Křivka ukazuje počet těchto chyb dělený počtem všech dosavadních platných testů.",
+    "typeIBoundaryExplanation": "Skutečný rozdíl je zde přesně Δ₀. Interval proto mine skutečnost právě tehdy, když test zamítne H₀; oba podíly jsou stejné a zobrazujeme je jen jednou. Při správných předpokladech se má dlouhodobý podíl chyb blížit zvolené hladině α = {alpha}. Jednotlivý běh může kolísat nad i pod ní; α není záruka přesného podílu chyb v každých 100 testech.",
+    "typeIInteriorExplanation": "U tohoto jednostranného testu leží skutečný rozdíl uvnitř H₀, nikoli na její hranici Δ₀. Četnost falešných poplachů tak může být menší než α = {alpha}. Nepokrytí skutečné hodnoty intervalem zde nemusí znamenat totéž co zamítnutí H₀.",
+    "typeIIExplanation": "V této populaci H₀ neplatí. Chybou II. druhu je její nezamítnutí: test přehlédne situaci odpovídající H₁. Křivka ukazuje podíl takových přehlédnutí, tedy odhad β; síla testu je 1 − β. β nemá směřovat k α: závisí na skutečném rozdílu, variabilitě, velikostech vzorků i zvolené α. Nepokrytí skutečnosti intervalem je v této situaci jiná událost.",
+    "observedBeta": "Odhad β z tohoto běhu",
+    "meanB": "Průměr skupiny B (min)",
+    "previewStep": "ŽIVÁ UKÁZKA · JEDEN VÝBĚR",
+    "previewSample": "Ukázkový výběr",
+    "previewDifference": "Odhad B − A v ukázce",
+    "previewNote": "Měňte nastavení nahoře nebo velikosti vzorků zde. Graf, p-hodnota, interval a srovnání s populací se automaticky přepočítají pro jeden ukázkový výběr. Opakovaná simulace níže tento graf nemění.",
+    "autoPopulationNote": "Po změně nastavení se populace i ukázkový výběr automaticky přepočítají. Při změně samotného testu nebo velikosti vzorků zůstává vytvořená populace stejná.",
+    "previewPending": "Přepočítávám ukázku podle nového nastavení…",
+    "newDraw": "Vylosovat jiný výběr",
+    "previewComparisonNote": "Srovnáváme jediný ukázkový výběr se skutečnou populací. Kladná odchylka znamená nadhodnocení. Tyto hodnoty se mění jen při úpravě nastavení nebo vylosování jiného výběru; do opakované simulace se nezapočítávají.",
+    "optionalSimulation": "Volitelně: simulace R opakovaných výběrů",
+    "simulationNote": "Chcete-li zkoumat dlouhodobou chybovost, spusťte samostatnou simulaci. Použije aktuální nastavení živé ukázky a uchová je pro celý běh. Ukázkový výběr ani její graf se při opakování nemění.",
+    "startSimulation": "Spustit opakovanou simulaci",
+    "runSnapshot": "Nastavení tohoto běhu: průměr A {meanA} min, B {meanB} min · nA = {nA}, nB = {nB} · α = {alpha} · {method}.",
+    "runDiffers": "Živá ukázka nyní používá jiné nastavení. Konvergence, les a export opakované simulace stále patří nastavení tohoto uloženého běhu. Pro nové nastavení spusťte nový běh.",
+    "downloadPreview": "Stáhnout ukázkový výběr · XLSX",
+    "simulationExportLabel": "Opakovaná simulace",
+    "comparison": "Jak blízko jsou odhady skutečné populaci?",
+    "comparisonMetric": "Sledovaná veličina",
+    "comparisonPopulation": "Skutečná populace",
+    "comparisonSample": "Poslední výběr",
+    "comparisonAverage": "Průměr všech platných odhadů",
+    "comparisonError": "Poslední odhad − populace",
+    "comparisonMeanA": "Průměr A",
+    "comparisonMeanB": "Průměr B",
+    "comparisonDifference": "Rozdíl B − A",
+    "cohensD": "Cohenovo d",
+    "populationD": "Cohenovo d v populaci",
+    "sampleD": "Cohenovo d z výběru",
+    "populationGroupDetails": "{count} lidí · skutečná SD {sd} min",
+    "comparisonNote": "Populační hodnoty známe ze všech vygenerovaných lidí. Poslední výběr i průměr dosavadních odhadů porovnáváme se stejnou skutečností; kladná odchylka znamená nadhodnocení. Průměr odhadů se počítá jen z platných výběrů, u d pouze z definovaných hodnot.",
+    "effectNote": "Cohenovo d vyjadřuje rozdíl B − A v jednotkách společné variability: d = (průměr B − průměr A) / √((SD²_A + SD²_B) / 2). Používáme stejnou variantu pro populaci i výběr, bez vážení variancí velikostmi skupin. Kladné d znamená delší čas v B; p-hodnota posuzuje důkazy proti H₀, nikoli velikost efektu.",
+    "effectCalculation": "Cohenovo d = ({b} − {a}) / √(({sdA}² + {sdB}²) / 2) = {d}. Jmenovatelem je variabilita lidí, nikoli směrodatná chyba SE; Δ₀ se ve velikosti efektu neodečítá.",
+    "effectSource": "Definice standardizace: NIST · Cohenovo d",
+    "xlsxPopulationMeanA": "Skutečný průměr A (min)",
+    "xlsxPopulationMeanB": "Skutečný průměr B (min)",
+    "xlsxMeanErrorA": "Odhad A − populace (min)",
+    "xlsxMeanErrorB": "Odhad B − populace (min)",
+    "xlsxDifferenceError": "Odhad rozdílu − populace (min)",
+    "xlsxEffectError": "Odhad d − populační d",
+    "xlsxEffectSdA": "SD A pro výpočet d (min)",
+    "xlsxEffectSdB": "SD B pro výpočet d (min)",
+    "title": "Testování hypotéz",
+    "heading": "Je rozdíl skutečný, nebo náhodný?",
+    "intro": "Dvě metody řešení úlohy, dvě skupiny lidí. Měňte nastavení a sledujte jeden test, jeho interval a p-hodnotu. Volitelná opakovaná simulace ukáže dlouhodobou chybovost.",
+    "experiment": "EXPERIMENT 03 · ROZDÍL, TEST A ROZHODNUTÍ",
+    "cardIntro": "Porovnejte dvě skupiny, prozkoumejte p-hodnotu a sledujte chyby I. a II. druhu při opakovaných výběrech.",
+    "cardTopics": "Welchův test · p-hodnota · síla testu",
+    "cardNumber": "03 / TESTOVÁNÍ",
+    "glyph": "H₀ / H₁",
+    "pSmall": "< 0,000001",
+    "threeExperiments": "03 dostupné experimenty",
+    "populationStep": "KROK 01 · DVĚ POPULACE",
+    "populationTitle": "Kdo řeší úlohu metodou A a B?",
+    "populationNote": "Syntetické časy v minutách. Věk a pohlaví souvisejí s časem řešení. Každá skupina má vlastní populaci; oba vzorky jsou nezávislé.",
+    "size": "Počet lidí v každé skupině",
+    "meanA": "Průměr skupiny A (min)",
+    "spreadA": "Variabilita A (výchozí SD, min)",
+    "spreadB": "Variabilita B (výchozí SD, min)",
+    "composition": "Upravit složení obou skupin · věk × pohlaví",
+    "generating": "Vytvářím dvě populace…",
+    "generated": "Vytvořeno {completed} / {total} osob",
+    "groupA": "Skupina A",
+    "groupB": "Skupina B",
+    "truth": "Skutečný rozdíl B − A",
+    "sampleStep": "KROK 02 · VÝBĚR A HYPOTÉZY",
+    "sampleTitle": "Na co se budeme ptát?",
+    "nA": "Velikost vzorku A",
+    "nB": "Velikost vzorku B",
+    "alpha": "Hladina významnosti α (%)",
+    "nullDifference": "Rozdíl předpokládaný H₀ (min)",
+    "alternative": "Alternativní hypotéza H₁",
+    "twoSided": "B − A ≠ Δ₀ · oboustranný test",
+    "greater": "B − A > Δ₀ · B má vyšší průměr",
+    "less": "B − A < Δ₀ · B má nižší průměr",
+    "nullStatement": "H₀: B − A {operator} {value} min",
+    "nullTrue": "Ve vytvořené populaci H₀ platí.",
+    "nullFalse": "Ve vytvořené populaci H₀ neplatí.",
+    "boundaryNote": "U jednostranného testu je α referencí jen na hranici H₀. Uvnitř H₀ může být četnost zamítnutí nižší.",
+    "biasNote": "Příležitostný sběr používá pracovní aproximaci testu. P-hodnoty a intervaly nezahrnují výběrové zkreslení; vážení nemusí odstranit rozdíly uvnitř demografických skupin.",
+    "outcomeBias": "Zkreslení podle času řešení",
+    "outcomeBiasNote": "Vyšší hodnota upřednostňuje pomalejší řešitele i mezi lidmi stejného věku a pohlaví.",
+    "runStep": "KROK 03 · OPAKOVANÉ TESTOVÁNÍ",
+    "ready": "Každý výběr poskytne dva průměry, jeden rozdíl a jeden test.",
+    "density": "Hustota",
+    "evidence": "Jak překvapivý je výsledek při H₀?",
+    "statisticAxis": "Testová statistika t = (odhad B − A − Δ₀) / SE",
+    "pArea": "Plocha p-hodnoty",
+    "criticalArea": "Kritická oblast pro α",
+    "nullCurve": "Rozdělení t při H₀",
+    "observedT": "Pozorovaná statistika t",
+    "testGraphNote": "Plocha p-hodnoty označuje při H₀ pravděpodobnost takto krajního nebo ještě krajnějšího výsledku ve zvoleném směru. Při nezamítnutí H₀ je modrá a kritické oblasti α oranžové. Při zamítnutí H₀ se chvosty i svislice testové statistiky zbarví červeně; výplně mají 70% průhlednost. Plochy se mohou překrývat; p není pravděpodobnost platnosti H₀.",
+    "offScale": "Statistika leží mimo zobrazený rozsah; šipka ukazuje její směr. Číselná p-hodnota používá celé rozdělení včetně nezobrazených ocasů.",
+    "lastDifference": "Poslední odhad B − A",
+    "interval": "Interval rozdílu ({confidence} %)",
+    "intervalBounds": "⟨{low}; {high}⟩ min",
+    "pValue": "p-hodnota",
+    "reject": "Zamítáme H₀",
+    "retain": "H₀ nezamítáme",
+    "decisionNote": "Nezamítnutí H₀ není důkaz její pravdivosti.",
+    "details": "Výpočet aktuálního testu",
+    "calculation": "Odhad B − A = {b} − {a} = {difference} min; SE = {se} min; t = ({difference} − {null}) / {se} = {statistic}; df ≈ {df}.",
+    "invalidCurrent": "Aktuální výběr neposkytl platný odhad. U vážení musí být v každé demografické skupině alespoň dvě osoby; k testu je také potřeba nenulový odhad variability.",
+    "results": "Co se děje při opakování?",
+    "average": "Průměr odhadnutých rozdílů",
+    "missed": "Intervaly mimo skutečný rozdíl",
+    "typeI": "Chyba I. druhu · zamítnutí platné H₀",
+    "typeII": "Chyba II. druhu β · nezamítnutí neplatné H₀",
+    "power": "Pozorovaná síla testu 1 − β",
+    "rejectionRate": "Podíl zamítnutí H₀",
+    "validCounts": "{valid} platných / {total} výběrů; {skipped} nevydaných odhadů",
+    "intervalConvergence": "Konvergence chybného pokrytí intervalů",
+    "decisionConvergence": "Konvergence chybných rozhodnutí",
+    "intervalConvergenceNote": "Podíl intervalů, které neobsahují skutečný populační rozdíl B − A. Při správných předpokladech má mířit přibližně k α; nejde o totéž jako zamítání H₀.",
+    "decisionConvergenceNote": "Sledujeme chybu podle známé pravdy v populaci. Je-li H₀ pravdivá, chybou je její zamítnutí. Je-li nepravdivá, chybou je její nezamítnutí. β nemá univerzální cílovou hodnotu; závisí na rozdílu, variabilitě, velikosti vzorků i α.",
+    "forest": "Intervaly rozdílu B − A",
+    "forestNote": "Čárkovaná zelená = skutečný rozdíl · tečkovaná oranžová = Δ₀. Červená úsečka minula skutečnost. Rozhodnutí o H₀ a p-hodnota jsou uvedené vpravo. Šipka značí neomezenou stranu jednostranného intervalu.",
+    "forestRow": "Výběr {iteration}: odhad {difference} min, interval {low} až {high}, p = {p}, {decision}",
+    "exportTitle": "Export výsledků",
+    "exportNote": "XLSX zachycuje stav při kliknutí: všechny dokončené výběry, oba průměry, rozdíly, p-hodnoty, intervaly, rozhodnutí a složení a váhy obou vzorků. Nevydané odhady zůstanou označené. Nastavení i skutečné populační hodnoty jsou v samostatném listu.",
+    "download": "Stáhnout opakovanou simulaci · XLSX",
+    "exporting": "Připravuji XLSX…",
+    "exportReady": "Výsledky jsou připravené ke stažení.",
+    "methodology": "Jak počítáme test?",
+    "methodologyText": "Rozdíl definujeme jako B − A. Pro nezávislé náhodné vzorky používáme Welchův test s korekcí rozptylu na konečné populace. Stratifikace počítá rozptyl po skupinách věk × pohlaví; stupně volnosti odhadujeme Satterthwaiteovou aproximací. U příležitostných a vážených vzorků jde o pracovní aproximaci bez záruky nominálního α. Intervaly používají stejné t-rozdělení a stejnou jednostrannost jako test.",
+    "source": "Metodický podklad: NIST · dvouvýběrový t-test",
+    "invalidPopulation": "Velikost každé populace musí být celé číslo od 10 000 do 1 000 000.",
+    "invalidMeans": "Oba průměry musí být od 1 do 1 000 minut a obě variability od 1 do 100 minut. Vyplňte všechna čísla.",
+    "invalidShares": "Osm demografických podílů musí mít každý 2 až 60 % a součet 100 %.",
+    "invalidSample": "Velikost každého vzorku musí být celé číslo od 20 do 2 000 a nejvýše pětina jeho populace.",
+    "invalidTest": "α musí být od 0,1 do 20 % a testovaný rozdíl konečné číslo od −1 000 do 1 000 minut.",
+    "invalidMethod": "Vyberte platnou metodu a směr testu. Obě zkreslení musí být od 0 do 2.",
+    "workerError": "Výpočet se nepodařilo dokončit. Zkuste jej znovu.",
+    "xlsxResults": "Výsledky testů",
+    "xlsxSettings": "Nastavení",
+    "xlsxValue": "Hodnota",
+    "xlsxValid": "Odhad vydán",
+    "xlsxOutside": "Interval mimo skutečnost",
+    "xlsxReject": "Zamítnuto H₀",
+    "xlsxCountsA": "Počty věk × pohlaví A",
+    "xlsxCountsB": "Počty věk × pohlaví B",
+    "xlsxWeightsA": "Váhy věk × pohlaví A",
+    "xlsxWeightsB": "Váhy věk × pohlaví B",
+    "xlsxMissing": "Nedostatečné skupiny A / B",
+    "xlsxBoundsNote": "Prázdná mez při platném odhadu značí neomezenou stranu jednostranného intervalu; při nevydaném odhadu jsou obě meze prázdné.",
+    "xlsxOrder": "Pořadí počtů a vah: {groups}. Hodnoty odděluje středník.",
+    "xlsxLow": "CI dolní mez (min)",
+    "xlsxHigh": "CI horní mez (min)",
+    "actualSdA": "Skutečná populační SD A (min)",
+    "actualSdB": "Skutečná populační SD B (min)"
+  },
+  "meta": {
+    "description": "Interaktivní statistická laboratoř: výběry, intervaly spolehlivosti a teorie pravděpodobnosti."
+  },
+  "app": {
+    "pageTitle": "{pageTitle} · MÚVS",
+    "intervalySpolehlivosti": "Intervaly spolehlivosti",
+    "teoriePravdepodobnosti": "Teorie pravděpodobnosti",
+    "statistickaLaborator": "Statistická laboratoř",
+    "strankaNenalezena": "Stránka nenalezena",
+    "prejitNaObsah": "Přejít na obsah",
+    "statistickaLaboratorUvod": "Statistická laboratoř – úvod",
+    "statisticka": "Statistická",
+    "laborator": "laboratoř",
+    "muvs": "MÚVS",
+    "hlavniNavigace": "Hlavní navigace",
+    "prehledTemat": "Přehled témat",
+    "pravdepodobnost": "Pravděpodobnost",
+    "interaktivniVyukaStatistiky": "Interaktivní výuka statistiky",
+    "odTeorieKPochopeni": "OD TEORIE K POCHOPENÍ",
+    "statistikaDavaSmysl": "Statistika dává smysl.",
+    "kdyzJiMuzeteZkouset": "Když ji můžete zkoušet.",
+    "mistoPoucekVlastniExperimentMenteParametryPozorujteVysledky": "Místo pouček vlastní experiment. Měňte parametry, pozorujte výsledky a objevujte, co se za čísly skutečně skrývá.",
+    "vyzkousetPrvniExperiment": "Vyzkoušet první experiment",
+    "bezInstalaceVypoctyPrimoVeVasemProhlizeci": "Aplikace běží lokálně na vašem počítači, výkon může být ovlivněn vaším hardwarem.",
+    "experiment01": "EXPERIMENT 01",
+    "text95Spolehlivost": "95% spolehlivost",
+    "kazdyVyberJinyInterval": "Každý výběr, jiný interval.",
+    "stejnaSkutecnost": "Stejná skutečnost.",
+    "vaseStatistickeHriste": "VAŠE STATISTICKÉ HŘIŠTĚ",
+    "vyberteSiTema": "Vyberte si téma",
+    "text02DostupneExperimenty": "02 dostupné experimenty",
+    "text01Odhadovani": "01 / ODHADOVÁNÍ",
+    "dostupne": "Dostupné",
+    "p": "[ p̂ ± ? ]",
+    "jakVyberLidiOvlivniOdhadPorovnejtePodilApple": "Jak metoda výběru vzorku ovlivní odhad? Porovnejte podíl Apple i čas na strávený na internetu",
+    "vyberyVazeniIntervaly": "Výběry · vážení · intervaly",
+    "text02Pravdepodobnost": "02 / PRAVDĚPODOBNOST",
+    "aB": "A ∩ B",
+    "prunikSjednoceniIPodminenaPravdepodobnostNastavteJevyProjdete": "Průnik, sjednocení i podmíněná pravděpodobnost. Nastavte jevy, projděte výpočet a prohlédněte si Vennův diagram.",
+    "jevyVypoctyDiagramy": "Jevy · výpočty · diagramy",
+    "text03Souvislosti": "03 / SOUVISLOSTI",
+    "pripravujeme": "Připravujeme",
+    "korelaceARegrese": "Korelace a regrese",
+    "prostorProBudouciZkoumaniVztahuMeziPromennymiA": "Prostor pro budoucí zkoumání vztahů mezi proměnnými a interpretace regresních modelů.",
+    "dalsiTemaLaboratore": "Další téma laboratoře",
+    "ucteSeTimZeMenitePodminky": "Učte se tím, že měníte podmínky.",
+    "neexistujeJedenSpravnyExperimentZkusteMensiVzorekJinou": "Neexistuje jeden správný experiment. Zkuste menší vzorek, jinou spolehlivost nebo nové složení populace a porovnejte výsledky.",
+    "pozorovatPorozumet": "POZOROVAT → POROZUMĚT",
+    "experiment01VyberOdhadANejistota": "EXPERIMENT 01 · VÝBĚR, ODHAD A NEJISTOTA",
+    "jakBlizkoJeOdhadSkutecnosti": "Jak blízko je odhad skutečnosti?",
+    "nestaciZnatVelikostVzorkuZkoumejteVlivVyberuLidi": "Nestačí znát velikost vzorku. Zkoumejte vliv výběru lidí, vážení a opakovaného měření.",
+    "odhad": "odhad",
+    "nejistota": "nejistota",
+    "experiment02PravdepodobnostDvouJevu": "EXPERIMENT 02 · PRAVDĚPODOBNOST DVOU JEVŮ",
+    "kdyzNastaneAACoB": "Když nastane A. A co B?",
+    "nastavtePravdepodobnostiVyberteOtazkuASledujteJakSe": "Nastavte pravděpodobnosti, vyberte otázku a sledujte, jak se vzorec promění ve výsledek i obraz.",
+    "pA": "P(A",
+    "b": "B)",
+    "tutoStrankuTuNemame": "Tuto stránku tu nemáme.",
+    "zpetNaPrehledTemat": "Zpět na přehled témat",
+    "muvs2": "· MÚVS",
+    "experimentujtePtejteSeRozumejte": "Experimentujte. Ptejte se. Rozumějte.",
+    "vypoctyZustavajiVProhlizeci": "Výpočty zůstávají v prohlížeči."
+  },
+  "simulator": {
+    "progress": "{completed} / {total} výběrů",
+    "valueMin": "{value} min",
+    "histogramOdhaduVariabletitle": "Histogram odhadů: {variableTitle}",
+    "skutecnyPodilApple": "Skutečný podíl Apple",
+    "skutecnyPrumerMinTyden": "Skutečný průměr (min/týden)",
+    "rozdeleniOdhaduVariabletitle": "Rozdělení odhadů: {variableTitle}",
+    "odhadPodiluApple": "Odhad podílu Apple (%)",
+    "odhadPrumeruMinTyden": "Odhad průměru (min/týden)",
+    "pocetVyberu": "Počet výběrů",
+    "konvergenceVariabletitle": "Konvergence: {variableTitle}",
+    "ocekavanyPodilMimo": "Očekávaný podíl mimo (α)",
+    "konvergenceVariabletitle2": "Konvergence: {variableTitle}",
+    "opakovanyVyber": "Opakovaný výběr",
+    "mimo": "Mimo (%)",
+    "pozastaveno": "Pozastaveno",
+    "zastaveno": "Zastaveno",
+    "bezAnimace": "bez animace",
+    "pozastavit": "Pozastavit",
+    "podilUzivateluApple": "Podíl uživatelů Apple",
+    "prumerMinutNaInternetuZaTyden": "Průměr minut strávených na internetu za týden",
+    "min": "min",
+    "populaciSeNepodariloVytvoritZkusteToZnovu": "Populaci se nepodařilo vytvořit. Zkuste to znovu.",
+    "nejprveVyplnteKladneDemografickePodily": "Nejprve vyplňte kladné demografické podíly.",
+    "vypocetSeNepodariloDokoncitSpustteJejZnovu": "Výpočet se nepodařilo dokončit. Spusťte jej znovu.",
+    "simulaceIntervaluSpolehlivosti": "Simulace intervalů spolehlivosti",
+    "jednaPopulaceDvaUkazateleJednaMetodaVyberu": "JEDNA POPULACE · DVA UKAZATELE · JEDNA METODA VÝBĚRU",
+    "losujteVzorkySledujteOdhadyIChyby": "Losujte vzorky. Sledujte odhady i chyby.",
+    "zvolteMetoduVyberuAOpakovaneOdhadujtePodilUzivatelu": "Zvolte metodu výběru a opakovaně odhadujte podíl uživatelů Apple a průměrný čas na internetu. Každý interval porovnáme se známou populační hodnotou.",
+    "smyslenaPopulace": "Smyšlená populace",
+    "nejdeODataOCr": "nejde o data o ČR",
+    "nastaveniPopulaceAVyberu": "Nastavení populace a výběrů",
+    "krok01SpolecnaPopulace": "KROK 01 · SPOLEČNÁ POPULACE",
+    "kohoBudemeZkoumat": "Koho budeme zkoumat?",
+    "pocetLidiVPopulaci": "Počet lidí (případů) v populaci",
+    "seedPopulace": "Seed populace",
+    "vekPohlaviAVzdelaniSouvisejiSTelefonemI": "Věk, pohlaví a vzdělání souvisejí s telefonem i časem na internetu. Populace se mezi opakováními nemění.",
+    "upravitSlozeniPopulaceVekPohlavi": "Upravit složení populace · věk × pohlaví",
+    "spolecnePodilySkupinSlouziJakoZnameCilePro": "Společné podíly skupin slouží jako známé cíle pro stratifikaci a vážení. Každá skupina musí mít alespoň 2 %.",
+    "soucet": "Součet:",
+    "normalizovatNa100": "Normalizovat na 100 %",
+    "vytvarimPopulaci": "Vytvářím populaci…",
+    "vytvoritPopulaci": "Vytvořit populaci",
+    "prubehVytvareniPopulace": "Průběh vytváření populace",
+    "pripravujiPopulaciProSimulaci": "Připravuji populaci pro simulaci…",
+    "lidi": "lidí (",
+    "populacePripravena": "Populace připravena ·",
+    "lidi2": "lidí",
+    "nastaveniPopulaceSeZmeniloPredSimulaciVytvorteNovou": "Nastavení populace se změnilo. Před simulací vytvořte novou populaci.",
+    "krok02Vybery": "KROK 02 · VÝBĚRY",
+    "jakBudemeLidiVybirat": "Jak budeme lidi vybírat?",
+    "metodaVyberu": "Metoda výběru",
+    "velikostKazdehoVzorkuN": "Velikost každého vzorku n",
+    "pocetOpakovani": "Počet opakování",
+    "spolehlivost": "Spolehlivost (%)",
+    "seedVyberu": "Seed výběrů",
+    "demografickeZkresleniPrilezitostnehoSberu": "Demografické zkreslení příležitostného sběru",
+    "text0BezDemografickePreferenceVyssiHodnotaZvyhodnujeMladsi": "0 = bez demografické preference. Vyšší hodnota zvýhodňuje mladší lidi a ženy.",
+    "zkresleniUvnitrSkupin": "Zkreslení uvnitř skupin",
+    "text0DostupnostZavisiJenNaDemografiiVyssiHodnota": "0 = dostupnost závisí jen na demografii. Vyšší hodnota zvýhodňuje Apple a více času online i mezi lidmi stejného věku a pohlaví.",
+    "skutecnaPopulace": "Skutečná populace",
+    "podilApple": "Podíl Apple",
+    "internetPopulacniPrumer": "Internet · populační průměr",
+    "minTyden": "min/týden",
+    "krok03Simulace": "KROK 03 · SIMULACE",
+    "kazdyVzorekPoskytneOdhadObouVelicin": "Každý vzorek poskytne odhad obou veličin.",
+    "prubehSimulace": "Průběh simulace",
+    "simulaceBezi": "Simulace běží",
+    "dokonceno": "Dokončeno",
+    "n": "· n =",
+    "spolehlivost2": "· spolehlivost",
+    "zobrazitIntervaloveLesy": "Zobrazit intervalové lesy",
+    "rychlost": "Rychlost",
+    "spustitNovouSimulaci": "Spustit novou simulaci ↗",
+    "spustitSimulaci": "Spustit simulaci ↗",
+    "pokracovat": "Pokračovat",
+    "zastavit": "Zastavit",
+    "vysledkySimulace": "Výsledky simulace",
+    "obaUkazateleZeStejnychVzorku": "OBA UKAZATELE ZE STEJNÝCH VZORKŮ",
+    "konvergenceAIntervaly": "Konvergence a intervaly",
+    "intervaly": "intervaly",
+    "intervalyPrilezitostnehoSberuJsouPracovniAproximaciKteraNeobsahuje": "Intervaly příležitostného sběru jsou pracovní aproximací, která neobsahuje výběrové zkreslení. Konvergence ukazuje, jak často skutečně minou známou populační hodnotu.",
+    "v": "V",
+    "z": "z",
+    "vyberuNemelaNekteraSkupinaAlespon2OsobyOdhad": "výběrů neměla některá skupina alespoň 2 osoby. Odhad a interval nelze spočítat; tyto výběry zůstávají označené v lese a nezapočítávají se do konvergence ani průměru odhadů.",
+    "skutecnaPopulacniHodnota": "Skutečná populační hodnota",
+    "posledniOdhad": "Poslední odhad",
+    "nelzeOdhadnout": "Nelze odhadnout",
+    "intervalLastlowLasthigh": "Interval ⟨{lastLow}; {lastHigh}⟩",
+    "nedostatekOsobVNektereSkupine": "Nedostatek osob v některé skupině",
+    "prumerVsechPlatnychOdhadu": "Průměr všech platných odhadů",
+    "odSkutecnostiDifferenceaveragemetricpopulationVariableunit": "Od skutečnosti: {differenceAverageMetricPopulation} {variableUnit}",
+    "zatimZadnyPlatnyOdhad": "Zatím žádný platný odhad",
+    "intervalyMimoSkutecnost": "Intervaly mimo skutečnost",
+    "platnychIntervalu": "platných intervalů",
+    "rozdeleni": "Rozdělení",
+    "odhaduPodiluApple": "odhadů podílu Apple",
+    "vyberovychPrumeruCasu": "výběrových průměrů času",
+    "histogramVsech": "Histogram všech",
+    "platnychOdhaduKazdyVzorekPridavaJedenOdhadSirka": "platných odhadů. Každý vzorek přidává jeden odhad; šířka sloupce je",
+    "sloupceZiskaneOdhadyCervenaSvisliceSkutecnost": "Sloupce = získané odhady · červená svislice = skutečnost.",
+    "oranzovaKrivkaNormalniRozdeleniSeStredemVeSkutecne": "Oranžová křivka = normální rozdělení se středem ve skutečné populační hodnotě a rozptylem odhadnutým ze simulace. Posun histogramu vůči křivce ukazuje zkreslení.",
+    "krivkuDoplnimeAzBudeViceOdlisnychOdhadu": "Křivku doplníme, až bude více odlišných odhadů.",
+    "zatimNeniKDispoziciPlatnyOdhadProHistogram": "Zatím není k dispozici platný odhad pro histogram.",
+    "konvergencePodiluChybnychIntervalu": "Konvergence podílu chybných intervalů",
+    "chybneIntervalyVsechnyDosavadniPlatneIntervalyOcekavanaHodnota": "Chybné intervaly / všechny dosavadní platné intervaly. Očekávaná hodnota při správném pokrytí je α =",
+    "zatimNeniKDispoziciPlatnyIntervalProVypocet": "Zatím není k dispozici platný interval pro výpočet konvergence.",
+    "demografickeCileSlozeniVzorkuAVypocteneVahy": "Demografické cíle, složení vzorku a vypočtené váhy",
+    "uNahodnehoANevazenehoPrilezitostnehoVyberuMaKazda": "U náhodného a neváženého příležitostného výběru má každá osoba váhu 1. U stratifikace a poststratifikace je váha osoby ve skupině h: wₕ = (Nₕ / N) / (nₕ / n). Používáme společné skupiny věk × pohlaví. Průměr vah v úplném vzorku je 1.",
+    "populacniPodilyAVahyPoslednihoVzorku": "Populační podíly a váhy posledního vzorku",
+    "skupina": "Skupina",
+    "pocetVPopulaci": "Počet v populaci",
+    "cilovyPodil": "Cílový podíl",
+    "posledniVzorek": "Poslední vzorek",
+    "pouzitaVahaOsoby": "Použitá váha osoby",
+    "efektivniVelikostPoslednihoVazenehoVzorkuPodleKishe": "Efektivní velikost posledního váženého vzorku podle Kishe",
+    "nelzeUrcitPlatnyOdhad": "nelze určit platný odhad",
+    "osobPopisujeNerovnomernostVahNikoliOdstraneniZkresleniNepouzivame": "osob. Popisuje nerovnoměrnost vah, nikoli odstranění zkreslení; nepoužíváme ji jako náhradu výpočtu rozptylu.",
+    "nedostatecneSkupiny": "Nedostatečné skupiny:",
+    "nahlednoutDoSpolecnehoDatasetu": "Nahlédnout do společného datasetu",
+    "ukazkaJedneOsobyZKazdeSkupinyCelyDataset": "Ukázka jedné osoby z každé skupiny. Celý dataset včetně obou sledovaných proměnných lze stáhnout jako XLSX v sekci Export.",
+    "ukazkaSyntetickePopulace": "Ukázka syntetické populace",
+    "id": "ID",
+    "vek": "Věk",
+    "pohlavi": "Pohlaví",
+    "vzdelani": "Vzdělání",
+    "telefon": "Telefon",
+    "internetMinTyden": "Internet (min/týden)",
+    "jakPocitameOdhadyAIntervaly": "Jak počítáme odhady a intervaly?",
+    "vsechnyMetodyPracujiSeStejnouKonecnouPopulaciA": "Všechny metody pracují se stejnou konečnou populací a vybírají n různých osob. Apple převádíme na indikátor 0/1; čas na internetu měříme v minutách za týden. Čas má pravostranně zešikmené rozdělení a společnou vazbu s telefonem přes digitální aktivitu.",
+    "nahodnyVyber": "Náhodný výběr:",
+    "prumerVzorkuARozptylSN1N": "průměr vzorku a rozptyl s²/n · (1 − n/N).",
+    "stratifikovanyVyber": "Stratifikovaný výběr:",
+    "odhadWYARozptylW1N": "odhad Σ Wₕ · ȳₕ a rozptyl Σ Wₕ² · (1 − nₕ/Nₕ) · sₕ²/nₕ, kde Wₕ = Nₕ/N. Kvůli odhadu rozptylu vybíráme nejméně 2 osoby z každé skupiny.",
+    "prilezitostnySber": "Příležitostný sběr:",
+    "postupneLosovaniBezVraceniSNerovnymiSancemiRelativni": "postupné losování bez vracení s nerovnými šancemi. Relativní dostupnost je exp[d · (−0,55 · věková skupina − 0,22 · muž) + u · (0,8 · Apple + 0,65 · ln(minuty/1500))]. Skupiny věku mají indexy 0 až 3; d a u jsou nastavené síly zkreslení.",
+    "vazeni": "Vážení:",
+    "poststratifikacePrilezitostnehoVzorkuNaSpolecneSkupinyVekPohlavi": "poststratifikace příležitostného vzorku na společné skupiny věk × pohlaví. Odhad je Σ Wₕ · ȳₕ; pracovní rozptyl je Σ Wₕ² · sₕ²/nₕ. U nepravděpodobnostního sběru tento rozptyl předpokládá reprezentativnost uvnitř skupin a neobsahuje výběrové zkreslení. Nejde o stratifikovaný náhodný výběr ani o sběr do kvót.",
+    "intervalyMajiTvarOdhadZSeSNormalnim": "Intervaly mají tvar odhad ± z · SE s normálním kvantilem pro zvolenou spolehlivost. U podílu meze omezujeme na 0 až 1, u minut na nezáporné hodnoty. Jde o aproximace, zvláště u malých skupin. Pokud při vážení má některá skupina méně než 2 respondenty, neuvádíme odhad ani interval; žádnou skupinu tiše nevynecháváme.",
+    "metodickePodklady": "Metodické podklady:",
+    "stratifikovanyVyber2": "stratifikovaný výběr",
+    "poststratifikaceNepravdepodobnostnichVzorku": "poststratifikace nepravděpodobnostních vzorků"
+  },
+  "sampling": {
+    "nahodnyVyber": "Náhodný výběr",
+    "stejnaSanceProKazdehoClovekaVyberBezVraceni": "Stejná šance pro každého člověka. Výběr bez vracení.",
+    "stratifikovanyVyber": "Stratifikovaný výběr",
+    "nahodnyVyberUvnitrVekuPohlaviPriblizneUmernyVelikosti": "Náhodný výběr uvnitř věku × pohlaví, přibližně úměrný velikosti skupin; alespoň 2 lidé ze skupiny.",
+    "prilezitostnyVyber": "Příležitostný výběr",
+    "mladsiLideAZenyJsouDostupnejsiVolitelneCasteji": "Mladší lidé a ženy jsou dostupnější. Volitelně častěji odpovídají také uživatelé Apple a aktivnější uživatelé internetu.",
+    "prilezitostnyVazeni": "Příležitostný + vážení",
+    "presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne": "Přesně tentýž příležitostný vzorek, převážený na známé společné rozdělení věku × pohlaví.",
+    "velikostPopulaceMusiBytCeleCisloOd10": "Velikost populace musí být celé číslo od 10 000 do 1 000 000.",
+    "kazdaZOsmiDemografickychSkupinMusiMitPodil": "Každá z osmi demografických skupin musí mít podíl od 2 do 60 %.",
+    "podilyVekuPohlaviMusiMitSoucet100": "Podíly věku × pohlaví musí mít součet 100 %.",
+    "vybertePlatnouMetoduVyberu": "Vyberte platnou metodu výběru.",
+    "velikostVzorkuMusiBytCeleCisloOd80": "Velikost vzorku musí být celé číslo od 80 do 2 000 a nejvýše pětina populace.",
+    "pocetOpakovaniMusiBytCeleCisloOd1": "Počet opakování musí být celé číslo od 1 do 10 000.",
+    "spolehlivostMusiBytOd80Do99": "Spolehlivost musí být od 80 do 99 %.",
+    "silaZkresleniMusiBytOd0Do2": "Síla zkreslení musí být od 0 do 2.",
+    "neplatnaVelikostVzorku": "Neplatná velikost vzorku.",
+    "proStratifikaciPotrebujemeAlesponDvaLidiVKazde": "Pro stratifikaci potřebujeme alespoň dva lidi v každé skupině.",
+    "vzorekJeVetsiNezPopulace": "Vzorek je větší než populace.",
+    "vzorekMusiObsahovatAlesponDveRuzneOsobyZ": "Vzorek musí obsahovat alespoň dvě různé osoby z populace."
+  },
+  "populationLabels": {
+    "ageGroups": [
+      "18–29",
+      "30–44",
+      "45–59",
+      "60–79"
+    ],
+    "sexes": [
+      "Žena",
+      "Muž"
+    ],
+    "education": [
+      "Základní",
+      "Střední",
+      "Vysokoškolské"
+    ],
+    "phones": [
+      "Apple",
+      "Samsung",
+      "Xiaomi",
+      "Ostatní"
+    ]
+  },
+  "help": {
+    "hypNullSlider": {
+      "title": "Δ₀: rozdíl, který předpokládá nulová hypotéza",
+      "paragraphs": ["Posuvník mění tvrzení H₀, nikoli skutečné průměry populací nebo vybrané lidi. Při Δ₀ = 0 testujeme shodu průměrů, při Δ₀ = 5 porovnáváme odhad B − A s pěti minutami. Ve statistice t se od odhadnutého rozdílu odečítá právě Δ₀.", "Číslo vedle posuvníku i číselný vstup nahoře jsou propojené. Pro jemné nastavení použijte krok 0,5 minuty nebo číslo zadejte přímo. Posuvník začíná rozsahem −50 až 50 minut; při zadání větší absolutní hodnoty se rozsah rozšíří, nejvýše do povolených −1 000 až 1 000 minut.", "Změna Δ₀ přepočítá t-statistiku, p-hodnotu a rozhodnutí. Odhady průměrů, jejich křivky, Cohenovo d i interval samotného rozdílu tím nepřelosujeme. Spuštěná opakovaná simulace si ponechá původní nastavení."]
+    },
+    "hypMeanGraph": {
+      "title": "Co znamenají modrá a červená křivka",
+      "paragraphs": ["Každá barva patří jedné skupině: A je modrá, B červená. Plná svislá čára ukazuje známou skutečnost v celé populaci. Přerušovaná svislá čára ukazuje, jaký průměr jsme odhadli z právě vybraných lidí. Jejich vzdálenost je chyba tohoto odhadu.", "Přerušovaná zvonová křivka ukazuje přibližnou nejistotu odhadu průměru. Vykreslujeme normální aproximaci se středem ve výběrovém odhadu a směrodatnou odchylkou rovnou SE dané skupiny. Je to odhad tvaru výběrového rozdělení posunutý k aktuálnímu odhadu, nikoli přesné rozdělení generované populace.", "Při zvětšení vzorku SE obvykle klesá: zvon se zužuje a roste do výšky, protože plocha pod ním zůstává přibližně 1. Samotný odhad se při přidání lidí může posunout oběma směry. Při stratifikaci a vážení používáme SE odpovídající zvolené metodě; příležitostný sběr může mít i úzkou křivku kolem zkresleného odhadu.", "Vedlejší graf má jinou osu: standardizovanou statistiku t při H₀. Z něj počítáme p-hodnotu. Překryv modré a červené křivky není p-hodnota ani β. Oba grafy pracují se stejným jediným výběrem a opakovaná simulace je nepřepisuje.", "U malých vzorků nebo silně zešikmených časů může být normální aproximace nejistoty hrubá. Vlastní Welchův test a interval rozdílu nadále používají Studentovo t-rozdělení a odhadnuté stupně volnosti."]
+    },
+    "hypPreview": {
+      "title": "Jeden výběr, který můžete zkoumat v klidu",
+      "paragraphs": [
+        "Tento panel ukazuje jeden konkrétní průzkum obou skupin. Nemusíte spouštět žádná opakování. Po změně velikosti vzorků, průměrů, variability, metody výběru, α nebo směru testu se výsledek automaticky přepočítá.",
+        "Velikosti vzorků nA a nB zadáváte do číselných polí u grafů; jsou propojené se stejnými vstupy nahoře. Můžete tedy zvětšovat každou skupinu zvlášť a sledovat, co se děje s nejistotou, statistikou t a p-hodnotou. Větší vzorek obvykle zmenšuje nejistotu; výběrový průměr a p se mohou přitom měnit oběma směry.",
+        "Při stejném seedu a stejném pořadí losování používá větší prostý náhodný vzorek stejné lidi jako menší a přidává další. U stratifikace losujeme stabilním pořadím uvnitř každé demografické skupiny; přidělení počtů mezi skupiny se může změnit. Změna α, Δ₀ nebo směru testu samotné vybrané lidi nemění.",
+        "Chcete-li vidět jiný náhodný průzkum při stejném nastavení, stiskněte „Vylosovat jiný výběr“. Opakovaná simulace je oddělená aktivita: její průběh zdejší výběr ani graf nepřepisuje. Ukázkový výběr si můžete samostatně stáhnout do XLSX."
+      ]
+    },
+    "hypSimulation": {
+      "title": "Opakování jsou samostatný experiment s chybovostí",
+      "paragraphs": [
+        "Živá ukázka odpovídá na otázku, co udělá jeden test při zvoleném nastavení. Simulace R výběrů odpovídá na jinou otázku: jak často by takový postup při mnoha nových průzkumech udělal chybu.",
+        "Při spuštění si simulace uloží současné populační průměry, obě velikosti vzorků, metodu, α i ostatní parametry. Tyto hodnoty během běhu neměníme. Můžete přitom dál upravovat živou ukázku; její změny do spuštěného ani dokončeného běhu nevstupují.",
+        "Konvergence, les, průměry odhadů a export této části patří pouze tomuto běhu. Pokud jste nastavení mezitím změnili, stránka na rozdíl upozorní. Nové nastavení otestujete spuštěním nové simulace.",
+        "Lze spustit až 10 000 opakování. Více opakování zpřesňuje odhad četnosti chyb, nikoli jeden průzkum. Pro rychlý běh nastavte rychlost bez animace a případně vypněte les; historii i možnost exportu zachováme."
+      ]
+    },
+    "hypComparison": {
+      "title": "Odhad versus skutečnost",
+      "paragraphs": [
+        "V běžném průzkumu skutečné průměry celé populace neznáme. Tady jsme všechny lidi sami vygenerovali, a proto je známe. Můžeme přímo ukázat, o kolik se náš výběr mýlí.",
+        "Tabulka živé ukázky porovnává její jediný výběr s populací: průměr A, průměr B, rozdíl B − A a Cohenovo d. V oddělené části opakované simulace navíc uvidíte poslední výběr tohoto běhu a průměr všech jeho platných odhadů. Odchylka nula znamená shodu s příslušnou populací.",
+        "Více opakování zpřesňuje pohled na chování metody, ne jednotlivý průzkum. Systematicky zkreslená metoda může mít i po mnoha opakováních průměr odhadů daleko od populace. Při vážení porovnáváme převážené odhady. Nevydaný odhad se zobrazí pomlčkou a do průměru nevstupuje."
+      ]
+    },
+    "hypEffect": {
+      "title": "Cohenovo d: jak velký je rozdíl vůči variabilitě lidí",
+      "paragraphs": [
+        "Rozdíl 5 minut může být výrazný, když se lidé mezi sebou liší jen málo, a méně výrazný při velké variabilitě. Cohenovo d rozdíl převede na jednotky společné směrodatné odchylky. Například d = 0,5 znamená rozdíl poloviny této společné SD.",
+        "Zde používáme d = (průměr B − průměr A) / √((SD²_A + SD²_B) / 2). Obě skupiny mají ve standardizátoru stejnou váhu, i když mají různě velké vzorky. U stejného světa se tak populační měřítko nemění jen změnou poměru nA a nB. Jde o výslovně zvolenou variantu Cohenova d; jiné programy mohou používat SD váženou velikostmi skupin.",
+        "Populační d počítáme ze skutečných průměrů a populačních SD všech lidí. Výběrové d je odhad: používá průměry a odhad variability z daného vzorku. Při stratifikaci a vážení odhadujeme variabilitu podle populačních podílů věku a pohlaví, včetně rozdílů uvnitř skupin i mezi nimi. Jde o poststratifikovaný popisný odhad, nikoli opravu všech možných zkreslení.",
+        "Kladné d znamená vyšší průměr B, záporné nižší. Časy měříme v minutách, takže vyšší B znamená pomalejší řešení. d nemá jednotku minut ani procent a nezávisí na zvolené α nebo Δ₀. Pokud není žádná variabilita, standardizace není definovaná.",
+        "Malá p-hodnota může doprovázet malý efekt při velkém vzorku; velký efekt může mít neprůkazné p při malém vzorku. Velikost efektu proto čtěte vedle rozdílu v minutách, intervalu a p-hodnoty. Orientační prahy velikosti efektu nenahrazují úsudek o praktickém významu.",
+        "Průměr výběrových d je průměr jednotlivých standardizovaných odhadů; není to d vypočítané až z průměrných průměrů a SD. U menších vzorků může mít d malé výběrové zkreslení; zde nepoužíváme korekci Hedgesovo g."
+      ]
+    },
+    "hypPopulation": {
+      "title": "Dvě skupiny, jejichž skutečnost známe",
+      "paragraphs": [
+        "Vytvoříme dvě samostatné populace lidí, kteří řeší stejnou úlohu metodou A nebo B. Sledujeme čas v minutách. Jsou to smyšlená data pro výuku, nikoli důkaz účinnosti nějaké skutečné metody.",
+        "Časy jsou kladné a mají pravostranně zešikmené rozdělení. Věk a pohlaví s časem souvisejí. Variabilita nastavuje výchozí rozptyl generátoru; skutečnou SD po přidání demografických rozdílů ukazují populační karty.",
+        "Oba skutečné průměry kalibrujeme přesně na zadané hodnoty. Rozdíl nula proto umožňuje simulovat skutečně platnou H₀. Počet lidí platí pro každou skupinu zvlášť; maximum je milion v A a milion v B. Seed vrátí stejnou populaci při stejném nastavení."
+      ]
+    },
+    "hypDifference": {
+      "title": "Rozdíl vždy znamená B minus A",
+      "paragraphs": [
+        "Průměry A a B zadáváte přímo a nezávisle. Při A = 60 minut a B = 65 minut je skutečný rozdíl B − A = 5 minut. Kladný rozdíl znamená, že B řeší úlohu déle; záporný, že je rychlejší. Změna průměru A sama neposouvá zadaný průměr B.",
+        "Z průměrů A a B odvodíme skutečný rozdíl populace. Testovaný rozdíl Δ₀ je jiné číslo: vyjadřuje tvrzení H₀. Obvykle testujeme Δ₀ = 0, tedy shodu průměrů. Po změně nastavení se živá ukázka automaticky přepočítá.",
+        "Velký vzorek může odhalit i velmi malý rozdíl. Statistická významnost sama neříká, zda je rozdíl prakticky důležitý."
+      ]
+    },
+    "hypSample": {
+      "title": "Dva nezávislé vzorky",
+      "paragraphs": [
+        "V každém opakování vybereme zvlášť nA lidí ze skupiny A a nB ze skupiny B. Člověk se v jednom vzorku neopakuje, ale při dalším průzkumu může být vybrán znovu. Nejde o párové měření stejných lidí před a po změně.",
+        "Větší vzorky obvykle zmenšují nejistotu rozdílu a zvyšují šanci zachytit neplatnou H₀. Welchův test dovoluje odlišné velikosti i variability skupin.",
+        "Náhodný a stratifikovaný výběr jsou pravděpodobnostní metody. Příležitostný sběr může systematicky upřednostňovat určité lidi. Vážení opravuje společné zastoupení věku a pohlaví, ale nemusí odstranit zkreslení uvnitř skupin. Při shodném seedu vybere příležitostný i vážený běh stejné osoby."
+      ]
+    },
+    "hypAlpha": {
+      "title": "α: hranice zvolená před pohledem na data",
+      "paragraphs": [
+        "Při α = 5 % zamítneme H₀, když p-hodnota klesne pod 0,05. Pokud je H₀ pravdivá a předpoklady testu fungují, měl by test na hranici H₀ chybně zamítat přibližně v 5 % opakování.",
+        "Nižší α omezuje falešné poplachy, ale při stejné velikosti vzorku ztěžuje odhalení skutečného rozdílu. Může proto zvýšit β, tedy riziko přehlédnutí neplatné H₀.",
+        "Hladina α není pravděpodobnost, že právě vyslovený závěr je chybný. Popisuje dlouhodobé chování postupu při pravdivé H₀."
+      ]
+    },
+    "hypAlternative": {
+      "title": "H₀, směr testu a interval",
+      "paragraphs": [
+        "Oboustranný test hledá odchylku od Δ₀ na obě strany. Jednostranný test hledá pouze vyšší nebo pouze nižší B − A. Směr má odpovídat otázce stanovené před zhlédnutím výsledků.",
+        "U směru B − A > Δ₀ zahrnuje H₀ také všechny rozdíly menší nebo rovné Δ₀. U směru B − A < Δ₀ je tomu naopak. Proto může H₀ platit i při rozdílu, který se nerovná Δ₀.",
+        "Interval má spolehlivost 1 − α. U jednostranného testu je otevřený na jedné straně do nekonečna. Jeho vyloučení Δ₀ ve směru H₁ odpovídá zamítnutí testu."
+      ]
+    },
+    "hypP": {
+      "title": "p-hodnota: jak krajní je výsledek při H₀",
+      "paragraphs": [
+        "Představte si, že na hranici H₀ je skutečný rozdíl přesně Δ₀. P-hodnota říká, jak často bychom při takové situaci získali testovou statistiku alespoň tak krajní jako právě pozorovanou, ve směru zvolené alternativy.",
+        "V grafu jde o modrou plochu pod t-rozdělením, při zamítnutí H₀ ji zvýrazníme červeně. Oboustranný test sčítá oba ocasy, jednostranný jen zvolený ocas. Kritické oblasti α jsou při nezamítnutí oranžové a při zamítnutí také červené, stejně jako čára testové statistiky. α je hranice daná předem, zatímco p-hodnota vychází z aktuálního výběru.",
+        "Malé p je argument proti H₀. P = 0,03 neznamená, že H₀ má tříprocentní pravděpodobnost, ani že rozdíl musí být důležitý. Velké p neprokazuje shodu skupin."
+      ]
+    },
+    "hypErrors": {
+      "title": "Dvě otázky a dva druhy chyby",
+      "paragraphs": [
+        "Chybný interval neobsahuje skutečný rozdíl B − A. Je-li tento skutečný rozdíl přesně Δ₀ předpokládané na hranici H₀, interval mine skutečnost právě tehdy, když odpovídající test zamítne H₀. Jde pak o tutéž chybu I. druhu, a proto její konvergenci zobrazujeme jen jednou.",
+        "Je-li H₀ pravdivá, chyba I. druhu znamená její zamítnutí. Je-li nepravdivá, chyba II. druhu znamená její nezamítnutí. Podíl této druhé chyby označujeme β; síla testu je 1 − β.",
+        "Při α = 5 % očekáváme za správných předpokladů na hranici H₀ přibližně pět falešných poplachů ze sta testů při mnoha opakováních. Není to záruka pro každou stovku. U jednostranné H₀ mimo její hranici může být četnost chyb nižší než α. Když H₀ neplatí, chyba rozhodnutí a nepokrytí skutečnosti intervalem už nejsou totéž; graf pak sleduje β.",
+        "β zde odhadujeme z opakovaných simulací při konkrétním nastaveném rozdílu. Nemá pevný univerzální cíl. Směrodatný je počet platných výběrů, nikoli výběrů, u kterých chyběl odhad.",
+        "Konvergence může začínat na nule, pokud prvních několik výběrů neudělalo chybu. Není to známka bezchybnosti testu; počáteční podíly jsou velmi nestabilní."
+      ]
+    },
+    "hypForest": {
+      "title": "Les všech intervalů rozdílu",
+      "paragraphs": [
+        "Každý řádek představuje jeden nezávislý průzkum obou skupin. Bod je odhad B − A a úsečka jeho interval. Zelená referenční čára je skutečný rozdíl, oranžová je Δ₀ předpokládané H₀.",
+        "Červený interval minul skutečnost. Rozhodnutí testu je uvedené zvlášť; zamítnutí H₀ samo o sobě nemusí být chybou. U jednostranného intervalu značí šipka neomezenou stranu.",
+        "Les má pevnou výšku a lze jej posouvat. Při 10 000 opakováních může jeho vykreslování zpomalit stránku. Checkbox les úplně vypne; historii i export zachová."
+      ]
+    },
+    "populationStep": {
+      "title": "Nejdřív vytvoříme svět, který budeme zkoumat",
+      "paragraphs": [
+        "Populace znamená všechny lidi, o kterých chceme něco zjistit. Zde si vytvoříme například 50 000 smyšlených lidí. Každý dostane věk, pohlaví, vzdělání, značku telefonu a počet minut na internetu za týden.",
+        "Protože známe celý tento svět, umíme spočítat skutečný podíl Apple i skutečný průměr času. Pak zkusíme, jak dobře bychom tyto hodnoty odhadli jen z malé části lidí — ze vzorku.",
+        "Věk a další vlastnosti spolu v modelu souvisejí. Pokud oslovíme hlavně mladé lidi, může to změnit také zastoupení Apple a průměrný čas online. Nejde o skutečná data o obyvatelích ČR."
+      ]
+    },
+    "populationSize": {
+      "title": "Počet lidí v celé populaci",
+      "paragraphs": [
+        "Toto je velikost celého modelového světa, nikoli počet oslovených lidí. Při populaci 50 000 a vzorku 300 vytvoříme 50 000 osob, ale při jednom výběru budeme znát odpovědi jen od 300 z nich.",
+        "Větší populace sama o sobě nezajistí přesnější odhad. Pro přesnost je důležitá hlavně velikost vzorku a způsob, jakým se lidé do vzorku dostanou. Větší populace také zabere více času a paměti při vytváření.",
+        "Můžete vytvořit až 1 000 000 lidí. Limit umožňuje vyexportovat celou populaci včetně záhlaví na jeden list Excelu. Při vytváření uvidíte průběh; velký export se připravuje po částech na pozadí.",
+        "Po změně stiskněte „Vytvořit populaci“. Nová populace nahradí tu dosavadní a vymaže výsledky předchozí simulace."
+      ]
+    },
+    "populationSeed": {
+      "title": "Seed populace: recept na stejné smyšlené lidi",
+      "paragraphs": [
+        "Seed je libovolné slovo nebo číslo, které počítači říká, jakou posloupnost náhodných čísel má použít. Není to heslo ani údaj o skutečných lidech.",
+        "Stejný seed, velikost a složení populace vytvoří znovu stejné osoby se stejnými telefony a časy. Jiný seed vytvoří jiný modelový svět, takže se může trochu změnit i skutečný podíl Apple nebo průměr času.",
+        "Chcete-li porovnávat metody výběru, nechte populaci stejnou. Měňte způsob výběru, ne celý svět, ze kterého vybíráte. Změnu seedu použijete tlačítkem „Vytvořit populaci“."
+      ]
+    },
+    "demographics": {
+      "title": "Složení populace: kdo v našem světě žije",
+      "paragraphs": [
+        "Lidi rozdělujeme do osmi skupin podle kombinace věku a pohlaví, například ženy ve věku 18–29 let. Pro tuto jednoduchou výukovou populaci používáme čtyři věkové skupiny a dvě modelové kategorie pohlaví.",
+        "Čísla říkají, jak velkou část celé populace tvoří jednotlivé skupiny. Všech osm podílů dohromady musí dát 100 %. Změníte-li například zastoupení starších lidí, může se změnit také celkový podíl Apple a čas na internetu.",
+        "Tyto podíly známe dopředu. Stratifikovaný výběr je používá při rozdělení vzorku do skupin a vážení je používá jako cíl, ke kterému se má složení vzorku přiblížit. V reálném průzkumu mohou podobné cíle pocházet třeba ze sčítání obyvatel."
+      ]
+    },
+    "demographicShare": {
+      "title": "Podíl této věkové a pohlavní skupiny",
+      "paragraphs": [
+        "Hodnota 10 % znamená, že do této skupiny patří přibližně každý desátý člověk z celé populace. U populace 50 000 lidí je to 5 000 osob.",
+        "Jde o kombinaci věku a pohlaví, ne o dva oddělené podíly. Všech osm polí musí mít součet 100 %. V tomto modelu je minimum 2 % na skupinu, aby skupina nebyla příliš malá.",
+        "Změna se projeví po vytvoření nové populace. Při vážení se bude vycházet ze skutečně vytvořených počtů lidí v jednotlivých skupinách."
+      ]
+    },
+    "normalize": {
+      "title": "Co udělá normalizace na 100 %",
+      "paragraphs": [
+        "Pokud se zadané podíly nesčítají na 100 %, tlačítko je všechny poměrně přepočítá. Jejich vzájemné poměry přitom zachová, až na malé zaokrouhlení.",
+        "Například při součtu 80 % se každé číslo násobí přibližně 1,25. Normalizace nevybírá lidi ani neopravuje zkreslení vzorku — jen upravuje zadání populace.",
+        "Potom ještě stiskněte „Vytvořit populaci“. Každá skupina stále musí splňovat povolené rozmezí."
+      ]
+    },
+    "createPopulation": {
+      "title": "Vytvořit nebo nahradit celou populaci",
+      "paragraphs": [
+        "Tlačítko vytvoří osoby podle zadaného počtu, seedu a demografického složení. Z jejich údajů pak spočítá skutečné populační hodnoty, se kterými budeme porovnávat odhady.",
+        "Dosavadní výsledky simulace se vymažou, protože by mohly patřit k jiné populaci. Pokud zadání včetně seedu nezměníte, vznikne znovu stejný dataset.",
+        "Pro další výběry ze stejné populace používejte „Spustit simulaci“. Není potřeba znovu vytvářet populaci před každým experimentem."
+      ]
+    },
+    "generation": {
+      "title": "Jak číst průběh vytváření populace",
+      "paragraphs": [
+        "Ukazatel počítá skutečně vytvořené osoby. Například 25 000 z 50 000 znamená, že už vznikla polovina populace. Není to odhad zbývajícího času.",
+        "Generování běží na pozadí. Až se objeví „Populace připravena“, můžete spustit výběry. Při spuštění simulace se stejná populace připravuje také pro výpočet na pozadí; seed zajistí stejné osoby."
+      ]
+    },
+    "samplingStep": {
+      "title": "Ze všech lidí oslovíme jen malou část",
+      "paragraphs": [
+        "Vzorek je skupina lidí vybraná z celé populace. Z jejich odpovědí odhadujeme něco o všech lidech. Například ze 300 oslovených zkusíme odhadnout, kolik uživatelů Apple je mezi všemi 50 000 lidmi.",
+        "Simulace tento průzkum opakuje. Každé opakování vybírá nový vzorek o stejné velikosti a spočítá dva odhady: podíl Apple a průměr minut na internetu.",
+        "Jednotlivé vzorky se budou lišit. Právě toto kolísání a vliv způsobu výběru ukazují histogram, konvergence a intervalový les."
+      ]
+    },
+    "method": {
+      "title": "Metoda výběru: koho se nám podaří oslovit",
+      "paragraphs": [
+        "Náhodný výběr: všichni lidé mají stejnou šanci dostat se do vzorku. V jednom vzorku je každý nejvýše jednou. Je to jednoduchý základ pro porovnání ostatních metod.",
+        "Stratifikovaný výběr: nejprve rozdělíme lidi podle věku a pohlaví. Potom uvnitř každé skupiny vybíráme náhodně. Přibližně hlídáme populační zastoupení a bereme alespoň dvě osoby z každé skupiny.",
+        "Příležitostný výběr: oslovujeme spíše lidi, kteří jsou dostupnější nebo ochotnější odpovědět. Typickým příkladem je anketa mezi návštěvníky určitého webu. Velký počet odpovědí ještě neznamená, že odpovídají celé populaci.",
+        "Příležitostný + vážení: po sběru upravíme vliv odpovědí podle známého věku a pohlaví. Nedostatečně zastoupená skupina dostane větší váhu. To může opravit demografické složení, ale nemusí opravit rozdíly mezi respondenty a ostatními uvnitř stejných skupin.",
+        "Vybranou metodu používá celý běh pro oba ukazatele. Pro nové porovnání dokončete nebo zastavte běh, změňte metodu a spusťte simulaci znovu."
+      ]
+    },
+    "sampleSize": {
+      "title": "Velikost vzorku n: kolik lidí oslovíme najednou",
+      "paragraphs": [
+        "Hodnota 300 znamená 300 různých lidí v jednom průzkumu. Ze stejných 300 lidí počítáme podíl Apple i průměr času. Při dalším opakování vybereme další vzorek; stejný člověk se může objevit v různých opakováních.",
+        "Větší náhodný vzorek obvykle méně kolísá a dává užší intervaly. Pro zhruba poloviční náhodnou chybu je obvykle potřeba přibližně čtyřnásobný vzorek.",
+        "Více lidí ale samo neopraví špatný způsob sběru. Pokud oslovujete hlavně fanoušky Apple, větší vzorek může dávat velmi úzký interval kolem příliš vysokého podílu Apple.",
+        "U vážení potřebujeme alespoň dvě osoby v každé demografické skupině. Malý nebo silně vychýlený vzorek může některé skupiny téměř minout; v takovém případě nevydáme odhad ani interval."
+      ]
+    },
+    "repetitions": {
+      "title": "Počet opakování: kolikrát uděláme celý průzkum",
+      "paragraphs": [
+        "Při vzorku 300 a 200 opakováních provedeme 200 samostatných průzkumů po 300 lidech. Nevznikne jeden velký vzorek 60 000 různých lidí. Každý průzkum přidá jeden odhad a jeden interval pro každou veličinu.",
+        "Více opakování ukáže spolehlivěji, jak metoda funguje dlouhodobě: kde leží odhady a jak často intervaly minou skutečnost. Histogram bude zřetelnější a konvergence méně nahodilá.",
+        "Lze spustit až 10 000 opakování při libovolné povolené velikosti vzorku. Delší běh můžete urychlit nastavením rychlosti bez animace a vypnutím vykreslování intervalových lesů. Výsledky zůstávají uložené pro export.",
+        "Počet opakování nezpřesňuje jednotlivý průzkum a nemění jeho velikost n. Zvyšuje hlavně názornost experimentu a dobu výpočtu."
+      ]
+    },
+    "confidence": {
+      "title": "Spolehlivost: jak často má interval zachytit skutečnost",
+      "paragraphs": [
+        "Interval je rozmezí kolem odhadu, které vyjadřuje nejistotu z výběru jen části lidí. Místo samotného „Apple má 42 % lidí“ tak dostaneme třeba „odhad 42 %, interval od 37 % do 47 %“.",
+        "Spolehlivost 95 % znamená: pokud metoda a předpoklady fungují správně, při mnoha opakováních by přibližně 95 ze 100 intervalů mělo obsahovat skutečnou populační hodnotu. Zhruba 5 ze 100 ji mine.",
+        "Vyšší spolehlivost, například 99 %, obvykle vytvoří širší intervaly. Za větší jistotu zachycení skutečnosti platíme méně přesným rozmezím.",
+        "Číslo 95 % není záruka pro každý konkrétní interval ani ochrana před zkresleným sběrem. U příležitostného výběru mohou intervaly míjet skutečnost mnohem častěji, protože výpočet nezahrnuje toto zkreslení."
+      ]
+    },
+    "sampleSeed": {
+      "title": "Seed výběrů: zopakovat stejné losování",
+      "paragraphs": [
+        "Seed výběrů určuje posloupnost losování respondentů. Při stejné populaci, metodě a nastavení získáte se stejným seedem stejné vzorky a výsledky. Jiný seed vytvoří jiné výběry, ale samotná populace se nezmění.",
+        "To se hodí při výuce: můžete někomu poslat nastavení a společně zkoumat stejný experiment. Při změně pouze rychlosti budou výsledky stejné.",
+        "Příležitostná a vážená varianta při shodném seedu a nastavení dostupnosti používají stejné respondenty. Rozdíl jejich výsledků tedy vznikne vážením, nikoli jinými lidmi."
+      ]
+    },
+    "demographicBias": {
+      "title": "Demografické zkreslení: některé skupiny oslovíme snáz",
+      "paragraphs": [
+        "Tento posuvník napodobuje situaci, kdy jsou při příležitostném sběru dostupnější mladší lidé a ženy. Čím vyšší hodnota, tím výrazněji se jejich odpovědi dostávají do vzorku.",
+        "Protože věk a pohlaví v modelu souvisejí s telefonem i používáním internetu, může se tím posunout podíl Apple i průměrný čas. Vzorek pak vypráví hlavně příběh dostupných lidí, nikoli celé populace.",
+        "Vážení podle věku a pohlaví umí tento druh rozdílu do značné míry opravit, pokud jsou lidé uvnitř jednotlivých skupin vybíráni bez další preference.",
+        "Hodnota 0 vypíná pouze demografickou preferenci. Jestliže je zapnuté „Zkreslení uvnitř skupin“, sběr může zůstat zkreslený. Hodnota 1× označuje sílu modelového pravidla, ne jedno procento chyby."
+      ]
+    },
+    "outcomeBias": {
+      "title": "Zkreslení uvnitř skupin: stejný věk ještě nestačí",
+      "paragraphs": [
+        "Představte si, že mezi ženami 30–44 let odpovídají častěji uživatelky Apple a lidé, kteří tráví více času online. Věk a pohlaví mohou ve vzorku vypadat správně, ale lidé se stále liší v tom, co skutečně zkoumáme.",
+        "Vyšší hodnota tohoto posuvníku právě takovou preferenci zesiluje — v každé demografické skupině zvýhodňuje Apple a více času na internetu.",
+        "Vážení jen podle věku a pohlaví tento problém neodstraní: nerozliší dvě osoby ze stejné skupiny podle toho, jaký mají telefon a jak často jsou online. I převážený výsledek tak může zůstat posunutý.",
+        "Hodnota 0 tuto dodatečnou preferenci vypíná. Zkuste nejprve vážení s hodnotou 0 a pak posuvník zvyšte: uvidíte rozdíl mezi opravou složení a opravou samotného způsobu sběru."
+      ]
+    },
+    "simulation": {
+      "title": "Co se stane po spuštění simulace",
+      "paragraphs": [
+        "Budeme opakovaně vybírat n lidí z připravené populace zvolenou metodou. Z každého vzorku současně vypočítáme podíl Apple, průměr minut na internetu a intervaly kolem obou odhadů.",
+        "Výsledky postupně přibývají do histogramů, konvergence a lesů. Známá populace se během běhu nemění. Nové spuštění vymaže předchozí výsledky a začne od prvního výběru.",
+        "Pauza výpočet dočasně přeruší a umožní pokračovat. Zastavení běh ukončí, ale zachová dosud zobrazené výsledky. Nastavení výběru je během běhu uzamčené, aby se nemíchaly různé experimenty."
+      ]
+    },
+    "speed": {
+      "title": "Rychlost mění jen přehrávání experimentu",
+      "paragraphs": [
+        "Vyšší hodnota zkracuje čekání mezi výběry. Nižší hodnota dává více času sledovat, jak přibývají intervaly a mění se grafy. Hodnota 0 znamená výpočet bez animačních prodlev.",
+        "Rychlost nemění vybrané lidi, odhady ani jejich spolehlivost. Lze ji upravovat i za běhu. Pro sledování prvních několika výběrů zkuste pomalejší tempo; pro tisíce opakování použijte 0."
+      ]
+    },
+    "apple": {
+      "title": "Podíl Apple: kolik lidí používá tuto značku",
+      "paragraphs": [
+        "Sledujeme jedinou značku napevno: Apple. Například 40 % znamená, že ze 100 lidí přibližně 40 používá Apple. Všechny ostatní značky tvoří zbytek.",
+        "Ve vzorku jde o odhad podílu v celé populaci. Při vážení se odpovědi počítají s různou vahou, takže odhad nemusí odpovídat prostému počtu uživatelů Apple dělenému počtem respondentů."
+      ]
+    },
+    "minutes": {
+      "title": "Průměrný čas na internetu za týden",
+      "paragraphs": [
+        "Sečteme týdenní minuty na internetu a vydělíme je počtem lidí. Například průměr 1 200 minut znamená 20 hodin týdně na osobu. Jednotliví lidé mohou být výrazně pod i nad průměrem.",
+        "V grafech nesledujeme časy jednotlivých osob, ale průměry získané z celých vzorků. Při vážení mají lidé z některých skupin při výpočtu průměru větší vliv.",
+        "Jde o smyšlenou proměnnou času na internetu, ne o měření skutečného používání vašeho zařízení."
+      ]
+    },
+    "truth": {
+      "title": "Skutečná populační hodnota: náš kontrolní výsledek",
+      "paragraphs": [
+        "Tuto hodnotu počítáme ze všech osob v modelové populaci, ne pouze ze vzorku. Proto ji zde známe přesně a můžeme zkontrolovat, jak moc se odhady mýlí.",
+        "V běžném průzkumu obvykle právě tuto hodnotu neznáme — proto průzkum děláme. Simulace nám dovoluje podívat se „za oponu“ a ověřit, zda metoda funguje.",
+        "Stejná skutečnost je vyznačena červenou svislicí v histogramu a čárkovanou čarou v lese. Při opakovaných výběrech se nemění, dokud nevytvoříte novou populaci."
+      ]
+    },
+    "lastEstimate": {
+      "title": "Poslední odhad a jeho interval",
+      "paragraphs": [
+        "Odhad je číslo vypočtené z právě posledního vzorku. Jiný vzorek může dát jiné číslo, i když jsou velikost, metoda a populace stejné.",
+        "Interval kolem odhadu vyjadřuje nejistotu z výběru části lidí. Například odhad 42 % s intervalem 37–47 % zahrnuje skutečnou hodnotu 41 %. Interval 45–55 % by ji už minul.",
+        "Porovnejte odhad i celé rozmezí se zeleně uvedenou populační hodnotou. Úzký interval nemusí být správný: při zkresleném sběru může ležet celý vedle skutečnosti."
+      ]
+    },
+    "averageEstimate": {
+      "title": "Průměr odhadů: kam metoda dlouhodobě míří",
+      "paragraphs": [
+        "Zprůměrujeme odhady ze všech dosavadních platných výběrů. Tím potlačujeme náhodné výkyvy jednotlivých průzkumů a lépe vidíme, zda metoda soustavně odhaduje příliš vysokou nebo nízkou hodnotu.",
+        "Rozdíl „Od skutečnosti“ říká, o kolik se tento průměr odchyluje od hodnoty v celé populaci. Plus znamená nadhodnocení a minus podhodnocení.",
+        "U Apple jde o procentní body: rozdíl mezi 40 % a 45 % je 5 procentních bodů. U času jde o minuty za týden. Více opakování pomáhá odchylku odhalit, ale neopravuje zkreslenou metodu."
+      ]
+    },
+    "outside": {
+      "title": "Intervaly mimo: kolikrát jsme skutečnost minuli",
+      "paragraphs": [
+        "Interval je „mimo“, pokud známá populační hodnota neleží mezi jeho dolní a horní mezí. V lese takový výběr označíme červeně a křížkem.",
+        "Při 95% spolehlivosti a dobře fungující metodě čekáme dlouhodobě přibližně 5 % intervalů mimo. I správný postup tedy občas mine; jedno minutí samo o sobě neznamená chybu programu.",
+        "Na začátku procento hodně skáče, protože máme jen několik intervalů. Případy, kdy interval kvůli nedostatečnému zastoupení skupin nelze spočítat, se do tohoto podílu nezahrnují."
+      ]
+    },
+    "histogram": {
+      "title": "Histogram: kde končí odhady z různých vzorků",
+      "paragraphs": [
+        "Každý platný vzorek přidává jeden odhad. Histogram seskupí podobné odhady do sloupců. Výška sloupce říká, kolikrát se odhad dostal do daného rozmezí. Nejde o počty jednotlivých respondentů.",
+        "Vodorovná osa ukazuje odhad podílu Apple v procentech nebo odhad průměru v minutách. Svislá osa ukazuje počet výběrů. Užší shluk sloupců znamená menší kolísání mezi průzkumy.",
+        "U času na internetu se s přibývajícími platnými výběry automaticky zjemňují intervaly histogramu. Více výsledků umožňuje ukázat podrobnější tvar rozdělení. Aktuální šířku sloupce najdete nad grafem. Při změně šířky se všechny dosavadní odhady znovu rozdělí do sloupců; jejich výšky se proto mohou změnit i bez změny samotných odhadů.",
+        "Červená svislice označuje skutečnost. Oranžová křivka je srovnávací normální rozdělení centrované na skutečnosti; jeho šířku odhadujeme z kolísání výsledků simulace. Křivka není rozdělením časů jednotlivých lidí ani důkazem, že metoda je správná.",
+        "Pokud se sloupce soustředí zřetelně vedle skutečné hodnoty, metoda má systematický posun. Zkuste zvětšit zkreslení příležitostného sběru a porovnat je s váženým výběrem."
+      ]
+    },
+    "convergence": {
+      "title": "Konvergence: jak se ustaluje četnost minutí",
+      "paragraphs": [
+        "Graf čteme zleva doprava, jak přibývají výběry. V každém bodě počítáme počet dosavadních intervalů mimo skutečnost dělený počtem všech dosavadních platných intervalů.",
+        "Přerušovaná vodorovná čára je α (alfa), tedy 100 % minus zvolená spolehlivost. Při 95% spolehlivosti je α = 5 %. K této hodnotě by se dobře fungující metoda měla při mnoha výběrech přibližovat.",
+        "Křivka nemusí klesat plynule. Jedno nové minutí ji zvedne, několik úspěšných intervalů ji sníží. Na začátku jsou skoky velké; s přibývajícími výběry mají jednotlivé výsledky menší vliv.",
+        "Pokud se křivka dlouhodobě drží vysoko nad cílem, intervaly zachycují skutečnost méně často, než slibuje jejich jmenovitá spolehlivost. U příležitostného sběru tím může být vidět zkreslení, které samotný interval neumí opravit."
+      ]
+    },
+    "forest": {
+      "title": "Intervalový les: jeden průzkum na každém řádku",
+      "paragraphs": [
+        "Každý řádek je jeden výběr lidí. Bod ukazuje odhad, úsečka jeho interval a čísla vpravo odhad i obě meze. Čárkovaná svislice ukazuje neměnnou skutečnou hodnotu v populaci.",
+        "Pokud úsečka čárkovanou čáru protíná nebo se jí dotýká, interval skutečnost zachytil. Pokud ji mine, zbarvíme jej červeně a bod nahradíme křížkem. I při správné metodě občas vznikne červený interval.",
+        "Les má pevnou výšku, ale obsahuje všechny výběry. Další řádky najdete posunutím uvnitř lesa myší, dotykem nebo po zaměření klávesnicí. Osa zůstává nahoře viditelná.",
+        "Řádek „Nelze odhadnout“ znamená, že v některé potřebné demografické skupině nejsou alespoň dvě osoby. Takový řádek zachováváme, ale nepočítáme jej jako úspěšný ani chybný interval."
+      ]
+    },
+    "forestToggle": {
+      "title": "Zobrazení lesa: méně kreslení, stejné výpočty",
+      "paragraphs": [
+        "Zaškrtnutí zobrazuje intervalový les pro Apple i čas na internetu. Každý výběr přidává do každého lesa další řádek. Při velkém počtu výběrů může vykreslování těchto řádků zpomalovat prohlížeč.",
+        "Po vypnutí se oba lesy přestanou vykreslovat. Simulace, histogramy a konvergence běží dál stejně; žádné intervaly se nevymažou.",
+        "Volbu můžete měnit i během běhu. Po opětovném zapnutí uvidíte všechny dosavadní intervaly, včetně těch, které vznikly při vypnutém zobrazení. Export XLSX je obsahuje v obou případech."
+      ]
+    },
+    "weights": {
+      "title": "Váhy: některé odpovědi zastupují více lidí",
+      "paragraphs": [
+        "Když nějaká skupina tvoří 20 % populace, ale jen 10 % vzorku, její odpovědi dostanou váhu 2. Ve výsledku mají dvojnásobný vliv. Kdyby naopak tvořila 40 % vzorku, dostala by váhu 0,5.",
+        "Takto upravíme společné zastoupení věku a pohlaví. Nedoplňujeme nové respondenty ani neznáme odpovědi těch, kteří neodpověděli. Jen měníme vliv získaných odpovědí.",
+        "Vážení předpokládá, že oslovení lidé dokážou zastoupit ostatní lidi ze stejné skupiny. Pokud odpovídají především fanoušci Apple nebo aktivnější uživatelé internetu, samotný věk a pohlaví tento rozdíl nevysvětlí."
+      ]
+    },
+    "dataset": {
+      "title": "Podívat se na osoby, ze kterých vybíráme",
+      "paragraphs": [
+        "Tabulka ukazuje jednu modelovou osobu z každé věkové a pohlavní skupiny. Pomáhá představit si, co znamená jeden řádek dat: jeden člověk, jeho vlastnosti a oba sledované údaje.",
+        "Celá populace je mnohem větší než tato ukázka. Tlačítkem pro XLSX stáhnete všechny osoby a můžete si jejich podíly nebo průměry sami ověřit například v tabulkovém editoru. Jde pouze o smyšlená data."
+      ]
+    },
+    "effectiveN": {
+      "title": "Efektivní velikost vzorku: jak nerovné jsou váhy",
+      "paragraphs": [
+        "Pokud mají všichni stejnou váhu, je efektivní velikost stejná jako skutečný počet respondentů. Pokud má několik lidí mnohem větší vliv než ostatní, efektivní velikost podle tohoto ukazatele klesne.",
+        "Například 300 respondentů s efektivní velikostí 180 stále znamená 300 skutečně oslovených lidí. Číslo 180 jen upozorňuje, že váhy nejsou rovnoměrné a nejistota může být větší než u 300 stejně vážených odpovědí.",
+        "Toto číslo neříká, zda zmizelo výběrové zkreslení, a není zárukou přesnosti. V naší simulaci navíc počítáme rozptyl z jednotlivých skupin; efektivní velikost neslouží jako náhrada tohoto výpočtu."
+      ]
+    },
+    "exportPopulation": {
+      "title": "Stáhnout celou modelovou populaci",
+      "paragraphs": [
+        "XLSX je běžný formát sešitu Excelu. V listu Populace bude každý řádek jedna osoba se svým věkem, pohlavím, vzděláním, telefonem a minutami na internetu. Další listy obsahují populační cíle a nastavení.",
+        "Stahujete právě připravenou populaci, ne pouze poslední vzorek. Soubor se hodí pro vlastní kontrolní výpočty nebo výuku v Excelu. Stahování nemění simulaci a data se nikam neposílají."
+      ]
+    },
+    "exportWeights": {
+      "title": "Stáhnout populační cíle i váhy jednotlivých výběrů",
+      "paragraphs": [
+        "List Cíle populace obsahuje osm skupin věk × pohlaví, počty lidí a jejich skutečné podíly. Je dostupný ihned po vytvoření populace, i když zatím neproběhl žádný výběr.",
+        "List Váhy výběrů přidává pro každý dokončený výběr osm řádků. Uvidíte, kolik lidí patřilo do každé skupiny, jak velký podíl tvořili ve vzorku a jaká váha odpovídá zvolené metodě.",
+        "U náhodného a neváženého příležitostného výběru má respondent váhu 1. U stratifikace a vážené varianty používáme poměr populačního a výběrového podílu. Samostatný sloupec poststratifikační váhy umožňuje porovnání i pro ostatní metody; není to vždy skutečně použitá váha.",
+        "Skupina bez respondentů má prázdnou váhu, nikoli nulu. Pokud kvůli nedostatečnému zastoupení nebyl vydán celý odhad, je to v sešitu označeno. Export zachytí dokončené výběry v okamžiku kliknutí."
+      ]
+    },
+    "exportIntervals": {
+      "title": "Stáhnout všechny jednotlivé odhady a intervaly",
+      "paragraphs": [
+        "Soubor obsahuje pro každý dokončený výběr oba ukazatele, odhady, meze intervalů, skutečné hodnoty a informaci, zda interval skutečnost minul. Přidáváme také nastavení, aby bylo možné výsledky porovnat.",
+        "Nevydané odhady zůstávají označené nedostatečným zastoupením skupin. Soubor můžete použít pro vlastní grafy a kontrolu počtu chybných intervalů; stahování běh neukončí."
+      ]
+    }
+  },
+  "tooltip": {
+    "napovedaSamplinghelptopictitle": "Nápověda: {SAMPLINGHELPTopicTitle}",
+    "zavritNapovedu": "Zavřít nápovědu"
+  },
+  "forest": {
+    "valueMin": "{value} min",
+    "intervalovyLesVariableapplepodl": "Intervalový les: {variableApplePodL}",
+    "podilApple": "podíl Apple",
+    "casNaInternetu": "čas na internetu",
+    "vyberEntryiterationIntervalestimateIntervalIntervallowAzIntervalhighIntervaloutsideneobsahujeskute": "Výběr {entryIteration}: odhad {intervalEstimate}, interval {intervalLow} až {intervalHigh}; {intervalOutsideNeobsahujeSkute}.",
+    "neobsahujeSkutecnouHodnotu": "neobsahuje skutečnou hodnotu",
+    "obsahujeSkutecnouHodnotu": "obsahuje skutečnou hodnotu",
+    "vyberEntryiterationNelzeOdhadnoutNedostatecneSkupinyEntryinsufficient": "Výběr {entryIteration}: nelze odhadnout; nedostatečné skupiny: {entryInsufficient}.",
+    "intervalovyLes": "Intervalový les",
+    "vyberuVsechnyIntervaly": "výběrů · všechny intervaly",
+    "carkovanaCaraSkutecnaHodnota": "Čárkovaná čára: skutečná hodnota",
+    "vsechnyVyberyPosouvejteProDalsiIntervaly": "Všechny výběry, posouvejte pro další intervaly",
+    "odhadAMeze": "Odhad a meze",
+    "nelzeOdhadnout": "Nelze odhadnout",
+    "nedostatekOsobVeSkupine": "Nedostatek osob ve skupině",
+    "bodOdhadUseckaIntervalCervenyKrizekMimoSkutecnost": "Bod = odhad · úsečka = interval · červený křížek = mimo skutečnost. Les lze posouvat myší, dotykem i klávesnicí."
+  },
+  "plot": {
+    "skutecnaHodnota": "Skutečná hodnota",
+    "vyber": "Výběr",
+    "pomocnaVodorovnaCaraProHodnotu": "Pomocná vodorovná čára pro hodnotu",
+    "naOse": "na ose",
+    "hodnota": "Hodnota",
+    "hodnota2": ": hodnota",
+    "pocetVyberu": ", počet výběrů",
+    "coNaSvisleOseMerime": ": co na svislé ose měříme.",
+    "jakouHodnotuNaVodorovneOseSledujeme": ": jakou hodnotu na vodorovné ose sledujeme."
+  },
+  "export": {
+    "populationpeoplelengthOsob": "{populationPeopleLength} osob",
+    "exportSeNepodariloPripravitZkusteToZnovu": "Export se nepodařilo připravit. Zkuste to znovu.",
+    "dataProVlastniPraci": "DATA PRO VLASTNÍ PRÁCI",
+    "export": "Export",
+    "stahneteSiDataDoExceluVeFormatuXlsx": "Stáhněte si data do Excelu ve formátu XLSX. Každý soubor obsahuje také list Nastavení se seedy a popisem dat. Export zachycuje stav při kliknutí; simulace může dál běžet.",
+    "populace": "Populace",
+    "vsechnyOsobyDemografieZnackaTelefonuATydenniCas": "Všechny osoby, demografie, značka telefonu a týdenní čas na internetu. Navíc známé populační cíle a skutečné hodnoty.",
+    "nejprveVytvortePopulaci": "Nejprve vytvořte populaci",
+    "stahnoutPopulaciXlsx": "Stáhnout populaci · XLSX",
+    "vahy": "Váhy",
+    "populacniPodilyVekPohlaviAProKazdyDokonceny": "Populační podíly věk × pohlaví a pro každý dokončený výběr počty respondentů, jejich podíly a váhy podle metody.",
+    "historylengthVyberu8Skupin": "{historyLength} výběrů × 8 skupin",
+    "populacniCileJsouDostupneIPredSimulaci": "Populační cíle jsou dostupné i před simulací",
+    "stahnoutVahyXlsx": "Stáhnout váhy · XLSX",
+    "vysledkyVzorku": "Výsledky vzorků",
+    "bodoveOdhadyDolniAHorniMezeCiA": "Bodové odhady, dolní a horní meze CI a porovnání se skutečností pro Apple i čas na internetu. Neplatné odhady mají uvedený důvod.",
+    "historylengthDokoncenychVyberuObaUkazatele": "{historyLength} dokončených výběrů · oba ukazatele",
+    "nejprveSpustteSimulaci": "Nejprve spusťte simulaci",
+    "stahnoutVysledkyXlsx": "Stáhnout výsledky · XLSX",
+    "dokoncujiSouborXlsx": "Dokončuji soubor XLSX…",
+    "pripravujiDataProExport": "Připravuji data pro export…",
+    "radku": "řádků",
+    "prubehPripravyExportu": "Průběh přípravy exportu",
+    "pripravaSouboruXlsx": "Příprava souboru XLSX",
+    "souborSePoDokonceniAutomatickyNabidneKeStazeni": "Soubor se po dokončení automaticky nabídne ke stažení. Příprava velké populace může chvíli trvat.",
+    "soubor": "Soubor",
+    "jePripraven": "je připraven.",
+    "zachycujeExportedcountDokoncenychVyberu": "Zachycuje {exportedCount} dokončených výběrů.",
+    "stahnoutZnovu": "Stáhnout znovu"
+  },
+  "xlsx": {
+    "vyberyZatimNeprobehly": "Výběry zatím neproběhly",
+    "cilePopulace": "Cíle populace",
+    "skupinaId": "Skupina ID",
+    "vekovaSkupina": "Věková skupina",
+    "pohlavi": "Pohlaví",
+    "pocetVPopulaciN": "Počet v populaci Nₕ",
+    "populacniPodilW": "Populační podíl Wₕ",
+    "nastaveni": "Nastavení",
+    "polozka": "Položka",
+    "export": "Export",
+    "celaSyntetickaPopulace": "Celá syntetická populace",
+    "populacniCileAVahyDokoncenychVyberu": "Populační cíle a váhy dokončených výběrů",
+    "bodoveOdhadyAIntervalyDokoncenychVyberu": "Bodové odhady a intervaly dokončených výběrů",
+    "data": "Data",
+    "syntetickaVyukovaPopulaceNejdeOSkutecnaDataO": "Syntetická výuková populace, nejde o skutečná data o ČR.",
+    "casExportuUtc": "Čas exportu (UTC)",
+    "pocetLidiVPopulaciN": "Počet lidí v populaci N",
+    "seedPopulace": "Seed populace",
+    "skutecnyPodilApple0Az1": "Skutečný podíl Apple (0 až 1)",
+    "skutecnyPrumerInternetuMinTyden": "Skutečný průměr internetu (min/týden)",
+    "metodaPoslednihoSpustenehoBehu": "Metoda posledního spuštěného běhu",
+    "stavBehuVOkamzikuExportu": "Stav běhu v okamžiku exportu",
+    "pripraveno": "Připraveno",
+    "simulaceBezi": "Simulace běží",
+    "dokonceno": "Dokončeno",
+    "exportovaneDokonceneVybery": "Exportované dokončené výběry",
+    "podilyJsouUlozenyJakoCisla0Az1": "Podíly jsou uloženy jako čísla 0 až 1 a zobrazeny v procentech. Čas je v minutách za týden.",
+    "neplatnyOdhad": "Neplatný odhad",
+    "prazdnyBodovyOdhadACiZnamenajiNevydanyOdhad": "Prázdný bodový odhad a CI znamenají nevydaný odhad, nikoli nulu. Důvod je uveden na řádku.",
+    "velikostVzorkuN": "Velikost vzorku n",
+    "planovanyPocetVyberu": "Plánovaný počet výběrů",
+    "spolehlivost0Az1": "Spolehlivost (0 až 1)",
+    "seedVyberu": "Seed výběrů",
+    "demografickeZkresleni": "Demografické zkreslení",
+    "zkresleniUvnitrSkupin": "Zkreslení uvnitř skupin",
+    "vypocetCi": "Výpočet CI",
+    "normalniAproximaceUPravdepodobnostnichVyberuRozptylZohlednujeZpusob": "Normální aproximace. U pravděpodobnostních výběrů rozptyl zohledňuje způsob výběru a konečnou populaci. U příležitostného sběru je interval pracovní aproximací a nezahrnuje výběrové zkreslení.",
+    "vahaPodleMetody": "Váha podle metody",
+    "uNahodnehoANevazenehoPrilezitostnehoVyberu1U": "U náhodného a neváženého příležitostného výběru 1; u stratifikovaného a váženého výběru Wₕ / (nₕ/n). Bez respondenta zůstává prázdná.",
+    "poststratifikacniVaha": "Poststratifikační váha",
+    "wNNUvedenaProPorovnaniUVsech": "Wₕ / (nₕ/n), uvedena pro porovnání u všech metod. Nemusí být použita danou metodou.",
+    "predSpustenimSimulace": "Před spuštěním simulace",
+    "sesitObsahujeZnamePopulacniCileVahyVyberuSe": "Sešit obsahuje známé populační cíle. Váhy výběrů se doplní až po dokončení alespoň jednoho výběru.",
+    "intervalyPrilezitostnehoSberu": "Intervaly příležitostného sběru",
+    "pracovniAproximaceNezahrnujiVyberoveZkresleni": "Pracovní aproximace; nezahrnují výběrové zkreslení.",
+    "statistickaLaboratorMuvs": "Statistická laboratoř MÚVS",
+    "populaceJesteNeniPripravena": "Populace ještě není připravena.",
+    "populace": "Populace",
+    "idOsoby": "ID osoby",
+    "vek": "Věk",
+    "vzdelani": "Vzdělání",
+    "telefon": "Telefon",
+    "internetMinTyden": "Internet (min/týden)",
+    "apple1Ano": "Apple (1 = ano)",
+    "vahyVyberu": "Váhy výběrů",
+    "vyber": "Výběr",
+    "metoda": "Metoda",
+    "pocetVeVzorkuN": "Počet ve vzorku nₕ",
+    "podilVeVzorku": "Podíl ve vzorku",
+    "odhadVydan": "Odhad vydán",
+    "poznamka": "Poznámka",
+    "slozeniVzorkuNezaznamenano": "Složení vzorku nezaznamenáno",
+    "meneNez2RespondentiOdhadNebylVydan": "Méně než 2 respondenti; odhad nebyl vydán",
+    "skupinaBezRespondentu": "Skupina bez respondentů",
+    "nejprveDokonceteAlesponJedenVyber": "Nejprve dokončete alespoň jeden výběr.",
+    "vysledkyVzorku": "Výsledky vzorků",
+    "appleSkutecnost": "Apple: skutečnost",
+    "appleBodovyOdhad": "Apple: bodový odhad",
+    "appleCiDolni": "Apple: CI dolní",
+    "appleCiHorni": "Apple: CI horní",
+    "appleIntervalMimo": "Apple: interval mimo",
+    "internetSkutecnostMinTyden": "Internet: skutečnost (min/týden)",
+    "internetBodovyOdhad": "Internet: bodový odhad",
+    "internetCiDolni": "Internet: CI dolní",
+    "internetCiHorni": "Internet: CI horní",
+    "internetIntervalMimo": "Internet: interval mimo",
+    "nedostatecneSkupiny": "Nedostatečné skupiny",
+    "efektivniNPodleKishe": "Efektivní n podle Kishe",
+    "hodnota": "Hodnota",
+    "pozastaveno": "Pozastaveno",
+    "zastaveno": "Zastaveno",
+    "chyba": "Chyba",
+    "jednotky": "Jednotky",
+    "spolehlivost": "Spolehlivost"
+  },
+  "probability": {
+    "pouzeA": "Pouze A",
+    "pouzeB": "Pouze B",
+    "aniAAniB": "Ani A, ani B",
+    "pravdepodobnostiDvouJevu": "Pravděpodobnosti dvou jevů",
+    "vyzkousejteZadani": "Vyzkoušejte zadání",
+    "znamyPrunik": "Známý průnik",
+    "nezavisleJevy": "Nezávislé jevy",
+    "neslucitelneJevy": "Neslučitelné jevy",
+    "neznamyPrunik": "Neznámý průnik",
+    "krok01Zadani": "KROK 01 · ZADÁNÍ",
+    "coOJevechVime": "Co o jevech víme?",
+    "pravdepodobnostiZadavejteOd0Do1Napriklad0": "Pravděpodobnosti zadávejte od 0 do 1. Například 0,5 znamená 50 %.",
+    "pA": "P(A)",
+    "pravdepodobnostJevuA": "Pravděpodobnost jevu A",
+    "pB": "P(B)",
+    "pravdepodobnostJevuB": "Pravděpodobnost jevu B",
+    "vztahMeziJevy": "Vztah mezi jevy",
+    "znamPravdepodobnostPruniku": "Znám pravděpodobnost průniku",
+    "jevyJsouNezavisle": "Jevy jsou nezávislé",
+    "jevyJsouNeslucitelne": "Jevy jsou neslučitelné",
+    "vztahNeznamUrcitMozneMeze": "Vztah neznám · určit možné meze",
+    "pABPAB": "P(A ∩ B) = P(A · B)",
+    "pravdepodobnostZeNastanouObaJevy": "Pravděpodobnost, že nastanou oba jevy.",
+    "nezavislostZnamenaZeNastaniJednohoJevuNemeniPravdepodobnost": "Nezávislost znamená, že nastání jednoho jevu nemění pravděpodobnost druhého. P(A ∩ B) = P(A) · P(B).",
+    "neslucitelneJevyNemohouNastatSoucasnePAB": "Neslučitelné jevy nemohou nastat současně. P(A ∩ B) = 0. Nezávislost a neslučitelnost jsou různé vlastnosti.",
+    "pAAPBObvykleNeurcujiPrunik": "P(A) a P(B) obvykle neurčují průnik jednoznačně. Ukážeme všechny možné výsledky, bez předpokladu nezávislosti.",
+    "krok02Otazka": "KROK 02 · OTÁZKA",
+    "coChceteVypocitat": "Co chcete vypočítat?",
+    "zadaniNeniMozne": "Zadání není možné",
+    "proTytoJevyMusiPlatit": "Pro tyto jevy musí platit",
+    "pAB": "≤ P(A ∩ B) ≤",
+    "upravteZadaniNeplatnePravdepodobnostiNelzeZnazornit": "Upravte zadání; neplatné pravděpodobnosti nelze znázornit.",
+    "vysledek": "VÝSLEDEK ·",
+    "neniDefinovano": "Není definováno",
+    "podminujiciJev": "Podmiňující jev",
+    "maNulovouPravdepodobnostVeVzorciBychomDeliliNulou": "má nulovou pravděpodobnost. Ve vzorci bychom dělili nulou.",
+    "resultrangelowAzResultrangehigh": "{resultRangeLow} až {resultRangeHigh}",
+    "pravdepodobnostJeResultrangelow": "Pravděpodobnost je {resultRangeLow}.",
+    "zadaneUdajeUrcujiTotoRozmeziProJednoznacnyVysledek": "Zadané údaje určují toto rozmezí. Pro jednoznačný výsledek potřebujeme další informaci o vztahu jevů.",
+    "krok03PostupVypoctu": "KROK 03 · POSTUP VÝPOČTU",
+    "odZadaniKVysledku": "Od zadání k výsledku",
+    "overimePripustnyPrunik": "Ověříme přípustný průnik.",
+    "max0PAPB1P": "max(0; P(A) + P(B) − 1) ≤ P(A ∩ B) ≤ min(P(A); P(B))",
+    "urcimePrunikZeZadani": "Určíme průnik ze zadání.",
+    "pAB2": "P(A ∩ B) =",
+    "jevyJsouNeslucitelneProtoPAB0": "Jevy jsou neslučitelné, proto P(A ∩ B) = 0.",
+    "prunikNeznameVeVypoctuPouzijemeJehoDolniI": "Průnik neznáme. Ve výpočtu použijeme jeho dolní i horní přípustnou mez.",
+    "pouzijemeVzorec": "Použijeme vzorec.",
+    "dosadimeAVypocitame": "Dosadíme a vypočítáme.",
+    "deleniNulouNeniDefinovano": "Dělení nulou není definováno.",
+    "vysledekResultrangelowResultrangehigh": "Výsledek ∈ ⟨{resultRangeLow}; {resultRangeHigh}⟩",
+    "jevyVObraze": "JEVY V OBRAZE",
+    "vennuvDiagram": "Vennův diagram",
+    "zvyraznenaOblastOdpovidaVybraneOtazcePlochyJsouSchematicke": "Zvýrazněná oblast odpovídá vybrané otázce. Plochy jsou schematické, velikost pravděpodobností vyjadřují čísla.",
+    "prunikCitatelVypoctu": "Průnik · čitatel výpočtu",
+    "vybranyJev": "Vybraný jev",
+    "oranzovyObrysOznacujePodminujiciJevConditional": "Oranžový obrys označuje podmiňující jev {conditional}.",
+    "ciselnePravdepodobnostiOblastiNelzeBezZnalostiPrunikuUrcit": "Číselné pravděpodobnosti oblastí nelze bez znalosti průniku určit.",
+    "vsechnyVysledky": "Ω · všechny výsledky",
+    "a": "A",
+    "b": "B",
+    "aB": "A ∩ B",
+    "oranzovyObrysOznacujeJev": "Oranžový obrys označuje jev",
+    "naKteryOmezujemeProstorCislaVDiagramuSe": ", na který omezujeme prostor. Čísla v diagramu se vztahují k celému Ω; podmíněná pravděpodobnost dělí průnik pravděpodobností jevu",
+    "otaznikyZnamenajiZeRozdeleniDoCtyrOblastiNeni": "Otazníky znamenají, že rozdělení do čtyř oblastí není jednoznačně známé. Tvar diagramu nepředpokládá konkrétní velikost průniku."
+  },
+  "probabilityRules": {
+    "prunikPAB": "Průnik · P(A ∩ B)",
+    "pAB": "P(A ∩ B)",
+    "nastanouObaJevySoucasneZapisABZnamena": "Nastanou oba jevy současně. Zápis A · B znamená také průnik.",
+    "sjednoceniPAB": "Sjednocení · P(A ∪ B)",
+    "pAPBPAB": "P(A) + P(B) − P(A ∩ B)",
+    "nastaneAlesponJedenJevPrunikOdecitameProtozeJsme": "Nastane alespoň jeden jev. Průnik odečítáme, protože jsme jej započítali dvakrát.",
+    "aBezBPAB": "A bez B · P(A ∖ B)",
+    "pAPAB": "P(A) − P(A ∩ B)",
+    "nastaneAASoucasneNenastaneB": "Nastane A a současně nenastane B.",
+    "bBezAPBA": "B bez A · P(B ∖ A)",
+    "pBPAB": "P(B) − P(A ∩ B)",
+    "nastaneBASoucasneNenastaneA": "Nastane B a současně nenastane A.",
+    "aniAAniB": "Ani A, ani B",
+    "text1PAPBPAB": "1 − P(A) − P(B) + P(A ∩ B)",
+    "nenastaneAniJedenJevJdeODoplnekSjednoceni": "Nenastane ani jeden jev. Jde o doplněk sjednocení.",
+    "doplnekAPA": "Doplněk A · P(Ā)",
+    "text1PA": "1 − P(A)",
+    "jevANenastaneBezOhleduNaB": "Jev A nenastane, bez ohledu na B.",
+    "doplnekBPB": "Doplněk B · P(B̄)",
+    "text1PB": "1 − P(B)",
+    "jevBNenastaneBezOhleduNaA": "Jev B nenastane, bez ohledu na A.",
+    "aZaPodminkyBPAB": "A za podmínky B · P(A | B)",
+    "pABPB": "P(A ∩ B) / P(B)",
+    "vimeZeNastaloBPodilPrunikuPocitamePouze": "Víme, že nastalo B. Podíl průniku počítáme pouze uvnitř B.",
+    "bZaPodminkyAPBA": "B za podmínky A · P(B | A)",
+    "pABPA": "P(A ∩ B) / P(A)",
+    "vimeZeNastaloAPodilPrunikuPocitamePouze": "Víme, že nastalo A. Podíl průniku počítáme pouze uvnitř A.",
+    "praveJedenJevPAB": "Právě jeden jev · P(A △ B)",
+    "pAPB2PAB": "P(A) + P(B) − 2 · P(A ∩ B)",
+    "nastanePraveJedenZJevuAleNeOba": "Nastane právě jeden z jevů, ale ne oba současně.",
+    "pAAPBMusiBytCisla": "P(A) a P(B) musí být čísla od 0 do 1.",
+    "neslucitelneJevyNemohouMitSoucetPAP": "Neslučitelné jevy nemohou mít součet P(A) + P(B) větší než 1.",
+    "prunikMusiLezetMeziMax0PA": "Průnik musí ležet mezi max(0; P(A) + P(B) − 1) a min(P(A); P(B))."
+  },
+  "statistics": {
+    "velikostPopulaceMusiBytKladneCeleCislo": "Velikost populace musí být kladné celé číslo.",
+    "velikostVzorkuMusiBytCeleCisloOd1": "Velikost vzorku musí být celé číslo od 1 do N.",
+    "proTutoAproximaciMusiVzorekTvoritNejvyse5": "Pro tuto aproximaci musí vzorek tvořit nejvýše 5 % populace (n/N ≤ 0,05).",
+    "spolehlivostMusiBytOd80Do999": "Spolehlivost musí být od 80 % do 99,9 %.",
+    "pocetOpakovaniMusiBytKladneCeleCislo": "Počet opakování musí být kladné celé číslo.",
+    "pouzijteAlespon2Kategorie": "Použijte alespoň 2 kategorie.",
+    "kazdaKategorieMusiMitNazevAPodilOd": "Každá kategorie musí mít název a podíl od 0 do 100 %.",
+    "soucetPodiluMusiByt100UpravteJeNebo": "Součet podílů musí být 100 %. Upravte je nebo použijte normalizaci.",
+    "neznamaMetodaIntervalu": "Neznámá metoda intervalu.",
+    "neplatnaPopulace": "Neplatná populace.",
+    "neplatnaVelikostVzorku": "Neplatná velikost vzorku.",
+    "pravdepodobnostMusiLezetMezi0A1": "Pravděpodobnost musí ležet mezi 0 a 1."
+  }
+}

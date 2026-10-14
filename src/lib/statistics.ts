@@ -1,3 +1,4 @@
+import { t } from './texts';
 import type { BatchSummary, CategorySummary, GlobalSummary, PopulationCategory, RealizedCategory, SimulationConfig } from './types';
 
 export const HISTOGRAM_BINS = 40;
@@ -17,23 +18,23 @@ export function formatBytes(bytes: number) { if (bytes < 1024 * 1024) return `${
 export function validate(config: SimulationConfig): string[] {
   const errors: string[] = [];
   const integer = (value: number, min: number, max: number) => Number.isInteger(value) && value >= min && value <= max;
-  if (!integer(config.N, 2, Number.MAX_SAFE_INTEGER)) errors.push('Velikost populace musí být kladné celé číslo.');
-  if (!integer(config.n, 1, config.N)) errors.push('Velikost vzorku musí být celé číslo od 1 do N.');
-  if (config.n / config.N > 0.05) errors.push('Pro tuto aproximaci musí vzorek tvořit nejvýše 5 % populace (n/N ≤ 0,05).');
-  if (!Number.isFinite(config.confidence) || config.confidence < 0.8 || config.confidence > 0.999) errors.push('Spolehlivost musí být od 80 % do 99,9 %.');
-  if (!integer(config.samplesPerBatch, 1, Number.MAX_SAFE_INTEGER)) errors.push('Počet opakování musí být kladné celé číslo.');
-  if (!integer(config.batches, 1, Number.MAX_SAFE_INTEGER)) errors.push('Počet opakování musí být kladné celé číslo.');
-  if (config.categories.length < 2) errors.push('Použijte alespoň 2 kategorie.');
-  if (config.categories.some(c => !c.name.trim() || !Number.isFinite(c.weight) || c.weight < 0 || c.weight > 100)) errors.push('Každá kategorie musí mít název a podíl od 0 do 100 %.');
-  if (Math.abs(config.categories.reduce((s, c) => s + c.weight, 0) - 100) > 0.0001) errors.push('Součet podílů musí být 100 %. Upravte je nebo použijte normalizaci.');
-  if (!['wilson', 'wald'].includes(config.method)) errors.push('Neznámá metoda intervalu.');
+  if (!integer(config.N, 2, Number.MAX_SAFE_INTEGER)) errors.push(t('statistics.velikostPopulaceMusiBytKladneCeleCislo'));
+  if (!integer(config.n, 1, config.N)) errors.push(t('statistics.velikostVzorkuMusiBytCeleCisloOd1'));
+  if (config.n / config.N > 0.05) errors.push(t('statistics.proTutoAproximaciMusiVzorekTvoritNejvyse5'));
+  if (!Number.isFinite(config.confidence) || config.confidence < 0.8 || config.confidence > 0.999) errors.push(t('statistics.spolehlivostMusiBytOd80Do999'));
+  if (!integer(config.samplesPerBatch, 1, Number.MAX_SAFE_INTEGER)) errors.push(t('statistics.pocetOpakovaniMusiBytKladneCeleCislo'));
+  if (!integer(config.batches, 1, Number.MAX_SAFE_INTEGER)) errors.push(t('statistics.pocetOpakovaniMusiBytKladneCeleCislo'));
+  if (config.categories.length < 2) errors.push(t('statistics.pouzijteAlespon2Kategorie'));
+  if (config.categories.some(c => !c.name.trim() || !Number.isFinite(c.weight) || c.weight < 0 || c.weight > 100)) errors.push(t('statistics.kazdaKategorieMusiMitNazevAPodilOd'));
+  if (Math.abs(config.categories.reduce((s, c) => s + c.weight, 0) - 100) > 0.0001) errors.push(t('statistics.soucetPodiluMusiByt100UpravteJeNebo'));
+  if (!['wilson', 'wald'].includes(config.method)) errors.push(t('statistics.neznamaMetodaIntervalu'));
   return errors;
 }
 
 // Largest remainders; ties follow the original category order.
 export function realizePopulation(N: number, categories: PopulationCategory[]): RealizedCategory[] {
   const total = categories.reduce((s, c) => s + c.weight, 0);
-  if (!Number.isInteger(N) || N < 1 || total <= 0 || !Number.isFinite(total) || categories.some(c => !Number.isFinite(c.weight) || c.weight < 0)) throw new Error('Neplatná populace.');
+  if (!Number.isInteger(N) || N < 1 || total <= 0 || !Number.isFinite(total) || categories.some(c => !Number.isFinite(c.weight) || c.weight < 0)) throw new Error(t('statistics.neplatnaPopulace'));
   const raw = categories.map(c => N * c.weight / total);
   const counts = raw.map(Math.floor);
   const order = raw.map((value, i) => ({ i, remainder: value - counts[i] })).sort((a, b) => b.remainder - a.remainder || a.i - b.i);
@@ -58,7 +59,7 @@ export function seededRandom(seed: string): () => number {
 export function sampleWithoutReplacement(counts: number[], n: number, random: () => number): number[] {
   const remaining = counts.slice();
   let total = counts.reduce((a, b) => a + b, 0);
-  if (!Number.isInteger(n) || n < 0 || n > total) throw new Error('Neplatná velikost vzorku.');
+  if (!Number.isInteger(n) || n < 0 || n > total) throw new Error(t('statistics.neplatnaVelikostVzorku'));
   const sample = counts.map(() => 0);
   for (let draw = 0; draw < n; draw++) {
     let position = Math.floor(random() * total);
@@ -73,7 +74,7 @@ export function sampleWithoutReplacement(counts: number[], n: number, random: ()
 
 // Acklam's rational approximation to the inverse standard normal CDF.
 export function normalQuantile(p: number): number {
-  if (p <= 0 || p >= 1) throw new Error('Pravděpodobnost musí ležet mezi 0 a 1.');
+  if (p <= 0 || p >= 1) throw new Error(t('statistics.pravdepodobnostMusiLezetMezi0A1'));
   const a = [-39.6968302866538, 220.946098424521, -275.928510446969, 138.357751867269, -30.6647980661472, 2.50662827745924];
   const b = [-54.4760987982241, 161.585836858041, -155.698979859887, 66.8013118877197, -13.2806815528857];
   const c = [-0.00778489400243029, -0.322396458041136, -2.40075827716184, -2.54973253934373, 4.37466414146497, 2.93816398269878];

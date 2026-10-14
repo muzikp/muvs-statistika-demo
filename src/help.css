@@ -2,7 +2,5 @@
 .category-actions .add-button{background:#e4f0d6;border:1px solid #c4dcb8;border-radius:4px;padding:8px 11px;color:#315f4c;font-weight:600}
 .category-actions .text-button{padding:8px 4px}
 .card-kicker{position:relative;display:flex;align-items:center;gap:8px}
-.card-kicker::after{content:'?';display:inline-grid;place-items:center;width:16px;height:16px;border:1px solid #91ab8b;border-radius:50%;font:11px 'DM Sans';color:#668563;cursor:help}
-.card-kicker:hover::before,.card-kicker:focus-within::before{content:'Tento krok můžete měnit. Výsledky se přepočítají až po spuštění simulace.';position:absolute;z-index:4;top:22px;left:0;width:230px;padding:10px 12px;background:#183c35;color:#f4f8ef;border-radius:4px;font:11px/1.45 'DM Sans';letter-spacing:0;box-shadow:0 8px 18px #183c3533}
 .category-actions button:focus-visible,.card-kicker:focus-visible{outline:2px solid #b56832;outline-offset:2px}
 @media(max-width:800px){.category-actions{position:static;margin:10px 16px 20px;padding-left:0}}
