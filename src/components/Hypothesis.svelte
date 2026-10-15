@@ -204,6 +204,16 @@
           </section>
           <section class="test-graph statistic-graph"><h3>{t('hypothesis.evidence')}<Help topic="hypP" /></h3>
             <DensityPlot series={testSeries} domain={testDomain} title={t('hypothesis.evidence')} xLabel={t('hypothesis.statisticAxis')} {regions} markers={[{ value: last.statistic, color: last.reject ? '#c34e4e' : '#153e36', label: `${t('hypothesis.observedT')}: ${number(last.statistic, 3)}` }]} />
+            <div class="t-explanation">
+              <p class="t-formula">{t('hypothesis.tFormula')}</p>
+              <dl class="t-legend">
+                <dt>x̄<sub>A</sub>, x̄<sub>B</sub></dt><dd>{t('hypothesis.tMeans')}</dd>
+                <dt>Δ₀</dt><dd>{t('hypothesis.tNullDifference')}</dd>
+                <dt>SE</dt><dd>{t('hypothesis.tStandardError')}</dd>
+                <dt>t</dt><dd>{t('hypothesis.tMeaning')}</dd>
+              </dl>
+              <p class="note">{t('hypothesis.tSubstitution', { a: number(last.meanA, 3), b: number(last.meanB, 3), null: number(currentConfig.nullDifference, 3), se: number(last.se, 3), statistic: number(last.statistic, 3) })}</p>
+            </div>
             <p class="note">{t('hypothesis.testGraphNote')}</p>{#if Math.abs(last.statistic) > testDomain[1]}<p class="note">{t('hypothesis.offScale')}</p>{/if}
           </section>
         </div>
@@ -243,6 +253,7 @@
 </section>
 
 <style>
+  .t-explanation{margin:18px 0;padding:16px;background:#f5f8f0;border:1px solid #dce6d4}.t-formula{margin:0 0 14px;font-size:18px;line-height:1.8;overflow-wrap:anywhere}.t-legend{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 14px;margin:0;font-size:12px;line-height:1.8}.t-legend dt{font-weight:600;color:#153e36}.t-legend dd{margin:0;color:#315c55}.t-explanation .note{margin-bottom:0}
   .kpis .population-difference{font-weight:600;color:#285c4a;border-top:1px solid #dce6d4;margin-top:6px;padding-top:8px}
 
   .preview-test-parameters{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.2fr 1.3fr;gap:24px;align-items:start;border-top:1px solid #dce6d4;padding-top:18px}.null-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:26px}.null-heading label{line-height:1.5}.null-heading .delta-number{width:85px;flex-shrink:0;margin:0;padding:4px 6px}.direction-control{border:0;padding:0;margin:0;min-width:0}.direction-control legend{font-size:12px;color:#315c55;padding:0;line-height:1.5}.direction-options{display:flex;gap:0;margin-top:8px}.direction-options label{flex:1;position:relative;min-width:0}.direction-options input{position:absolute;opacity:0;width:1px;height:1px;margin:0}.direction-options span{display:block;text-align:center;white-space:nowrap;padding:10px 4px;border:1px solid #cbd8c1;background:#fafcf8;font-size:11px}.direction-options label+label span{border-left:0}.direction-options input:checked+span{background:#287766;color:white;border-color:#287766}.direction-options input:focus-visible+span{outline:3px solid #b56832;outline-offset:2px;position:relative;z-index:1}@media(max-width:1000px){.preview-test-parameters{grid-template-columns:1fr 1fr}.direction-control{grid-column:1/-1}}@media(max-width:800px){.preview-test-parameters{grid-template-columns:1fr;gap:18px}.direction-control{grid-column:auto}}
