@@ -6,6 +6,8 @@
   import { DEFAULT_HYPOTHESIS_SPEC, hypothesisConvergence, hypothesisNullTrue, populationDifference, validateHypothesis, validateHypothesisPopulation, type Alternative, type HypothesisConfig, type HypothesisIteration, type HypothesisMessage, type HypothesisPopulationSummary } from '../lib/hypothesis';
   import { studentDensity } from '../lib/student';
   import { hypothesisMeanCurves } from '../lib/hypothesis-plots';
+  // Keep worker code with the loaded page so later deployments cannot remove it.
+  import HypothesisWorker from '../lib/hypothesis.worker.ts?worker&inline';
   import Help from './Help.svelte';
   import Plot from './Plot.svelte';
   import DensityPlot from './DensityPlot.svelte';
@@ -55,7 +57,7 @@
   const snapshot = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
 
   function connectPreview() {
-    const job = new Worker(new URL('../lib/hypothesis.worker.ts', import.meta.url), { type: 'module' }); previewWorker = job;
+    const job = new HypothesisWorker(); previewWorker = job;
     job.onmessage = ({ data }: MessageEvent<HypothesisMessage>) => {
       if (job !== previewWorker || data.requestId !== inFlightPreview) return;
       const latest = data.requestId === previewRequest;
@@ -119,7 +121,7 @@
     const config = { ...preview.config, repeats }, errors = validateHypothesis(config);
     if (errors.length) { error = errors[0]; return; }
     simulationWorker?.terminate(); run = snapshot(config); runPopulation = preview.population; history = []; error = ''; runGenerated = 0; runGenerating = true; status = 'running';
-    const job = new Worker(new URL('../lib/hypothesis.worker.ts', import.meta.url), { type: 'module' }); simulationWorker = job;
+    const job = new HypothesisWorker(); simulationWorker = job;
     job.onmessage = ({ data }: MessageEvent<HypothesisMessage>) => {
       if (job !== simulationWorker) return;
       if (data.type === 'population-progress') { runGenerated = data.completed; return; }
