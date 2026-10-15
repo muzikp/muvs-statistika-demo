@@ -5,6 +5,7 @@ import { dictionary, t } from './src/lib/texts';
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === 'true' ? '/muvs-statistika-demo/' : '/',
   plugins: [svelte(), {
     name: 'site-texts',
     transformIndexHtml(html) {

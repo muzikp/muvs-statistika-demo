@@ -1,5 +1,18 @@
 # Statistická laboratoř MÚVS
 
+## GitHub Pages
+
+Web je připraven pro adresu https://muzikp.github.io/muvs-statistika-demo/ bez vlastní domény.
+V nastavení repozitáře **Settings → Pages → Build and deployment → Source** vyberte **GitHub Actions**.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` nainstaluje závislosti,
+spustí testy, sestaví aplikaci a nasadí obsah `dist`. Lze jej spustit také ručně v záložce Actions.
+Lokální instalace npm není pro nasazení přes GitHub Actions potřeba.
+
+Proměnná `GITHUB_PAGES=true` při buildu nastavuje prefix `/muvs-statistika-demo/`.
+Build vytváří samostatné vstupní HTML pro všechna tři témata, takže na Pages funguje
+i přímé otevření odkazu a obnovení stránky bez nastavování přesměrování na hostingu.
+Lokální vývoj nadále používá kořen `/`.
+
 Výuková Svelte + TypeScript aplikace pro opakovaný výběr z konečné populace. Na `/ci-alfa-explained` jedna simulace současně odhaduje podíl uživatelů Apple a průměr minut na internetu za týden. Před spuštěním se volí metoda výběru; během jednoho běhu se nemění. Výstup pro oba ukazatele obsahuje srovnání se skutečnou populační hodnotou, histogram všech platných odhadů, konvergenci podílu chybných intervalů vůči α a intervalový les. Histogram má normální srovnávací křivku centrovanou na skutečné populační hodnotě s rozptylem odhadnutým ze simulace, škálovanou na četnosti podle šířky sloupců. Minuty mají vlastní osu bez procentního omezení. Les má pevnou výšku 420 px, lze jej posouvat a obsahuje všechny výběry včetně označených neplatných odhadů.
 
 Samostatná stránka `/probability` slouží k výuce pravděpodobností dvou jevů. Uživatel zadává P(A), P(B) a případně průnik, nebo volí nezávislost či neslučitelnost. Stránka počítá průnik, sjednocení, rozdíly, doplňky, podmíněné pravděpodobnosti a pravděpodobnost právě jednoho jevu. Zobrazuje postup s dosazením a schematický Vennův diagram. Bez známého vztahu jevů uvádí přípustné meze výsledku; neplatné zadání a podmiňování nulovým jevem vysvětluje. Při statickém nasazení musí hosting přesměrovat cesty aplikace na `index.html`, aby fungovalo i přímé otevření `/probability`.
