@@ -16,10 +16,15 @@ export const METHODS = [
   { id: 'weighted', name: t('sampling.prilezitostnyVazeni'), color: '#6b86b5', description: t('sampling.presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne') }
 ] as const;
 export type Method = typeof METHODS[number]['id'];
+export const INTERVAL_METHODS = [
+  { id: 'wald', name: t('sampling.intervalWald') },
+  { id: 'wilson', name: t('sampling.intervalWilson') }
+] as const;
+export type IntervalMethod = typeof INTERVAL_METHODS[number]['id'];
 export interface Person { id: number; age: number; sex: number; education: number; phone: number; minutes: number; cell: number }
 export interface PopulationSpec { size: number; seed: string; shares: number[] }
 export interface Population { spec: PopulationSpec; people: Person[]; cells: number[][]; apple: number; minutes: number }
-export interface SamplingConfig { population: PopulationSpec; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; method: Method }
+export interface SamplingConfig { population: PopulationSpec; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; method: Method; intervalMethod?: IntervalMethod }
 export interface EstimatePair { apple: Interval; minutes: Interval }
 export interface MethodResult { estimates: EstimatePair | null; effectiveN: number | null; counts: number[]; weights: (number | null)[]; insufficient: number[] }
 export interface MomentSummary { count: number; sum: number; squaredError: number; widthSum: number; covered: number }
@@ -39,6 +44,7 @@ export function validatePopulation(spec: PopulationSpec): string[] {
 export function validateSampling(config: SamplingConfig): string[] {
   const errors = validatePopulation(config.population);
   if (!METHODS.some(method => method.id === config.method)) errors.push(t('sampling.vybertePlatnouMetoduVyberu'));
+  if (!INTERVAL_METHODS.some(method => method.id === (config.intervalMethod ?? 'wald'))) errors.push(t('sampling.vybertePlatnouMetoduIntervalu'));
   if (!Number.isInteger(config.n) || config.n < 80 || config.n > 2000 || config.n > config.population.size / 5) errors.push(t('sampling.velikostVzorkuMusiBytCeleCisloOd80'));
   if (!Number.isInteger(config.repeats) || config.repeats < 1 || config.repeats > MAX_REPEATS) errors.push(t('sampling.pocetOpakovaniMusiBytCeleCisloOd1'));
   if (!Number.isFinite(config.confidence) || config.confidence < .8 || config.confidence > .99) errors.push(t('sampling.spolehlivostMusiBytOd80Do99'));
@@ -118,7 +124,7 @@ function moments(people: Person[], variable: 'apple' | 'minutes') {
   const variance = values.reduce((sum, x) => sum + (x - mean) ** 2, 0) / (values.length - 1);
   return { mean, variance };
 }
-export function estimateSample(population: Population, ids: number[], method: Method, confidence: number): MethodResult {
+export function estimateSample(population: Population, ids: number[], method: Method, confidence: number, intervalMethod: IntervalMethod = 'wald'): MethodResult {
   if (ids.length < 2 || new Set(ids).size !== ids.length || ids.some(id => !population.people[id])) throw new Error(t('sampling.vzorekMusiObsahovatAlesponDveRuzneOsobyZ'));
   const sample = ids.map(id => population.people[id]);
   const groups = population.cells.map((_, h) => sample.filter(person => person.cell === h));
@@ -142,8 +148,17 @@ export function estimateSample(population: Population, ids: number[], method: Me
       const stats = moments(sample, variable); estimate = stats.mean;
       variance = stats.variance / sample.length * (method === 'random' ? 1 - sample.length / population.people.length : 1);
     }
-    const half = z * Math.sqrt(Math.max(0, variance));
-    const low = Math.max(0, estimate - half), high = variable === 'apple' ? Math.min(1, estimate + half) : estimate + half;
+    let low: number, high: number;
+    if (variable === 'apple' && intervalMethod === 'wilson') {
+      const effectiveN = Math.max(1, estimate * (1 - estimate) / Math.max(variance, Number.EPSILON));
+      const z2 = z ** 2, denominator = 1 + z2 / effectiveN;
+      const center = (estimate + z2 / (2 * effectiveN)) / denominator;
+      const margin = z * Math.sqrt(estimate * (1 - estimate) / effectiveN + z2 / (4 * effectiveN ** 2)) / denominator;
+      low = Math.max(0, center - margin); high = Math.min(1, center + margin);
+    } else {
+      const half = z * Math.sqrt(Math.max(0, variance));
+      low = Math.max(0, estimate - half); high = variable === 'apple' ? Math.min(1, estimate + half) : estimate + half;
+    }
     return { estimate, low, high, outside: isOutside(population[variable], low, high) };
   };
   const squaredWeights = grouped ? counts.reduce((sum, count, h) => sum + count * weights[h]! ** 2, 0) : sample.length;
@@ -171,18 +186,20 @@ export function compareOnce(population: Population, config: SamplingConfig, iter
   const stratifiedRandom = seededRandom(`${config.seed}:stratified:${iteration}`);
   const stratified = population.cells.flatMap((cell, h) => randomIndices(cell.length, allocation[h], stratifiedRandom).map(i => cell[i]));
   const convenience = convenienceIndices(cdf, config.n, seededRandom(`${config.seed}:convenience:${iteration}`));
-  return { random: estimateSample(population, random, 'random', config.confidence), stratified: estimateSample(population, stratified, 'stratified', config.confidence), convenience: estimateSample(population, convenience, 'convenience', config.confidence), weighted: estimateSample(population, convenience, 'weighted', config.confidence) };
+  const intervalMethod = config.intervalMethod ?? 'wald';
+  return { random: estimateSample(population, random, 'random', config.confidence, intervalMethod), stratified: estimateSample(population, stratified, 'stratified', config.confidence, intervalMethod), convenience: estimateSample(population, convenience, 'convenience', config.confidence, intervalMethod), weighted: estimateSample(population, convenience, 'weighted', config.confidence, intervalMethod) };
 }
 
 export function simulateOnce(population: Population, config: SamplingConfig, iteration: number, cdf: number[], allocation: number[]): MethodResult {
-  if (config.method === 'random') return estimateSample(population, randomIndices(population.people.length, config.n, seededRandom(`${config.seed}:random:${iteration}`)), 'random', config.confidence);
+  const intervalMethod = config.intervalMethod ?? 'wald';
+  if (config.method === 'random') return estimateSample(population, randomIndices(population.people.length, config.n, seededRandom(`${config.seed}:random:${iteration}`)), 'random', config.confidence, intervalMethod);
   if (config.method === 'stratified') {
     const random = seededRandom(`${config.seed}:stratified:${iteration}`);
     const ids = population.cells.flatMap((cell, h) => randomIndices(cell.length, allocation[h], random).map(i => cell[i]));
-    return estimateSample(population, ids, 'stratified', config.confidence);
+    return estimateSample(population, ids, 'stratified', config.confidence, intervalMethod);
   }
   const ids = convenienceIndices(cdf, config.n, seededRandom(`${config.seed}:convenience:${iteration}`));
-  return estimateSample(population, ids, config.method, config.confidence);
+  return estimateSample(population, ids, config.method, config.confidence, intervalMethod);
 }
 
 export function samplingConvergence(history: SamplingIteration[], variable: 'apple' | 'minutes'): { x: number; y: number }[] {

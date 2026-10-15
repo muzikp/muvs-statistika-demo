@@ -2,7 +2,7 @@
   import { t } from '../lib/texts';
 
   import { onMount } from 'svelte';
-  import { MAX_POPULATION, MAX_REPEATS, AGE_GROUPS, SEXES, EDUCATION, PHONES, DEFAULT_SHARES, METHODS, createSummary, validatePopulation, validateSampling, samplingConvergence, type Method, type Population, type PopulationSpec, type SamplingConfig, type SamplingMessage, type MomentSummary, type SamplingIteration } from '../lib/sampling';
+  import { MAX_POPULATION, MAX_REPEATS, AGE_GROUPS, SEXES, EDUCATION, PHONES, DEFAULT_SHARES, METHODS, INTERVAL_METHODS, createSummary, validatePopulation, validateSampling, samplingConvergence, type Method, type IntervalMethod, type Population, type PopulationSpec, type SamplingConfig, type SamplingMessage, type MomentSummary, type SamplingIteration } from '../lib/sampling';
   import { number, percent } from '../lib/format';
   import Plot from './Plot.svelte';
   import Help from './Help.svelte';
@@ -22,7 +22,7 @@
   let error = $state(''), completed = $state(0), summary = $state.raw(createSummary().random);
   let history = $state.raw<SamplingIteration[]>([]);
   let runConfig = $state.raw<SamplingConfig | null>(null);
-  let selectedMethod = $state<Method>('random'), speed = $state(4);
+  let selectedMethod = $state<Method>('random'), intervalMethod = $state<IntervalMethod>('wald'), speed = $state(4);
   let showForest = $state(true);
   let preferencesLoaded = $state(false);
   let worker: Worker | null = null;
@@ -78,7 +78,7 @@
   }
   function start() {
     if (generating || !populationReady || pending || busy) return;
-    const config: SamplingConfig = { population: population.spec, n: Number(n), repeats: Number(repeats), confidence: Number(confidence) / 100, seed, demographicBias: Number(demographicBias), outcomeBias: Number(outcomeBias), method: selectedMethod };
+    const config: SamplingConfig = { population: population.spec, n: Number(n), repeats: Number(repeats), confidence: Number(confidence) / 100, seed, demographicBias: Number(demographicBias), outcomeBias: Number(outcomeBias), method: selectedMethod, intervalMethod };
     const errors = validateSampling(config);
     if (errors.length) { error = errors[0]; return; }
     worker?.terminate(); error = ''; completed = 0; summary = createSummary()[selectedMethod]; history = []; runConfig = config; status = 'running';
@@ -102,10 +102,10 @@
   function setSpeed(value: number) { speed = value; if (busy) worker?.postMessage({ type: 'speed', speed }); }
   $effect(() => {
     if (!preferencesLoaded) return;
-    savePreferences('simulator', { populationSize, populationSeed, shares, n, repeats, confidence, seed, demographicBias, outcomeBias, selectedMethod, speed, showForest });
+    savePreferences('simulator', { populationSize, populationSeed, shares, n, repeats, confidence, seed, demographicBias, outcomeBias, selectedMethod, intervalMethod, speed, showForest });
   });
   onMount(() => {
-    const saved = loadPreferences<Partial<{ populationSize: number; populationSeed: string; shares: number[]; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; selectedMethod: Method; speed: number; showForest: boolean }>>('simulator', {});
+    const saved = loadPreferences<Partial<{ populationSize: number; populationSeed: string; shares: number[]; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; selectedMethod: Method; intervalMethod: IntervalMethod; speed: number; showForest: boolean }>>('simulator', {});
     if (Number.isFinite(saved.populationSize)) populationSize = saved.populationSize!;
     if (typeof saved.populationSeed === 'string') populationSeed = saved.populationSeed;
     if (Array.isArray(saved.shares) && saved.shares.length === shares.length && saved.shares.every(value => Number.isFinite(value))) shares = saved.shares;
@@ -116,6 +116,7 @@
     if (Number.isFinite(saved.demographicBias)) demographicBias = saved.demographicBias!;
     if (Number.isFinite(saved.outcomeBias)) outcomeBias = saved.outcomeBias!;
     if (saved.selectedMethod && METHODS.some(method => method.id === saved.selectedMethod)) selectedMethod = saved.selectedMethod;
+    if (saved.intervalMethod && INTERVAL_METHODS.some(method => method.id === saved.intervalMethod)) intervalMethod = saved.intervalMethod;
     if (Number.isFinite(saved.speed)) speed = saved.speed!;
     if (typeof saved.showForest === 'boolean') showForest = saved.showForest;
     preferencesLoaded = true;
@@ -167,6 +168,7 @@
       <section class="sampling-card">
         <p class="card-kicker">{t('simulator.krok02Vybery')}<Help topic="samplingStep" /></p><h3>{t('simulator.jakBudemeLidiVybirat')}</h3>
         <label>{t('simulator.metodaVyberu')}<Help topic="method" /><select disabled={busy || generating} bind:value={selectedMethod}>{#each METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
+        <label>{t('simulator.metodaIntervalu')}<Help topic="intervalMethod" /><select disabled={busy || generating} bind:value={intervalMethod}>{#each INTERVAL_METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
         <p class="sampling-note">{selected.description}</p>
         <div class="sampling-fields"><label>{t('simulator.velikostKazdehoVzorkuN')}<Help topic="sampleSize" /><input disabled={busy || generating} type="number" min="80" max="2000" step="20" bind:value={n} /></label><label>{t('simulator.pocetOpakovani')}<Help topic="repetitions" /><input disabled={busy || generating} type="number" min="1" max={MAX_REPEATS} step="10" bind:value={repeats} /></label><label>{t('simulator.spolehlivost')}<Help topic="confidence" /><input disabled={busy || generating} type="number" min="80" max="99" step="1" bind:value={confidence} /></label><label>{t('simulator.seedVyberu')}<Help topic="sampleSeed" /><input disabled={busy || generating} bind:value={seed} /></label></div>
         {#if nonprobability}
