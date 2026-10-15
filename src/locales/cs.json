@@ -25,8 +25,8 @@
     "previewStep": "ŽIVÁ UKÁZKA · JEDEN VÝBĚR",
     "previewSample": "Ukázkový výběr",
     "previewDifference": "Odhad B − A v ukázce",
-    "previewNote": "Měňte nastavení nahoře nebo velikosti vzorků zde. Graf, p-hodnota, interval a srovnání s populací se automaticky přepočítají pro jeden ukázkový výběr. Opakovaná simulace níže tento graf nemění.",
-    "autoPopulationNote": "Po změně nastavení se populace i ukázkový výběr automaticky přepočítají. Při změně samotného testu nebo velikosti vzorků zůstává vytvořená populace stejná.",
+    "previewNote": "Po vytvoření populací měňte velikosti vzorků, α nebo hypotézy. Grafy, p-hodnota a interval se průběžně přepočítají pro jeden náhodný výběr z každé skupiny.",
+    "manualPopulationNote": "Parametry populace se použijí až po stisku tlačítka „Vytvořit populaci“. Velikosti vzorků a nastavení testu pak můžete měnit bez nového generování.",
     "previewPending": "Přepočítávám ukázku podle nového nastavení…",
     "newDraw": "Vylosovat jiný výběr",
     "previewComparisonNote": "Srovnáváme jediný ukázkový výběr se skutečnou populací. Kladná odchylka znamená nadhodnocení. Tyto hodnoty se mění jen při úpravě nastavení nebo vylosování jiného výběru; do opakované simulace se nezapočítávají.",
@@ -72,14 +72,20 @@
     "glyph": "H₀ / H₁",
     "pSmall": "< 0,000001",
     "threeExperiments": "03 dostupné experimenty",
+    "randomSampling": "Náhodný výběr bez vracení",
+    "populationDirty": "Parametry populace byly změněny. Výsledky zatím patří poslední vytvořené populaci. Změny použijete tlačítkem Vytvořit populaci.",
+    "populationNeeded": "Nejprve nastavte obě skupiny a vytvořte populace.",
+    "populationReady": "Obě populace jsou připravené pro výběry a testování.",
+    "xlsxPopulations": "Populace A a B",
+    "xlsxPopulationMean": "Skutečný průměr (min)",
+    "xlsxPopulationSd": "Skutečná SD (min)",
     "populationStep": "KROK 01 · DVĚ POPULACE",
     "populationTitle": "Kdo řeší úlohu metodou A a B?",
-    "populationNote": "Syntetické časy v minutách. Věk a pohlaví souvisejí s časem řešení. Každá skupina má vlastní populaci; oba vzorky jsou nezávislé.",
+    "populationNote": "Syntetické časy řešení v minutách pro dvě nezávislé skupiny A a B. Každá má vlastní průměr a variabilitu.",
     "size": "Počet lidí v každé skupině",
     "meanA": "Průměr skupiny A (min)",
-    "spreadA": "Variabilita A (výchozí SD, min)",
-    "spreadB": "Variabilita B (výchozí SD, min)",
-    "composition": "Upravit složení obou skupin · věk × pohlaví",
+    "spreadA": "Variabilita A (SD generátoru, min)",
+    "spreadB": "Variabilita B (SD generátoru, min)",
     "generating": "Vytvářím dvě populace…",
     "generated": "Vytvořeno {completed} / {total} osob",
     "groupA": "Skupina A",
@@ -99,9 +105,6 @@
     "nullTrue": "Ve vytvořené populaci H₀ platí.",
     "nullFalse": "Ve vytvořené populaci H₀ neplatí.",
     "boundaryNote": "U jednostranného testu je α referencí jen na hranici H₀. Uvnitř H₀ může být četnost zamítnutí nižší.",
-    "biasNote": "Příležitostný sběr používá pracovní aproximaci testu. P-hodnoty a intervaly nezahrnují výběrové zkreslení; vážení nemusí odstranit rozdíly uvnitř demografických skupin.",
-    "outcomeBias": "Zkreslení podle času řešení",
-    "outcomeBiasNote": "Vyšší hodnota upřednostňuje pomalejší řešitele i mezi lidmi stejného věku a pohlaví.",
     "runStep": "KROK 03 · OPAKOVANÉ TESTOVÁNÍ",
     "ready": "Každý výběr poskytne dva průměry, jeden rozdíl a jeden test.",
     "density": "Hustota",
@@ -122,7 +125,7 @@
     "decisionNote": "Nezamítnutí H₀ není důkaz její pravdivosti.",
     "details": "Výpočet aktuálního testu",
     "calculation": "Odhad B − A = {b} − {a} = {difference} min; SE = {se} min; t = ({difference} − {null}) / {se} = {statistic}; df ≈ {df}.",
-    "invalidCurrent": "Aktuální výběr neposkytl platný odhad. U vážení musí být v každé demografické skupině alespoň dvě osoby; k testu je také potřeba nenulový odhad variability.",
+    "invalidCurrent": "Aktuální výběr neposkytl platný odhad. K testu je potřeba nenulový odhad variability.",
     "results": "Co se děje při opakování?",
     "average": "Průměr odhadnutých rozdílů",
     "missed": "Intervaly mimo skutečný rozdíl",
@@ -139,19 +142,18 @@
     "forestNote": "Čárkovaná zelená = skutečný rozdíl · tečkovaná oranžová = Δ₀. Červená úsečka minula skutečnost. Rozhodnutí o H₀ a p-hodnota jsou uvedené vpravo. Šipka značí neomezenou stranu jednostranného intervalu.",
     "forestRow": "Výběr {iteration}: odhad {difference} min, interval {low} až {high}, p = {p}, {decision}",
     "exportTitle": "Export výsledků",
-    "exportNote": "XLSX zachycuje stav při kliknutí: všechny dokončené výběry, oba průměry, rozdíly, p-hodnoty, intervaly, rozhodnutí a složení a váhy obou vzorků. Nevydané odhady zůstanou označené. Nastavení i skutečné populační hodnoty jsou v samostatném listu.",
+    "exportNote": "XLSX zachycuje všechny dokončené výběry, velikosti obou vzorků, průměry, rozdíly, p-hodnoty, intervaly a rozhodnutí. Nastavení i skutečné hodnoty obou populací jsou v samostatných listech.",
     "download": "Stáhnout opakovanou simulaci · XLSX",
     "exporting": "Připravuji XLSX…",
     "exportReady": "Výsledky jsou připravené ke stažení.",
     "methodology": "Jak počítáme test?",
-    "methodologyText": "Rozdíl definujeme jako B − A. Pro nezávislé náhodné vzorky používáme Welchův test s korekcí rozptylu na konečné populace. Stratifikace počítá rozptyl po skupinách věk × pohlaví; stupně volnosti odhadujeme Satterthwaiteovou aproximací. U příležitostných a vážených vzorků jde o pracovní aproximaci bez záruky nominálního α. Intervaly používají stejné t-rozdělení a stejnou jednostrannost jako test.",
+    "methodologyText": "Rozdíl definujeme jako B − A. Z každé populace nezávisle losujeme náhodný vzorek bez vracení. Používáme Welchův test s korekcí rozptylu na konečné populace a Satterthwaiteovým odhadem stupňů volnosti. Intervaly používají stejné t-rozdělení a stejnou jednostrannost jako test.",
     "source": "Metodický podklad: NIST · dvouvýběrový t-test",
     "invalidPopulation": "Velikost každé populace musí být celé číslo od 10 000 do 1 000 000.",
     "invalidMeans": "Oba průměry musí být od 1 do 1 000 minut a obě variability od 1 do 100 minut. Vyplňte všechna čísla.",
-    "invalidShares": "Osm demografických podílů musí mít každý 2 až 60 % a součet 100 %.",
     "invalidSample": "Velikost každého vzorku musí být celé číslo od 20 do 2 000 a nejvýše pětina jeho populace.",
     "invalidTest": "α musí být od 0,1 do 20 % a testovaný rozdíl konečné číslo od −1 000 do 1 000 minut.",
-    "invalidMethod": "Vyberte platnou metodu a směr testu. Obě zkreslení musí být od 0 do 2.",
+    "invalidMethod": "Vyberte platný směr alternativní hypotézy.",
     "workerError": "Výpočet se nepodařilo dokončit. Zkuste jej znovu.",
     "xlsxResults": "Výsledky testů",
     "xlsxSettings": "Nastavení",
@@ -159,13 +161,7 @@
     "xlsxValid": "Odhad vydán",
     "xlsxOutside": "Interval mimo skutečnost",
     "xlsxReject": "Zamítnuto H₀",
-    "xlsxCountsA": "Počty věk × pohlaví A",
-    "xlsxCountsB": "Počty věk × pohlaví B",
-    "xlsxWeightsA": "Váhy věk × pohlaví A",
-    "xlsxWeightsB": "Váhy věk × pohlaví B",
-    "xlsxMissing": "Nedostatečné skupiny A / B",
     "xlsxBoundsNote": "Prázdná mez při platném odhadu značí neomezenou stranu jednostranného intervalu; při nevydaném odhadu jsou obě meze prázdné.",
-    "xlsxOrder": "Pořadí počtů a vah: {groups}. Hodnoty odděluje středník.",
     "xlsxLow": "CI dolní mez (min)",
     "xlsxHigh": "CI horní mez (min)",
     "actualSdA": "Skutečná populační SD A (min)",
@@ -430,14 +426,20 @@
     },
     "hypMeanGraph": {
       "title": "Co znamenají modrá a červená křivka",
-      "paragraphs": ["Každá barva patří jedné skupině: A je modrá, B červená. Plná svislá čára ukazuje známou skutečnost v celé populaci. Přerušovaná svislá čára ukazuje, jaký průměr jsme odhadli z právě vybraných lidí. Jejich vzdálenost je chyba tohoto odhadu.", "Přerušovaná zvonová křivka ukazuje přibližnou nejistotu odhadu průměru. Vykreslujeme normální aproximaci se středem ve výběrovém odhadu a směrodatnou odchylkou rovnou SE dané skupiny. Je to odhad tvaru výběrového rozdělení posunutý k aktuálnímu odhadu, nikoli přesné rozdělení generované populace.", "Při zvětšení vzorku SE obvykle klesá: zvon se zužuje a roste do výšky, protože plocha pod ním zůstává přibližně 1. Samotný odhad se při přidání lidí může posunout oběma směry. Při stratifikaci a vážení používáme SE odpovídající zvolené metodě; příležitostný sběr může mít i úzkou křivku kolem zkresleného odhadu.", "Vedlejší graf má jinou osu: standardizovanou statistiku t při H₀. Z něj počítáme p-hodnotu. Překryv modré a červené křivky není p-hodnota ani β. Oba grafy pracují se stejným jediným výběrem a opakovaná simulace je nepřepisuje.", "U malých vzorků nebo silně zešikmených časů může být normální aproximace nejistoty hrubá. Vlastní Welchův test a interval rozdílu nadále používají Studentovo t-rozdělení a odhadnuté stupně volnosti."]
+      "paragraphs": [
+        "Každá barva patří jedné skupině: A je modrá, B červená. Plná svislá čára ukazuje známou skutečnost v celé populaci. Přerušovaná svislá čára ukazuje, jaký průměr jsme odhadli z právě vybraných lidí. Jejich vzdálenost je chyba tohoto odhadu.",
+        "Přerušovaná zvonová křivka ukazuje přibližnou nejistotu odhadu průměru. Vykreslujeme normální aproximaci se středem ve výběrovém odhadu a směrodatnou odchylkou rovnou SE dané skupiny. Je to odhad tvaru výběrového rozdělení posunutý k aktuálnímu odhadu, nikoli přesné rozdělení generované populace.",
+        "Při zvětšení vzorku SE obvykle klesá: zvon se zužuje a roste do výšky, protože plocha pod ním zůstává přibližně 1. Samotný odhad se při přidání lidí může posunout oběma směry.",
+        "Vedlejší graf má jinou osu: standardizovanou statistiku t při H₀. Z něj počítáme p-hodnotu. Překryv modré a červené křivky není p-hodnota ani β. Oba grafy pracují se stejným jediným výběrem a opakovaná simulace je nepřepisuje.",
+        "U malých vzorků nebo silně zešikmených časů může být normální aproximace nejistoty hrubá. Vlastní Welchův test a interval rozdílu nadále používají Studentovo t-rozdělení a odhadnuté stupně volnosti."
+      ]
     },
     "hypPreview": {
       "title": "Jeden výběr, který můžete zkoumat v klidu",
       "paragraphs": [
-        "Tento panel ukazuje jeden konkrétní průzkum obou skupin. Nemusíte spouštět žádná opakování. Po změně velikosti vzorků, průměrů, variability, metody výběru, α nebo směru testu se výsledek automaticky přepočítá.",
+        "Nejprve vytvořte obě populace. Panel poté ukazuje jeden náhodný výběr z každé skupiny. Změny velikostí vzorků, α, Δ₀ a směru testu se projeví průběžně; populační parametry použijete až tlačítkem „Vytvořit populaci“.",
         "Velikosti vzorků nA a nB zadáváte do číselných polí u grafů; jsou propojené se stejnými vstupy nahoře. Můžete tedy zvětšovat každou skupinu zvlášť a sledovat, co se děje s nejistotou, statistikou t a p-hodnotou. Větší vzorek obvykle zmenšuje nejistotu; výběrový průměr a p se mohou přitom měnit oběma směry.",
-        "Při stejném seedu a stejném pořadí losování používá větší prostý náhodný vzorek stejné lidi jako menší a přidává další. U stratifikace losujeme stabilním pořadím uvnitř každé demografické skupiny; přidělení počtů mezi skupiny se může změnit. Změna α, Δ₀ nebo směru testu samotné vybrané lidi nemění.",
+        "Při stejném seedu a pořadí losování větší vzorek ponechá lidi z menšího vzorku a přidá další. Změna α, Δ₀ nebo směru testu vybrané lidi nemění.",
         "Chcete-li vidět jiný náhodný průzkum při stejném nastavení, stiskněte „Vylosovat jiný výběr“. Opakovaná simulace je oddělená aktivita: její průběh zdejší výběr ani graf nepřepisuje. Ukázkový výběr si můžete samostatně stáhnout do XLSX."
       ]
     },
@@ -445,7 +447,7 @@
       "title": "Opakování jsou samostatný experiment s chybovostí",
       "paragraphs": [
         "Živá ukázka odpovídá na otázku, co udělá jeden test při zvoleném nastavení. Simulace R výběrů odpovídá na jinou otázku: jak často by takový postup při mnoha nových průzkumech udělal chybu.",
-        "Při spuštění si simulace uloží současné populační průměry, obě velikosti vzorků, metodu, α i ostatní parametry. Tyto hodnoty během běhu neměníme. Můžete přitom dál upravovat živou ukázku; její změny do spuštěného ani dokončeného běhu nevstupují.",
+        "Při spuštění si simulace uloží současné populační průměry, obě velikosti vzorků, α i ostatní parametry. Tyto hodnoty během běhu neměníme. Můžete přitom dál upravovat živou ukázku; její změny do spuštěného ani dokončeného běhu nevstupují.",
         "Konvergence, les, průměry odhadů a export této části patří pouze tomuto běhu. Pokud jste nastavení mezitím změnili, stránka na rozdíl upozorní. Nové nastavení otestujete spuštěním nové simulace.",
         "Lze spustit až 10 000 opakování. Více opakování zpřesňuje odhad četnosti chyb, nikoli jeden průzkum. Pro rychlý běh nastavte rychlost bez animace a případně vypněte les; historii i možnost exportu zachováme."
       ]
@@ -455,7 +457,7 @@
       "paragraphs": [
         "V běžném průzkumu skutečné průměry celé populace neznáme. Tady jsme všechny lidi sami vygenerovali, a proto je známe. Můžeme přímo ukázat, o kolik se náš výběr mýlí.",
         "Tabulka živé ukázky porovnává její jediný výběr s populací: průměr A, průměr B, rozdíl B − A a Cohenovo d. V oddělené části opakované simulace navíc uvidíte poslední výběr tohoto běhu a průměr všech jeho platných odhadů. Odchylka nula znamená shodu s příslušnou populací.",
-        "Více opakování zpřesňuje pohled na chování metody, ne jednotlivý průzkum. Systematicky zkreslená metoda může mít i po mnoha opakováních průměr odhadů daleko od populace. Při vážení porovnáváme převážené odhady. Nevydaný odhad se zobrazí pomlčkou a do průměru nevstupuje."
+        "Více opakování zpřesňuje pohled na chování metody, ne jednotlivý průzkum. Nevydaný odhad se zobrazí pomlčkou a do průměru nevstupuje."
       ]
     },
     "hypEffect": {
@@ -463,7 +465,7 @@
       "paragraphs": [
         "Rozdíl 5 minut může být výrazný, když se lidé mezi sebou liší jen málo, a méně výrazný při velké variabilitě. Cohenovo d rozdíl převede na jednotky společné směrodatné odchylky. Například d = 0,5 znamená rozdíl poloviny této společné SD.",
         "Zde používáme d = (průměr B − průměr A) / √((SD²_A + SD²_B) / 2). Obě skupiny mají ve standardizátoru stejnou váhu, i když mají různě velké vzorky. U stejného světa se tak populační měřítko nemění jen změnou poměru nA a nB. Jde o výslovně zvolenou variantu Cohenova d; jiné programy mohou používat SD váženou velikostmi skupin.",
-        "Populační d počítáme ze skutečných průměrů a populačních SD všech lidí. Výběrové d je odhad: používá průměry a odhad variability z daného vzorku. Při stratifikaci a vážení odhadujeme variabilitu podle populačních podílů věku a pohlaví, včetně rozdílů uvnitř skupin i mezi nimi. Jde o poststratifikovaný popisný odhad, nikoli opravu všech možných zkreslení.",
+        "Populační d používá skutečné průměry a populační SD všech lidí v A a B. Výběrové d používá průměry a výběrové SD z obou náhodných vzorků.",
         "Kladné d znamená vyšší průměr B, záporné nižší. Časy měříme v minutách, takže vyšší B znamená pomalejší řešení. d nemá jednotku minut ani procent a nezávisí na zvolené α nebo Δ₀. Pokud není žádná variabilita, standardizace není definovaná.",
         "Malá p-hodnota může doprovázet malý efekt při velkém vzorku; velký efekt může mít neprůkazné p při malém vzorku. Velikost efektu proto čtěte vedle rozdílu v minutách, intervalu a p-hodnoty. Orientační prahy velikosti efektu nenahrazují úsudek o praktickém významu.",
         "Průměr výběrových d je průměr jednotlivých standardizovaných odhadů; není to d vypočítané až z průměrných průměrů a SD. U menších vzorků může mít d malé výběrové zkreslení; zde nepoužíváme korekci Hedgesovo g."
@@ -472,25 +474,26 @@
     "hypPopulation": {
       "title": "Dvě skupiny, jejichž skutečnost známe",
       "paragraphs": [
-        "Vytvoříme dvě samostatné populace lidí, kteří řeší stejnou úlohu metodou A nebo B. Sledujeme čas v minutách. Jsou to smyšlená data pro výuku, nikoli důkaz účinnosti nějaké skutečné metody.",
-        "Časy jsou kladné a mají pravostranně zešikmené rozdělení. Věk a pohlaví s časem souvisejí. Variabilita nastavuje výchozí rozptyl generátoru; skutečnou SD po přidání demografických rozdílů ukazují populační karty.",
-        "Oba skutečné průměry kalibrujeme přesně na zadané hodnoty. Rozdíl nula proto umožňuje simulovat skutečně platnou H₀. Počet lidí platí pro každou skupinu zvlášť; maximum je milion v A a milion v B. Seed vrátí stejnou populaci při stejném nastavení."
+        "Vytvoříme dvě samostatné populace lidí, kteří řeší stejnou úlohu metodou A nebo B. Sledujeme pouze čas v minutách. Jde o smyšlená data pro výuku.",
+        "Nastavte počet lidí v každé skupině, oba průměry, variabilitu a seed. Tlačítkem „Vytvořit populaci“ použijete nastavení. Při pozdější úpravě parametrů zůstávají původní populace aktivní až do dalšího stisku tlačítka.",
+        "Časy jsou kladné a pravostranně zešikmené. SD generátoru určuje variabilitu rozdělení; skutečná SD konečné populace se může mírně lišit a je uvedena v populačních kartách.",
+        "Průměry kalibrujeme přesně na zadané hodnoty, takže stejné průměry umožňují simulovat platnou H₀. Maximum je milion lidí v každé skupině. Stejný seed a parametry vytvářejí stejná data."
       ]
     },
     "hypDifference": {
       "title": "Rozdíl vždy znamená B minus A",
       "paragraphs": [
         "Průměry A a B zadáváte přímo a nezávisle. Při A = 60 minut a B = 65 minut je skutečný rozdíl B − A = 5 minut. Kladný rozdíl znamená, že B řeší úlohu déle; záporný, že je rychlejší. Změna průměru A sama neposouvá zadaný průměr B.",
-        "Z průměrů A a B odvodíme skutečný rozdíl populace. Testovaný rozdíl Δ₀ je jiné číslo: vyjadřuje tvrzení H₀. Obvykle testujeme Δ₀ = 0, tedy shodu průměrů. Po změně nastavení se živá ukázka automaticky přepočítá.",
+        "Z průměrů A a B odvodíme skutečný rozdíl populace. Testovaný rozdíl Δ₀ je jiné číslo: vyjadřuje tvrzení H₀. Obvykle testujeme Δ₀ = 0, tedy shodu průměrů. Změna populačních průměrů se projeví až po vytvoření nových populací; změna Δ₀ se projeví ihned.",
         "Velký vzorek může odhalit i velmi malý rozdíl. Statistická významnost sama neříká, zda je rozdíl prakticky důležitý."
       ]
     },
     "hypSample": {
       "title": "Dva nezávislé vzorky",
       "paragraphs": [
-        "V každém opakování vybereme zvlášť nA lidí ze skupiny A a nB ze skupiny B. Člověk se v jednom vzorku neopakuje, ale při dalším průzkumu může být vybrán znovu. Nejde o párové měření stejných lidí před a po změně.",
-        "Větší vzorky obvykle zmenšují nejistotu rozdílu a zvyšují šanci zachytit neplatnou H₀. Welchův test dovoluje odlišné velikosti i variability skupin.",
-        "Náhodný a stratifikovaný výběr jsou pravděpodobnostní metody. Příležitostný sběr může systematicky upřednostňovat určité lidi. Vážení opravuje společné zastoupení věku a pohlaví, ale nemusí odstranit zkreslení uvnitř skupin. Při shodném seedu vybere příležitostný i vážený běh stejné osoby."
+        "Z populace A losujeme nA lidí a nezávisle z populace B dalších nB lidí. Výběr je náhodný bez vracení: člověk se v jednom vzorku neopakuje, ale v dalším opakování může být vybrán znovu.",
+        "Větší vzorky obvykle zmenšují nejistotu rozdílu a zvyšují sílu testu. Welchův test dovoluje odlišné velikosti i variability skupin. Nejde o párové měření.",
+        "Změna velikosti vzorku ani hypotéz nevyžaduje nové populace. Pro obě skupiny používáme stejný princip náhodného výběru."
       ]
     },
     "hypAlpha": {

@@ -4,7 +4,7 @@ import { cohensD, groupEstimate, createHypothesisPopulation, DEFAULT_HYPOTHESIS_
 
 const spec = { ...DEFAULT_HYPOTHESIS_SPEC, size: 10000 };
 const population = createHypothesisPopulation(spec);
-const config: HypothesisConfig = { population: spec, nA: 100, nB: 150, repeats: 10000, seed: 'hypothesis-check', alpha: .05, nullDifference: 0, alternative: 'two-sided', method: 'random', demographicBias: 1, outcomeBias: 0 };
+const config: HypothesisConfig = { population: spec, nA: 100, nB: 150, repeats: 10000, seed: 'hypothesis-check', alpha: .05, nullDifference: 0, alternative: 'two-sided' };
 
 describe('Student distribution and Welch test', () => {
   it('standardizes B minus A consistently, preserving sign and units and rejecting undefined effects', () => {
@@ -30,7 +30,7 @@ describe('Student distribution and Welch test', () => {
     expect(studentSurvival(100, 100)).toBeGreaterThan(0);
   });
   it('computes unequal-variance df and coherent intervals for all alternatives', () => {
-    const group = (mean: number, variance: number, n: number): GroupEstimate => ({ mean, variance, dfDenominator: variance ** 2 / (n - 1), sd: Math.sqrt(variance * n), effectSd: Math.sqrt(variance * n), counts: [], weights: [] });
+    const group = (mean: number, variance: number, n: number): GroupEstimate => ({ mean, variance, dfDenominator: variance ** 2 / (n - 1), sd: Math.sqrt(variance * n), effectSd: Math.sqrt(variance * n) });
     const a = group(10, .4, 10), b = group(12, .45, 20);
     for (const alternative of ['two-sided', 'greater', 'less'] as const) {
       const result = welchResult(a, b, { ...config, alternative }, 2)!;
@@ -50,7 +50,7 @@ describe('Student distribution and Welch test', () => {
 });
 
 describe('Two finite populations and repeated hypothesis tests', () => {
-  it('uses reproducible positive times, exact chosen means, demographic targets and real progress', () => {
+  it('uses reproducible positive times, exact chosen means and real progress', () => {
     const progress: number[] = [];
     const repeated = createHypothesisPopulation({ ...spec, meanB: spec.meanA + 3.5 }, (completed, total) => { expect(total).toBe(20000); progress.push(completed); });
     expect(repeated.groups[0]).toEqual(population.groups[0]);
@@ -62,57 +62,51 @@ describe('Two finite populations and repeated hypothesis tests', () => {
       expect(values.every(value => value > 0)).toBe(true);
     });
     expect(progress[0]).toBe(0); expect(progress.at(-1)).toBe(20000); expect(progress).toContain(1000);
-    expect(repeated.cells.map(cell => cell.length)).toEqual(population.summary.counts);
+    expect(repeated.groups.map(group => group.length)).toEqual([spec.size, spec.size]);
   });
-  it('supports all selection methods and reuses the same convenience samples for weighting', () => {
-    const unweighted = hypothesisSampler(population, { ...config, method: 'convenience' })(9);
-    const weighted = hypothesisSampler(population, { ...config, method: 'weighted' })(9);
-    expect(weighted.ids).toEqual(unweighted.ids);
-    expect(weighted.entry.result).not.toBeNull();
-    expect(weighted.entry.result!.weights[0]).not.toEqual(unweighted.entry.result!.weights[0]);
-    for (const method of ['random', 'stratified', 'convenience', 'weighted'] as const) {
-      const draw = hypothesisSampler(population, { ...config, method })(0);
-      expect(draw.ids.map(ids => new Set(ids).size)).toEqual([config.nA, config.nB]);
-      expect(draw.entry.result!.p).toBeGreaterThanOrEqual(0);
-      expect(draw.entry.result!.p).toBeLessThanOrEqual(1);
-    }
+  it('draws independent samples without replacement and reproduces the selected people', () => {
+    const draw = hypothesisSampler(population, config)(0);
+    expect(draw.ids.map(ids => new Set(ids).size)).toEqual([config.nA, config.nB]);
+    expect(draw.ids[0]).not.toEqual(draw.ids[1].slice(0, config.nA));
+    expect(hypothesisSampler(population, config)(0)).toEqual(draw);
+    expect(draw.entry.result!.p).toBeGreaterThanOrEqual(0);
+    expect(draw.entry.result!.p).toBeLessThanOrEqual(1);
   });
   it('keeps preview draws nested as sample size grows and holds people fixed when only the test changes', () => {
-    for (const method of ['random', 'convenience', 'weighted'] as const) {
-      const initial = hypothesisSampler(population, { ...config, method }, true)(3);
-      const enlarged = hypothesisSampler(population, { ...config, method, nA: 200, nB: 250 }, true)(3);
+    {
+      const initial = hypothesisSampler(population, config, true)(3);
+      const enlarged = hypothesisSampler(population, { ...config, nA: 200, nB: 250 }, true)(3);
       expect(enlarged.ids[0].slice(0, config.nA)).toEqual(initial.ids[0]);
       expect(enlarged.ids[1].slice(0, config.nB)).toEqual(initial.ids[1]);
-      const differentTest = hypothesisSampler(population, { ...config, method, alpha: .01, alternative: 'greater', nullDifference: 3 }, true)(3);
+      const differentTest = hypothesisSampler(population, { ...config, alpha: .01, alternative: 'greater', nullDifference: 3 }, true)(3);
       expect(differentTest.ids).toEqual(initial.ids);
       expect(differentTest.entry.result!.cohensD).toBe(initial.entry.result!.cohensD);
       expect(differentTest.entry.result!.p).not.toBe(initial.entry.result!.p);
-      expect(hypothesisSampler(population, { ...config, method }, true)(4).ids).not.toEqual(initial.ids);
+      expect(hypothesisSampler(population, config, true)(4).ids).not.toEqual(initial.ids);
     }
     const changed = createHypothesisPopulation({ ...spec, meanA: 70, meanB: 65 });
     expect(changed.summary.groups.map(group => group.mean)).toEqual([70, 65]);
     expect(changed.summary.truth).toBe(-5);
   });
-  it('standardizes weighted means with marginal variation including between-demographic differences', () => {
-    const ids = population.cells.flatMap((cell, h) => cell.slice(0, h + 3));
-    const estimate = groupEstimate(population, 0, ids, 'weighted')!;
-    const cells = population.cells.map((_, h) => ids.filter(id => population.cellCodes[id] === h).map(id => population.groups[0][id]));
-    const means = cells.map(values => values.reduce((sum, value) => sum + value, 0) / values.length);
-    const expectedMean = means.reduce((sum, mean, h) => sum + population.summary.counts[h] / spec.size * mean, 0);
-    const expectedVariance = cells.reduce((sum, values, h) => sum + population.summary.counts[h] / spec.size * (values.reduce((sum, value) => sum + (value - means[h]) ** 2, 0) / (values.length - 1) + (means[h] - expectedMean) ** 2), 0);
-    expect(estimate.mean).toBeCloseTo(expectedMean, 12);
-    expect(estimate.effectSd).toBeCloseTo(Math.sqrt(expectedVariance), 12);
-    const result = hypothesisSampler(population, { ...config, method: 'weighted' })(0).entry.result!;
-    expect(result.cohensD).toBe(cohensD(result.meanA, result.meanB, result.effectSdA, result.effectSdB));
-    const changedTest = welchResult(estimate, { ...estimate, mean: estimate.mean + 5 }, { ...config, alpha: .01, nullDifference: 99 }, 0)!;
-    expect(changedTest.cohensD).toBeCloseTo(5 / estimate.effectSd, 12);
+  it('estimates ordinary sample variance and applies the finite-population correction to SE', () => {
+    const ids = Array.from({ length: 80 }, (_, i) => i * 7);
+    const estimate = groupEstimate(population, 0, ids)!;
+    const values = ids.map(id => population.groups[0][id]);
+    const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+    const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1);
+    expect(estimate.mean).toBeCloseTo(mean, 12);
+    expect(estimate.effectSd).toBeCloseTo(Math.sqrt(variance), 12);
+    expect(estimate.variance).toBeCloseTo(variance / values.length * (1 - values.length / spec.size), 12);
+    expect(groupEstimate(population, 0, [0])).toBeNull();
+    const result = hypothesisSampler(population, config)(0).entry.result!;
+    expect(result.cohensD).toBe(cohensD(result.meanA, result.meanB, result.sdA, result.sdB));
   });
   it('classifies composite one-sided nulls and excludes invalid tests from convergence', () => {
     expect(hypothesisNullTrue(-3, { alternative: 'greater', nullDifference: 0 })).toBe(true);
     expect(hypothesisNullTrue(3, { alternative: 'greater', nullDifference: 0 })).toBe(false);
     expect(hypothesisNullTrue(3, { alternative: 'less', nullDifference: 0 })).toBe(true);
     const entry = hypothesisSampler(population, config)(0).entry;
-    const invalid = { iteration: 2, result: null, insufficient: [[0], []] };
+    const invalid = { iteration: 2, result: null };
     const summary = hypothesisConvergence([entry, invalid], config);
     expect(summary.valid).toBe(1); expect(summary.skipped).toBe(1);
     expect(summary.averageA).toBe(entry.result!.meanA); expect(summary.averageB).toBe(entry.result!.meanB);
@@ -136,12 +130,13 @@ describe('Two finite populations and repeated hypothesis tests', () => {
     const power = hypothesisConvergence(Array.from({ length: 300 }, (_, i) => alternativeSampler(i).entry), alternativeConfig);
     expect(power.rejected / power.valid).toBeGreaterThan(.9);
   });
-  it('validates limits and handles undersampled demographic cells', () => {
+  it('validates limits and supports the smallest independent samples', () => {
     expect(validateHypothesis(config)).toEqual([]);
     expect(validateHypothesis({ ...config, nA: 2000, nB: 2000 })).toEqual([]);
     for (const patch of [{ nA: 19 }, { nB: NaN }, { repeats: 10001 }, { alpha: 0 }, { nullDifference: Infinity }]) expect(validateHypothesis({ ...config, ...patch }).length).toBeGreaterThan(0);
-    const scarce = hypothesisSampler(population, { ...config, nA: 20, nB: 20, method: 'weighted', demographicBias: 2 })(0).entry;
-    expect(scarce.result).toBeNull(); expect(scarce.insufficient.flat().length).toBeGreaterThan(0);
+    const small = hypothesisSampler(population, { ...config, nA: 20, nB: 20 })(0).entry;
+    expect(small.result).not.toBeNull();
+    expect(validateHypothesis({ ...config, population: { ...spec, size: NaN } })).not.toEqual([]);
     expect(density([1, 1, 1], [0, 2], 0).every(point => Number.isFinite(point.y))).toBe(true);
   });
 });

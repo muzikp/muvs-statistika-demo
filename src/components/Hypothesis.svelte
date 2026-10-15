@@ -2,8 +2,8 @@
   import { onMount, untrack } from 'svelte';
   import { t } from '../lib/texts';
   import { number, percent } from '../lib/format';
-  import { AGE_GROUPS, SEXES, METHODS, MAX_POPULATION, MAX_REPEATS, type Method } from '../lib/sampling';
-  import { DEFAULT_HYPOTHESIS_SPEC, hypothesisConvergence, hypothesisNullTrue, populationDifference, validateHypothesis, type Alternative, type HypothesisConfig, type HypothesisIteration, type HypothesisMessage, type HypothesisPopulationSummary } from '../lib/hypothesis';
+  import { MAX_POPULATION, MAX_REPEATS } from '../lib/sampling';
+  import { DEFAULT_HYPOTHESIS_SPEC, hypothesisConvergence, hypothesisNullTrue, populationDifference, validateHypothesis, validateHypothesisPopulation, type Alternative, type HypothesisConfig, type HypothesisIteration, type HypothesisMessage, type HypothesisPopulationSummary } from '../lib/hypothesis';
   import { studentDensity } from '../lib/student';
   import { hypothesisMeanCurves } from '../lib/hypothesis-plots';
   import Help from './Help.svelte';
@@ -12,12 +12,15 @@
   import HypothesisForest from './HypothesisForest.svelte';
   import HypothesisComparison from './HypothesisComparison.svelte';
 
-  let spec = $state({ ...DEFAULT_HYPOTHESIS_SPEC, shares: [...DEFAULT_HYPOTHESIS_SPEC.shares] });
+  let spec = $state({ ...DEFAULT_HYPOTHESIS_SPEC });
+  let activeSpec = $state<typeof DEFAULT_HYPOTHESIS_SPEC | null>(null);
+  let readyPopulation = $state.raw<HypothesisPopulationSummary | null>(null);
+  const populationDirty = $derived(activeSpec !== null && JSON.stringify(spec) !== JSON.stringify(activeSpec));
   let nA = $state(100), nB = $state(100), repeats = $state(200), alpha = $state(5), nullDifference = $state(0), seed = $state('testy-2026');
-  let method = $state<Method>('random'), alternative = $state<Alternative>('two-sided'), demographicBias = $state(1), outcomeBias = $state(0);
+  let alternative = $state<Alternative>('two-sided');
   let draw = $state(0), speed = $state(4), showForest = $state(true);
   let preview = $state.raw<{ config: HypothesisConfig; population: HypothesisPopulationSummary; entry: HypothesisIteration } | null>(null);
-  let previewPending = $state(true), previewError = $state(''), generated = $state(0), generating = $state(false);
+  let previewPending = $state(false), previewError = $state(''), generated = $state(0), generating = $state(false);
   let previewWorker: Worker | null = null, previewRequest = 0, previewTimer: ReturnType<typeof setTimeout> | undefined;
   let inFlightPreview: number | null = null;
   let queuedPreview: { config: HypothesisConfig; draw: number; requestId: number; due: number } | null = null;
@@ -26,11 +29,9 @@
   let simulationWorker: Worker | null = null, runGenerated = $state(0), runGenerating = $state(false), error = $state('');
   let exportWorker: Worker | null = null, exporting = $state(false), exportProgress = $state(0), exportTotal = $state(0), exportUrl = $state(''), exportedLabel = $state('');
   const busy = $derived(status === 'running' || status === 'paused');
-  const totalShares = $derived(spec.shares.reduce((sum, share) => sum + Number(share), 0));
-  const nonprobability = $derived(method === 'weighted' || method === 'convenience');
   const nullSliderLimit = $derived(Math.min(1000, Math.max(50, Math.ceil(Math.abs(nullDifference || 0) / 50) * 50)));
   const currentConfig = $derived(preview?.config ?? null);
-  const population = $derived(preview?.population ?? null);
+  const population = $derived(preview?.population ?? readyPopulation);
   const last = $derived(preview?.entry.result ?? null);
   const convergence = $derived(run ? hypothesisConvergence(history, run) : null);
   const nullTrue = $derived(run ? hypothesisNullTrue(populationDifference(run.population), run) : false);
@@ -59,6 +60,10 @@
       if (job !== previewWorker || data.requestId !== inFlightPreview) return;
       const latest = data.requestId === previewRequest;
       if (data.type === 'population-progress' && latest) { generated = data.completed; generating = true; }
+      else if (data.type === 'population-ready' && latest) {
+        inFlightPreview = null; generating = false; readyPopulation = data.population;
+        activeSpec = snapshot(data.population.spec);
+      }
       else if (data.type === 'preview-ready') {
         inFlightPreview = null;
         // During a drag, show finished intermediate sizes instead of waiting
@@ -95,14 +100,19 @@
     flushPreview();
   }
   $effect(() => {
-    const config: HypothesisConfig = { population: snapshot(spec), nA, nB, repeats: 1, seed, alpha: alpha / 100, nullDifference, alternative, method, demographicBias, outcomeBias };
+    if (!activeSpec) return;
+    const config: HypothesisConfig = { population: snapshot(activeSpec), nA, nB, repeats: 1, seed, alpha: alpha / 100, nullDifference, alternative };
     const selectedDraw = draw;
     untrack(() => schedulePreview(config, selectedDraw));
   });
-  function normalize() {
-    if (!Number.isFinite(totalShares) || totalShares <= 0) return;
-    spec.shares = spec.shares.map(value => Math.round(Number(value) / totalShares * 10000) / 100);
-    spec.shares[7] = Math.round((100 - spec.shares.slice(0, 7).reduce((sum, value) => sum + value, 0)) * 100) / 100;
+  function generatePopulation() {
+    if (generating || busy) return;
+    const errors = validateHypothesisPopulation(spec);
+    if (errors.length) { previewError = errors[0]; return; }
+    clearTimeout(previewTimer); previewWorker?.terminate(); previewWorker = null;
+    queuedPreview = null; inFlightPreview = ++previewRequest;
+    preview = null; readyPopulation = null; activeSpec = null; previewError = ''; generated = 0; generating = true;
+    (previewWorker ?? connectPreview()).postMessage({ type: 'generate', spec: snapshot(spec), requestId: previewRequest });
   }
   function start() {
     if (busy || previewPending || !preview) return;
@@ -147,20 +157,21 @@
   <div class="setup-grid">
     <section class="hyp-card">
       <p class="card-kicker">{t('hypothesis.populationStep')}<Help topic="hypPopulation" /></p><h2>{t('hypothesis.populationTitle')}</h2><p class="note">{t('hypothesis.populationNote')}</p>
-      <div class="fields"><label>{t('hypothesis.size')}<Help topic="hypPopulation" /><input data-field="size" type="number" min="10000" max={MAX_POPULATION} step="10000" bind:value={spec.size} /></label><label>{t('simulator.seedPopulace')}<Help topic="hypPopulation" /><input data-field="populationSeed" bind:value={spec.seed} /></label>
-        <label>{t('hypothesis.meanA')}<Help topic="hypDifference" /><input data-field="meanA" type="number" min="1" max="1000" step="1" bind:value={spec.meanA} /></label><label>{t('hypothesis.meanB')}<Help topic="hypDifference" /><input data-field="meanB" type="number" min="1" max="1000" step="1" bind:value={spec.meanB} /></label>
-        <label>{t('hypothesis.spreadA')}<Help topic="hypPopulation" /><input data-field="spreadA" type="number" min="1" max="100" step="1" bind:value={spec.spreadA} /></label><label>{t('hypothesis.spreadB')}<Help topic="hypPopulation" /><input data-field="spreadB" type="number" min="1" max="100" step="1" bind:value={spec.spreadB} /></label></div>
-      <details><summary>{t('hypothesis.composition')}</summary><div class="fields shares">{#each spec.shares as share, h}<label>{AGE_GROUPS[Math.floor(h / 2)]} · {SEXES[h % 2]}<input type="number" min="2" max="60" step="1" bind:value={spec.shares[h]} /></label>{/each}</div><p>{t('simulator.soucet')} {number(totalShares, 1)} %</p><button class="button ghost" onclick={normalize}>{t('simulator.normalizovatNa100')}</button></details>
-      <p class="note">{t('hypothesis.autoPopulationNote')}</p>
-      {#if generating}<div role="status" class="generation"><strong>{t('hypothesis.generating')}</strong><progress value={generated} max={spec.size * 2} aria-label={t('simulator.prubehVytvareniPopulace')}></progress><span>{t('hypothesis.generated', { completed: number(generated), total: number(spec.size * 2) })}</span></div>{/if}
+      <div class="fields"><label>{t('hypothesis.size')}<Help topic="hypPopulation" /><input data-field="size" disabled={generating || busy} type="number" min="10000" max={MAX_POPULATION} step="10000" bind:value={spec.size} /></label><label>{t('simulator.seedPopulace')}<Help topic="hypPopulation" /><input data-field="populationSeed" disabled={generating || busy} bind:value={spec.seed} /></label>
+        <label>{t('hypothesis.meanA')}<Help topic="hypDifference" /><input data-field="meanA" disabled={generating || busy} type="number" min="1" max="1000" step="1" bind:value={spec.meanA} /></label><label>{t('hypothesis.meanB')}<Help topic="hypDifference" /><input data-field="meanB" disabled={generating || busy} type="number" min="1" max="1000" step="1" bind:value={spec.meanB} /></label>
+        <label>{t('hypothesis.spreadA')}<Help topic="hypPopulation" /><input data-field="spreadA" disabled={generating || busy} type="number" min="1" max="100" step="1" bind:value={spec.spreadA} /></label><label>{t('hypothesis.spreadB')}<Help topic="hypPopulation" /><input data-field="spreadB" disabled={generating || busy} type="number" min="1" max="100" step="1" bind:value={spec.spreadB} /></label></div>
+      <p class="note">{t('hypothesis.manualPopulationNote')}</p>
+      <button data-action="generate-population" class="button primary" disabled={generating || busy} onclick={generatePopulation}>{t('simulator.vytvoritPopulaci')}</button>
+      {#if populationDirty}<p class="warning" role="status">{t('hypothesis.populationDirty')}</p>{/if}
+      {#if !activeSpec && !generating}<p class="note" role="status">{t('hypothesis.populationNeeded')}</p>{/if}
+      {#if population && !generating}<p class="note" role="status">{t('hypothesis.populationReady')}</p>{/if}
+      {#if generating}<div role="status" class="generation"><strong>{t('hypothesis.generating')}</strong><progress value={generated} max={(activeSpec?.size ?? spec.size) * 2} aria-label={t('simulator.prubehVytvareniPopulace')}></progress><span>{t('hypothesis.generated', { completed: number(generated), total: number((activeSpec?.size ?? spec.size) * 2) })}</span></div>{/if}
     </section>
     <section class="hyp-card">
       <p class="card-kicker">{t('hypothesis.sampleStep')}<Help topic="hypSample" /></p><h2>{t('hypothesis.sampleTitle')}</h2>
-      <label>{t('simulator.metodaVyberu')}<Help topic="hypSample" /><select data-field="method" bind:value={method}>{#each METHODS as item}<option value={item.id}>{item.name}</option>{/each}</select></label>
       <div class="fields"><label>{t('hypothesis.nA')}<Help topic="hypSample" /><input data-field="nA" type="number" min="20" max="2000" step="1" bind:value={nA} /></label><label>{t('hypothesis.nB')}<Help topic="hypSample" /><input data-field="nB" type="number" min="20" max="2000" step="1" bind:value={nB} /></label>
         <label>{t('hypothesis.alpha')}<Help topic="hypAlpha" /><input data-field="alpha" type="number" min=".1" max="20" step=".1" bind:value={alpha} /></label><label>{t('hypothesis.nullDifference')}<Help topic="hypDifference" /><input data-field="nullDifference" type="number" min="-1000" max="1000" step=".5" bind:value={nullDifference} /></label></div>
       <label>{t('hypothesis.alternative')}<Help topic="hypAlternative" /><select data-field="alternative" bind:value={alternative}><option value="two-sided">{t('hypothesis.twoSided')}</option><option value="greater">{t('hypothesis.greater')}</option><option value="less">{t('hypothesis.less')}</option></select></label><label>{t('simulator.seedVyberu')}<Help topic="hypPreview" /><input data-field="seed" bind:value={seed} /></label>
-      {#if nonprobability}<label>{t('simulator.demografickeZkresleniPrilezitostnehoSberu')}<Help topic="hypSample" /> <output>{number(demographicBias, 1)}×</output><input data-field="demographicBias" type="range" min="0" max="2" step=".25" bind:value={demographicBias} /></label><label>{t('hypothesis.outcomeBias')}<Help topic="hypSample" /> <output>{number(outcomeBias, 1)}×</output><input data-field="outcomeBias" type="range" min="0" max="2" step=".25" bind:value={outcomeBias} /></label><p class="note">{t('hypothesis.outcomeBiasNote')}</p>{/if}
     </section>
   </div>
   {#if previewError}<p class="warning" role="alert">{previewError}</p>{/if}
@@ -169,10 +180,10 @@
     <div><span>{t('hypothesis.truth')}<Help topic="hypDifference" /></span><strong>{number(population.truth, 2)} {t('simulator.min')}</strong><small>{t('hypothesis.nullStatement', { operator: currentConfig.alternative === 'greater' ? '≤' : currentConfig.alternative === 'less' ? '≥' : '=', value: number(currentConfig.nullDifference, 2) })}</small></div>
     <div><span>{t('hypothesis.populationD')}<Help topic="hypEffect" /></span><strong data-population-d>{population.cohensD === null ? '—' : number(population.cohensD, 3)}</strong></div>
   </div>{/if}
-  <section class="hyp-card preview-panel" aria-busy={previewPending}>
+  {#if activeSpec}<section class="hyp-card preview-panel" aria-busy={previewPending}>
     <p class="card-kicker">{t('hypothesis.previewStep')}<Help topic="hypPreview" /></p><h2>{t('hypothesis.evidence')}<Help topic="hypP" /></h2><p class="note">{t('hypothesis.previewNote')}</p>
     <div class="preview-controls">
-      <label>{t('hypothesis.nA')}<Help topic="hypPreview" /><input data-field="previewNA" type="number" min="20" max="2000" step="1" bind:value={nA} /></label><label>{t('hypothesis.nB')}<Help topic="hypPreview" /><input data-field="previewNB" type="number" min="20" max="2000" step="1" bind:value={nB} /></label><button data-action="new-draw" class="button secondary" disabled={previewPending || !!previewError} onclick={() => { draw++; }}>{t('hypothesis.newDraw')}</button>
+      <label>{t('hypothesis.nA')}<Help topic="hypPreview" /><input data-field="previewNA" type="number" min="20" max="2000" step="1" bind:value={nA} /></label><label>{t('hypothesis.nB')}<Help topic="hypPreview" /><input data-field="previewNB" type="number" min="20" max="2000" step="1" bind:value={nB} /></label><button data-action="new-draw" class="button secondary" disabled={!preview || previewPending || !!previewError} onclick={() => { draw++; }}>{t('hypothesis.newDraw')}</button>
       <div class="preview-test-parameters">
         <label>{t('hypothesis.alpha')}<Help topic="hypAlpha" /><output>{number(alpha, 1)} %</output><input data-field="previewAlpha" type="range" min=".1" max="20" step=".1" bind:value={alpha} /></label>
         <div class="preview-null"><div class="null-heading"><label for="preview-null-slider">{t('hypothesis.nullDifference')}<Help topic="hypNullSlider" /></label><input class="delta-number" data-field="previewNullNumber" aria-label={t('hypothesis.nullDifference')} type="number" min="-1000" max="1000" step=".5" bind:value={nullDifference} /></div><input id="preview-null-slider" data-field="previewNullDifference" type="range" min={-nullSliderLimit} max={nullSliderLimit} step=".5" bind:value={nullDifference} /></div>
@@ -184,7 +195,6 @@
     {#if previewPending}<p class="preview-status" role="status">{t('hypothesis.previewPending')}</p>{/if}
     {#if preview && currentConfig && population}<div class:updating={previewPending}>
       <p class="note preview-sizes">{t('hypothesis.displayedSampleSizes', { nA: number(currentConfig.nA), nB: number(currentConfig.nB) })}</p>
-      {#if currentConfig.method === 'weighted' || currentConfig.method === 'convenience'}<p class="warning">{t('hypothesis.biasNote')}</p>{/if}
       {#if last}
         <div class="kpis"><div><span>{t('hypothesis.previewDifference')}<Help topic="hypDifference" /></span><strong>{number(last.difference, 2)} {t('simulator.min')}</strong><small class="population-difference" data-population-difference>{t('hypothesis.cardPopulationDifference', { value: number(population.truth, 2) })}</small><small data-difference-error>{t('hypothesis.cardDifferenceError', { value: (last.difference - population.truth > 0 ? '+' : '') + number(last.difference - population.truth, 2) })}</small><small>A: {number(last.meanA, 2)} · B: {number(last.meanB, 2)}</small></div><div><span>{t('hypothesis.interval', { confidence: number((1 - currentConfig.alpha) * 100, 1) })}<Help topic="hypAlternative" /></span><strong class="bounds">{t('hypothesis.intervalBounds', { low: bound(last.low), high: bound(last.high) })}</strong></div><div><span>{t('hypothesis.pValue')}<Help topic="hypP" /></span><strong data-p-value>{pText(last.p)}</strong><small>α = {percent(currentConfig.alpha, 1)}</small></div><div class:rejected={last.reject}><span>{t('hypothesis.title')}</span><strong class="decision" data-decision={last.reject}>{last.reject ? t('hypothesis.reject') : t('hypothesis.retain')}</strong><small>{t('hypothesis.decisionNote')}</small></div></div>
         <div class="test-graphs">
@@ -205,14 +215,13 @@
   </section>
   <details class="repeat-activity">
     <summary>{t('hypothesis.optionalSimulation')}<Help topic="hypSimulation" /></summary><p class="note">{t('hypothesis.simulationNote')}</p>
-    {#if run && runPopulation}<p class="note run-snapshot">{t('hypothesis.runSnapshot', { meanA: number(runPopulation.groups[0].mean, 2), meanB: number(runPopulation.groups[1].mean, 2), nA: number(run.nA), nB: number(run.nB), alpha: percent(run.alpha), method: METHODS.find(item => item.id === run?.method)?.name ?? '' })}</p>{/if}
+    {#if run && runPopulation}<p class="note run-snapshot">{t('hypothesis.runSnapshot', { meanA: number(runPopulation.groups[0].mean, 2), meanB: number(runPopulation.groups[1].mean, 2), nA: number(run.nA), nB: number(run.nB), alpha: percent(run.alpha), method: t('hypothesis.randomSampling') })}</p>{/if}
     {#if runDiffers}<p class="warning">{t('hypothesis.runDiffers')}</p>{/if}
     {#if convergence && run && runPopulation && history.length}<section class="hyp-results"><h2>{t('hypothesis.results')}<Help topic="hypErrors" /></h2><p class="note">{nullTrue ? t('hypothesis.nullTrue') : t('hypothesis.nullFalse')} {t('hypothesis.validCounts', { valid: number(convergence.valid), total: number(history.length), skipped: number(convergence.skipped) })}</p>
-      {#if run.method === 'convenience' || run.method === 'weighted'}<p class="warning">{t('hypothesis.biasNote')}</p>{/if}
       <div class="kpis"><div><span>{t('hypothesis.average')}</span><strong>{convergence.average === null ? '—' : number(convergence.average, 2)}</strong><small>{t('hypothesis.truth')}: {number(runPopulation.truth, 2)}</small></div><div><span>{t('hypothesis.missed')}</span><strong>{convergence.valid ? percent(convergence.missed / convergence.valid) : '—'}</strong></div><div><span>{nullTrue ? t('hypothesis.typeI') : t('hypothesis.typeII')}<Help topic="hypErrors" /></span><strong>{convergence.valid ? percent(convergence.wrong / convergence.valid) : '—'}</strong></div><div><span>{nullTrue ? t('hypothesis.rejectionRate') : t('hypothesis.power')}<Help topic="hypErrors" /></span><strong>{convergence.valid ? percent(convergence.rejected / convergence.valid) : '—'}</strong></div></div>
     </section>{/if}
     <div class="run-bar"><div><label>{t('simulator.pocetOpakovani')}<Help topic="hypSimulation" /><input data-field="repeats" type="number" min="1" max={MAX_REPEATS} step="1" bind:value={repeats} disabled={busy} /></label><strong>{run ? t('simulator.progress', { completed: number(history.length), total: number(run.repeats) }) : t('hypothesis.ready')}</strong>
-      {#if run}<progress value={history.length} max={run.repeats} aria-label={t('simulator.prubehSimulace')}></progress><small data-status={status}>{status === 'running' ? t('simulator.simulaceBezi') : status === 'paused' ? t('simulator.pozastaveno') : status === 'stopped' ? t('simulator.zastaveno') : status === 'completed' ? t('simulator.dokonceno') : ''} · {METHODS.find(item => item.id === run?.method)?.name}</small>{/if}
+      {#if run}<progress value={history.length} max={run.repeats} aria-label={t('simulator.prubehSimulace')}></progress><small data-status={status}>{status === 'running' ? t('simulator.simulaceBezi') : status === 'paused' ? t('simulator.pozastaveno') : status === 'stopped' ? t('simulator.zastaveno') : status === 'completed' ? t('simulator.dokonceno') : ''} · {t('hypothesis.randomSampling')}</small>{/if}
       {#if runGenerating && run}<progress value={runGenerated} max={run.population.size * 2} aria-label={t('simulator.prubehVytvareniPopulace')}></progress><small>{t('hypothesis.generated', { completed: number(runGenerated), total: number(run.population.size * 2) })}</small>{/if}</div>
       <div class="run-actions"><label class="toggle"><input data-field="forest" type="checkbox" bind:checked={showForest} />{t('simulator.zobrazitIntervaloveLesy')}<Help topic="hypForest" /></label><label class="speed">{t('simulator.rychlost')}<Help topic="speed" /><output>{speed === 0 ? t('simulator.bezAnimace') : `${number(speed, 1)}×`}</output><input data-field="speed" type="range" min="0" max="8" step=".5" value={speed} oninput={event => changeSpeed(Number(event.currentTarget.value))} /></label><button data-action="start" class="button primary" disabled={busy || previewPending || !preview} onclick={start}>{history.length ? t('simulator.spustitNovouSimulaci') : t('hypothesis.startSimulation')}</button>{#if busy}<button data-action="pause" class="button secondary" onclick={pause}>{status === 'paused' ? t('simulator.pokracovat') : t('simulator.pozastavit')}</button><button data-action="stop" class="button ghost" onclick={stop}>{t('simulator.zastavit')}</button>{/if}</div>
     </div>
@@ -227,7 +236,7 @@
       {#if showForest}<HypothesisForest {history} truth={runPopulation.truth} nullDifference={run.nullDifference} />{/if}
     </section>{/if}
     <section class="hyp-export"><h2>{t('hypothesis.exportTitle')}</h2><p class="note">{t('hypothesis.exportNote')}</p><button data-action="export" class="button secondary" disabled={!history.length || exporting} onclick={() => download(false)}>{exporting ? t('hypothesis.exporting') : t('hypothesis.download')}</button></section>
-  </details>
+  </details>{/if}
   {#if error}<p class="warning" role="alert">{error}</p>{/if}
   {#if exporting}<progress value={exportProgress} max={exportTotal} aria-label={t('export.prubehPripravyExportu')}></progress>{/if}{#if exportUrl}<p class="note export-ready">{exportedLabel} · {t('hypothesis.exportReady')} <a href={exportUrl} download="testovani-hypotez.xlsx">{t('export.stahnoutZnovu')}</a></p>{/if}
   <details class="methodology"><summary>{t('hypothesis.methodology')}</summary><p class="note">{t('hypothesis.methodologyText')}</p><a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda353.htm" target="_blank" rel="noreferrer">{t('hypothesis.source')}</a><p class="note">{t('hypothesis.effectNote')}</p><a href="https://itl.nist.gov/div898/software/dataplot/refman2/auxillar/hedgeg.htm" target="_blank" rel="noreferrer">{t('hypothesis.effectSource')}</a></details>
@@ -240,5 +249,5 @@
 
   .test-graphs{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 0}.test-graph{min-width:0;padding:18px;border:1px solid var(--line);background:#fff}.test-graph h3{min-height:44px;font-size:16px;line-height:1.6}@media(max-width:1000px){.test-graphs{grid-template-columns:1fr}.test-graph h3{min-height:0}}
 
-  .hypothesis-lab{padding-top:24px;border-top:1px solid var(--line)}.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.hyp-card{background:#fff;border:1px solid var(--line);padding:24px;min-width:0}h2{font-size:21px;margin:8px 0 18px}h3{font-size:16px;margin:0 0 12px}.note{font-size:12px;color:#697c6d;line-height:1.85;margin:12px 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}label{font-size:12px;color:#315c55;display:block;margin:12px 0}input,select{width:100%;margin-top:8px;padding:11px 10px;background:#fafcf8;border:1px solid #cbd8c1;border-radius:3px;font:inherit;color:#153e36;min-width:0}input[type=range]{padding:0;accent-color:#287766}details{margin:18px 0;font-size:12px}summary{cursor:pointer;font-weight:600;line-height:1.8}button:disabled{opacity:.5;cursor:default}output{float:right;margin-left:8px}.shares{margin-top:8px}.generation{font-size:12px;line-height:1.9;margin-top:14px}.generation strong,.generation span{display:block}progress{display:block;width:100%;height:8px;margin:10px 0;accent-color:#287766}.population-facts{display:grid;grid-template-columns:repeat(4,1fr);padding:20px;background:#edf4e6;margin:16px 0;gap:20px}.population-facts span,.population-facts small{display:block;font-size:11px;color:#6a7e6b}.population-facts strong{display:block;font:22px 'DM Mono',monospace;margin:10px 0}.run-actions{max-width:500px;align-items:center}.toggle{display:flex;align-items:center;gap:8px;margin:0}.toggle input{width:auto;margin:0}.speed{min-width:170px;margin:0}.run-bar{align-items:center}.run-bar strong{font-size:15px}.run-bar small{display:block;font-size:11px}.run-bar input[type=number]{max-width:180px}.warning{background:#fff4e8;color:#895735;border:1px solid #edcfad;padding:14px;font-size:12px;line-height:1.8}.preview-panel{margin:26px 0}.preview-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:24px;align-items:center;padding:16px 20px;background:#f1f6eb;border:1px solid #dce6d4}.preview-controls label{margin:0}.preview-status{font-size:12px;color:#426c4c;background:#edf4e6;padding:12px}.updating{opacity:.5}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.kpis>div{background:#f5f8f0;border:1px solid #dce6d4;padding:16px}.kpis span,.kpis small{display:block;font-size:11px;color:#697c6d;line-height:1.7}.kpis strong{display:block;font:23px 'DM Mono',monospace;color:#285c4a;margin:12px 0;overflow-wrap:anywhere}.kpis .bounds,.kpis .decision{font-size:16px}.kpis .rejected{background:#fff1e5;border-color:#efd1b4}.repeat-activity{padding:24px;border:1px solid var(--line);background:#fafcf8;margin-top:28px}.repeat-activity>summary{font-size:20px}.hyp-results{margin-top:30px}.convergence-card{margin:20px 0}.convergence-plot{max-width:800px;margin-inline:auto}.methodology,.hyp-export{margin-top:28px;border-top:1px solid var(--line);padding-top:24px}.methodology a{font-size:12px}.hyp-export .note{max-width:850px}@media(max-width:800px){.setup-grid{grid-template-columns:1fr}.hyp-card,.repeat-activity{padding:18px}.kpis{grid-template-columns:1fr 1fr}.population-facts{grid-template-columns:1fr 1fr}.preview-controls{grid-template-columns:1fr;padding:16px;gap:16px}.preview-controls button{justify-self:start}.run-actions{max-width:none}.fields{gap:8px 12px}.population-facts strong{font-size:19px}}
+  .hypothesis-lab{padding-top:24px;border-top:1px solid var(--line)}.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.hyp-card{background:#fff;border:1px solid var(--line);padding:24px;min-width:0}h2{font-size:21px;margin:8px 0 18px}h3{font-size:16px;margin:0 0 12px}.note{font-size:12px;color:#697c6d;line-height:1.85;margin:12px 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}label{font-size:12px;color:#315c55;display:block;margin:12px 0}input,select{width:100%;margin-top:8px;padding:11px 10px;background:#fafcf8;border:1px solid #cbd8c1;border-radius:3px;font:inherit;color:#153e36;min-width:0}input[type=range]{padding:0;accent-color:#287766}details{margin:18px 0;font-size:12px}summary{cursor:pointer;font-weight:600;line-height:1.8}button:disabled{opacity:.5;cursor:default}output{float:right;margin-left:8px}.generation{font-size:12px;line-height:1.9;margin-top:14px}.generation strong,.generation span{display:block}progress{display:block;width:100%;height:8px;margin:10px 0;accent-color:#287766}.population-facts{display:grid;grid-template-columns:repeat(4,1fr);padding:20px;background:#edf4e6;margin:16px 0;gap:20px}.population-facts span,.population-facts small{display:block;font-size:11px;color:#6a7e6b}.population-facts strong{display:block;font:22px 'DM Mono',monospace;margin:10px 0}.run-actions{max-width:500px;align-items:center}.toggle{display:flex;align-items:center;gap:8px;margin:0}.toggle input{width:auto;margin:0}.speed{min-width:170px;margin:0}.run-bar{align-items:center}.run-bar strong{font-size:15px}.run-bar small{display:block;font-size:11px}.run-bar input[type=number]{max-width:180px}.warning{background:#fff4e8;color:#895735;border:1px solid #edcfad;padding:14px;font-size:12px;line-height:1.8}.preview-panel{margin:26px 0}.preview-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:24px;align-items:center;padding:16px 20px;background:#f1f6eb;border:1px solid #dce6d4}.preview-controls label{margin:0}.preview-status{font-size:12px;color:#426c4c;background:#edf4e6;padding:12px}.updating{opacity:.5}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.kpis>div{background:#f5f8f0;border:1px solid #dce6d4;padding:16px}.kpis span,.kpis small{display:block;font-size:11px;color:#697c6d;line-height:1.7}.kpis strong{display:block;font:23px 'DM Mono',monospace;color:#285c4a;margin:12px 0;overflow-wrap:anywhere}.kpis .bounds,.kpis .decision{font-size:16px}.kpis .rejected{background:#fff1e5;border-color:#efd1b4}.repeat-activity{padding:24px;border:1px solid var(--line);background:#fafcf8;margin-top:28px}.repeat-activity>summary{font-size:20px}.hyp-results{margin-top:30px}.convergence-card{margin:20px 0}.convergence-plot{max-width:800px;margin-inline:auto}.methodology,.hyp-export{margin-top:28px;border-top:1px solid var(--line);padding-top:24px}.methodology a{font-size:12px}.hyp-export .note{max-width:850px}@media(max-width:800px){.setup-grid{grid-template-columns:1fr}.hyp-card,.repeat-activity{padding:18px}.kpis{grid-template-columns:1fr 1fr}.population-facts{grid-template-columns:1fr 1fr}.preview-controls{grid-template-columns:1fr;padding:16px;gap:16px}.preview-controls button{justify-self:start}.run-actions{max-width:none}.fields{gap:8px 12px}.population-facts strong{font-size:19px}}
 </style>
