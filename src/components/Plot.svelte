@@ -6,6 +6,7 @@
   let { points, title, xLabel, yLabel, reference, referenceLabel = t('plot.skutecnaHodnota'), horizontal = false, kind = 'bar', color = '#2f6f8f', barOpacity = 1, secondaryPoints = [], secondaryColor = '#b56832', domain, barWidth, currentSample, totalSamples }: {
     points: Point[]; title: string; xLabel: string; yLabel: string; reference: number; referenceLabel?: string; horizontal?: boolean; kind?: 'bar' | 'line'; color?: string; barOpacity?: number; secondaryPoints?: Point[]; secondaryColor?: string; domain?: [number, number]; barWidth?: number; currentSample?: number; totalSamples?: number;
   } = $props();
+  let expanded = $state(false);
   const left = 54, right = 590, top = 30, bottom = 228;
   let xMin = $derived(domain?.[0] ?? Math.min(0, ...points.map(p => p.x)));
   let xMax = $derived(domain?.[1] ?? Math.max(1, ...points.map(p => p.x)));
@@ -20,7 +21,9 @@
   let secondaryLine = $derived(secondaryPoints.map((p, i) => `${i ? 'L' : 'M'}${x(p.x)},${y(p.y)}`).join(' '));
 </script>
 
-<div class="plot-wrap">
+<svelte:window onkeydown={(event) => { if (event.key === 'Escape') expanded = false; }} />
+<div class:plot-expanded={expanded} class="plot-wrap" role="button" tabindex="0" onclick={(event) => { if (expanded && event.target === event.currentTarget) expanded = false; else if (!expanded) expanded = true; }} onkeydown={(event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) expanded = true; }}>
+  <button class="plot-expand" type="button" aria-label={expanded ? t('plot.zavritGraf') : t('plot.zvetsitGraf')} onclick={(event) => { event.stopPropagation(); expanded = !expanded; }}>{expanded ? 'x' : '+'}</button>
   <svg viewBox="0 0 620 285" role="img" aria-label={`${title}. ${xLabel}, ${yLabel}. ${referenceLabel}: ${number(reference, 2)}.`}>
     <title>{title}</title>
     {#if currentSample !== undefined && totalSamples !== undefined}<text x={right} y="16" text-anchor="end" class="plot-progress">{t('plot.vyber')} {number(currentSample)} / {number(totalSamples)}</text>{/if}
@@ -45,3 +48,7 @@
   </svg>
   <div class="chart-legend"><span class="legend-dash"></span>{referenceLabel}: {number(reference, 2)}{horizontal ? ' %' : ''}</div>
 </div>
+
+<style>
+  .plot-wrap{position:relative}.plot-wrap svg{display:block;width:100%;height:auto;cursor:zoom-in}.plot-expand{position:absolute;right:8px;top:8px;z-index:2;border:1px solid #cbdce8;border-radius:4px;background:rgba(255,255,255,.9);color:#2f6f8f;width:30px;height:30px;cursor:pointer;font-size:17px;line-height:1}.plot-expanded{position:fixed;inset:0;z-index:1000;background:rgba(18,45,60,.82);display:flex;flex-direction:column;justify-content:center;padding:clamp(16px,4vw,64px);box-sizing:border-box}.plot-expanded .plot-expand{right:clamp(16px,4vw,64px);top:clamp(16px,4vw,64px);width:38px;height:38px;background:white;font-size:24px}.plot-expanded svg{width:min(1200px,100%);max-height:calc(100vh - 130px);margin:0 auto;cursor:default;background:white;border-radius:4px}.plot-expanded .chart-legend{width:min(1200px,100%);margin:10px auto 0;color:white}.plot-expanded .legend-dash{background:white}@media(max-width:700px){.plot-expanded{padding:14px}.plot-expanded .plot-expand{right:14px;top:14px}}
+</style>

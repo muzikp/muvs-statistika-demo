@@ -863,6 +863,8 @@
   },
   "plot": {
     "skutecnaHodnota": "Skutečná hodnota",
+    "zvetsitGraf": "Zvětšit graf na celou obrazovku",
+    "zavritGraf": "Zavřít graf",
     "vyber": "Výběr",
     "pomocnaVodorovnaCaraProHodnotu": "Pomocná vodorovná čára pro hodnotu",
     "naOse": "na ose",
