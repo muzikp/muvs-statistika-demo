@@ -18,7 +18,9 @@ export const METHODS = [
 export type Method = typeof METHODS[number]['id'];
 export const INTERVAL_METHODS = [
   { id: 'wald', name: t('sampling.intervalWald') },
-  { id: 'wilson', name: t('sampling.intervalWilson') }
+  { id: 'wilson', name: t('sampling.intervalWilson') },
+  { id: 'agrestiCoull', name: t('sampling.intervalAgrestiCoull') },
+  { id: 'clopperPearson', name: t('sampling.intervalClopperPearson') }
 ] as const;
 export type IntervalMethod = typeof INTERVAL_METHODS[number]['id'];
 export interface Person { id: number; age: number; sex: number; education: number; phone: number; minutes: number; cell: number }
@@ -124,6 +126,42 @@ function moments(people: Person[], variable: 'apple' | 'minutes') {
   const variance = values.reduce((sum, x) => sum + (x - mean) ** 2, 0) / (values.length - 1);
   return { mean, variance };
 }
+// Lanczos approximation and continued fraction for the regularized beta CDF.
+// They are used only for the exact binomial interval, so a compact local implementation
+// keeps the sampling worker self-contained and avoids an additional dependency.
+function logGamma(x: number) {
+  const coefficients = [676.5203681218851, -1259.1392167224028, 771.3234287776531, -176.6150291621406, 12.507343278686905, -0.13857109526572012, 9.984369578019572e-6, 1.5056327351493116e-7];
+  if (x < .5) return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * x)) - logGamma(1 - x);
+  let z = x - 1, y = .9999999999998099;
+  coefficients.forEach((coefficient, i) => { y += coefficient / (z + i + 1); });
+  const t = z + coefficients.length - .5;
+  return .5 * Math.log(2 * Math.PI) + (z + .5) * Math.log(t) - t + Math.log(y);
+}
+function betaFraction(a: number, b: number, x: number) {
+  const maxIterations = 200, epsilon = 3e-14, minimum = 1e-300;
+  let qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap;
+  d = Math.abs(d) < minimum ? minimum : d; d = 1 / d; let h = d;
+  for (let m = 1; m <= maxIterations; m++) {
+    const m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; d = Math.abs(d) < minimum ? minimum : d; c = 1 + aa / c; c = Math.abs(c) < minimum ? minimum : c; d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; d = Math.abs(d) < minimum ? minimum : d; c = 1 + aa / c; c = Math.abs(c) < minimum ? minimum : c; d = 1 / d;
+    const delta = d * c; h *= delta;
+    if (Math.abs(delta - 1) < epsilon) break;
+  }
+  return h;
+}
+function betaCdf(x: number, a: number, b: number) {
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  const front = Math.exp(a * Math.log(x) + b * Math.log1p(-x) - logGamma(a) - logGamma(b) + logGamma(a + b));
+  return x < (a + 1) / (a + b + 2) ? front * betaFraction(a, b, x) / a : 1 - front * betaFraction(b, a, 1 - x) / b;
+}
+function betaQuantile(p: number, a: number, b: number) {
+  let low = 0, high = 1;
+  for (let i = 0; i < 70; i++) { const mid = (low + high) / 2; if (betaCdf(mid, a, b) < p) low = mid; else high = mid; }
+  return (low + high) / 2;
+}
 export function estimateSample(population: Population, ids: number[], method: Method, confidence: number, intervalMethod: IntervalMethod = 'wald'): MethodResult {
   if (ids.length < 2 || new Set(ids).size !== ids.length || ids.some(id => !population.people[id])) throw new Error(t('sampling.vzorekMusiObsahovatAlesponDveRuzneOsobyZ'));
   const sample = ids.map(id => population.people[id]);
@@ -149,7 +187,16 @@ export function estimateSample(population: Population, ids: number[], method: Me
       variance = stats.variance / sample.length * (method === 'random' ? 1 - sample.length / population.people.length : 1);
     }
     let low: number, high: number;
-    if (variable === 'apple' && intervalMethod === 'wilson') {
+    if (variable === 'apple' && intervalMethod === 'clopperPearson' && method === 'random') {
+      const sampleSize = sample.length, successes = Math.round(estimate * sampleSize), alpha = 1 - confidence;
+      low = successes <= 0 ? 0 : betaQuantile(alpha / 2, successes, sampleSize - successes + 1);
+      high = successes >= sampleSize ? 1 : betaQuantile(1 - alpha / 2, successes + 1, sampleSize - successes);
+    } else if (variable === 'apple' && intervalMethod === 'agrestiCoull') {
+      const effectiveN = Math.max(1, estimate * (1 - estimate) / Math.max(variance, Number.EPSILON)), z2 = z ** 2;
+      const adjustedN = effectiveN + z2, adjustedP = (estimate * effectiveN + z2 / 2) / adjustedN;
+      const half = z * Math.sqrt(adjustedP * (1 - adjustedP) / adjustedN);
+      low = Math.max(0, adjustedP - half); high = Math.min(1, adjustedP + half);
+    } else if (variable === 'apple' && intervalMethod === 'wilson') {
       const effectiveN = Math.max(1, estimate * (1 - estimate) / Math.max(variance, Number.EPSILON));
       const z2 = z ** 2, denominator = 1 + z2 / effectiveN;
       const center = (estimate + z2 / (2 * effectiveN)) / denominator;

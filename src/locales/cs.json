@@ -400,6 +400,8 @@
     "nahodnyVyber": "Náhodný výběr",
     "intervalWald": "Wald (normální aproximace)",
     "intervalWilson": "Wilson (stabilnější interval pro podíl)",
+    "intervalAgrestiCoull": "Agresti–Coull (upravený Wilsonův interval)",
+    "intervalClopperPearson": "Clopper–Pearson (exaktní binomický interval)",
     "stejnaSanceProKazdehoClovekaVyberBezVraceni": "Stejná šance pro každého člověka. Výběr bez vracení.",
     "stratifikovanyVyber": "Stratifikovaný výběr",
     "nahodnyVyberUvnitrVekuPohlaviPriblizneUmernyVelikosti": "Náhodný výběr uvnitř věku × pohlaví, přibližně úměrný velikosti skupin; alespoň 2 lidé ze skupiny.",
@@ -663,7 +665,7 @@
         "Počet opakování nezpřesňuje jednotlivý průzkum a nemění jeho velikost n. Zvyšuje hlavně názornost experimentu a dobu výpočtu."
       ]
     },
-    "intervalMethod": {"title": "Metoda konstrukce intervalu", "paragraphs": ["Wald\u016fv interval pou\u017e\u00edv\u00e1 symetrickou norm\u00e1ln\u00ed aproximaci a je jednoduch\u00fd, ale u pod\u00edl\u016f bl\u00edzko 0 % nebo 100 % m\u016f\u017ee b\u00fdt nep\u0159esn\u00fd.", "Wilson\u016fv interval je ur\u010den hlavn\u011b pro pod\u00edly. L\u00e9pe respektuje hranice 0 % a 100 % a b\u00fdv\u00e1 stabiln\u011bj\u0161\u00ed u men\u0161\u00edch vzork\u016f. Pro pr\u016fm\u011br minut se pou\u017eije stejn\u00e1 norm\u00e1ln\u00ed aproximace jako u Waldova intervalu."]},
+    "intervalMethod": {"title": "Metoda konstrukce intervalu", "paragraphs": ["Waldův interval používá symetrickou normální aproximaci a je jednoduchý, ale u podílů blízko 0 % nebo 100 % může být nepřesný.", "Wilsonův interval je určen hlavně pro podíly. Lépe respektuje hranice 0 % a 100 % a bývá stabilnější u menších vzorků.", "Agresti–Coullův interval je praktická úprava Wilsonova intervalu. Přidává několik pomyslných pozorování a často poskytuje dobré pokrytí.", "Clopper–Pearsonův interval je exaktní binomický interval. Je konzervativní, tedy obvykle o něco širší, ale spolehlivě drží požadované pokrytí. U průměru minut se všechny metody použijí jako normální aproximace."]},
     "confidence": {
       "title": "Spolehlivost: jak často má interval zachytit skutečnost",
       "paragraphs": [
