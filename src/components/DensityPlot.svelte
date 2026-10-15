@@ -6,6 +6,7 @@
   interface Region { from: number; to: number; color: string; label: string; opacity?: number }
   interface Marker { value: number; label: string; color: string; dashed?: boolean; width?: number }
   let { series, domain, title, xLabel, regions = [], markers = [], showMarkerLegend = false }: { series: Series[]; domain: [number, number]; title: string; xLabel: string; regions?: Region[]; markers?: Marker[]; showMarkerLegend?: boolean } = $props();
+  let expanded = $state(false);
   const left = 55, right = 675, top = 20, bottom = 230;
   const maximum = $derived(Math.max(1e-9, ...series.flatMap(line => line.points.map(point => point.y))) * 1.12);
   const x = (value: number) => left + (Math.max(domain[0], Math.min(domain[1], value)) - domain[0]) / (domain[1] - domain[0]) * (right - left);
@@ -17,7 +18,9 @@
   }
 </script>
 
-<div class="density-plot">
+<svelte:window onkeydown={(event) => { if (event.key === 'Escape') expanded = false; }} />
+<div class:plot-expanded={expanded} class="density-plot" role="button" tabindex="0" onclick={(event) => { if (expanded && event.target === event.currentTarget) expanded = false; else if (!expanded) expanded = true; }} onkeydown={(event) => { if ((event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) expanded = true; }}>
+  <button class="plot-expand" type="button" aria-label={expanded ? t('plot.zavritGraf') : t('plot.zvetsitGraf')} onclick={(event) => { event.stopPropagation(); expanded = !expanded; }}>{expanded ? 'x' : '+'}</button>
   <svg viewBox="0 0 700 285" role="img" aria-label={`${title}. ${xLabel}. ${markers.map(marker => marker.label).join('; ')}`}>
     <title>{title}</title>
     {#each [0, .25, .5, .75, 1] as tick}
@@ -37,5 +40,5 @@
 </div>
 
 <style>
-  svg{display:block;width:100%;height:auto}text{font:10px 'DM Mono',monospace;fill:#718175}.density-legend{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:11px;color:#64766a;margin-top:8px}.density-legend span{display:flex;align-items:center;gap:7px}.density-legend i{width:16px;height:0;display:inline-block;border-top:3px solid currentColor;flex-shrink:0}.density-legend i.dashed{border-top-style:dashed}
+  .density-plot{position:relative}.density-plot svg{display:block;width:100%;height:auto;cursor:zoom-in}text{font:10px 'DM Mono',monospace;fill:#718175}.density-legend{display:flex;flex-wrap:wrap;gap:10px 20px;font-size:11px;color:#64766a;margin-top:8px}.density-legend span{display:flex;align-items:center;gap:7px}.density-legend i{width:16px;height:0;display:inline-block;border-top:3px solid currentColor;flex-shrink:0}.density-legend i.dashed{border-top-style:dashed}.plot-expand{position:absolute;right:8px;top:8px;z-index:2;border:1px solid #cbdce8;border-radius:4px;background:rgba(255,255,255,.9);color:#2f6f8f;width:30px;height:30px;cursor:pointer;font-size:17px;line-height:1}.plot-expanded{position:fixed;inset:0;z-index:1000;background:rgba(18,45,60,.82);display:flex;flex-direction:column;justify-content:center;padding:clamp(16px,4vw,64px);box-sizing:border-box}.plot-expanded .plot-expand{right:clamp(16px,4vw,64px);top:clamp(16px,4vw,64px);width:38px;height:38px;background:white;font-size:24px}.plot-expanded svg{width:min(1200px,100%);max-height:calc(100vh - 130px);margin:0 auto;cursor:default;background:white;border-radius:4px}.plot-expanded .density-legend{width:min(1200px,100%);margin:10px auto 0;color:white}.plot-expanded .density-legend i{border-color:white}@media(max-width:700px){.plot-expanded{padding:14px}.plot-expanded .plot-expand{right:14px;top:14px}}
 </style>

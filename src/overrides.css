@@ -56,3 +56,4 @@
 
 .plot-wrap{position:relative;overflow:hidden!important}
 .plot-wrap svg{overflow:hidden!important;display:block}
+.plot-wrap.plot-expanded{position:fixed!important;overflow:visible!important}
