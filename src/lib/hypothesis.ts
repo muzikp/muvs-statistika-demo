@@ -8,7 +8,7 @@ export interface HypothesisSpec { size: number; seed: string; meanA: number; mea
 export interface HypothesisConfig { population: HypothesisSpec; nA: number; nB: number; repeats: number; seed: string; alpha: number; nullDifference: number; alternative: Alternative }
 export interface DensityPoint { x: number; y: number }
 export interface GroupSummary { mean: number; sd: number }
-export interface HypothesisPopulationSummary { spec: HypothesisSpec; groups: GroupSummary[]; truth: number; cohensD: number | null }
+export interface HypothesisPopulationSummary { spec: HypothesisSpec; groups: GroupSummary[]; truth: number; cohensD: number | null; dataset?: { group: Uint8Array; value: Float64Array } }
 export interface HypothesisPopulation { summary: HypothesisPopulationSummary; groups: Float64Array[] }
 export interface GroupEstimate { mean: number; variance: number; dfDenominator: number; sd: number; effectSd: number }
 export interface TestResult { meanA: number; meanB: number; sdA: number; sdB: number; effectSdA: number; effectSdB: number; cohensD: number | null; difference: number; se: number; seA: number; seB: number; df: number; statistic: number; p: number; critical: number; low: number; high: number; outside: boolean; reject: boolean }
@@ -72,7 +72,10 @@ export function createHypothesisPopulation(spec: HypothesisSpec, progress?: (com
     stats.push({ mean, sd: Math.sqrt(squared / spec.size) }); groups.push(values);
   }
   progress?.(2 * spec.size, 2 * spec.size);
-  return { summary: { spec: { ...spec }, groups: stats, truth: populationDifference(spec), cohensD: cohensD(stats[0].mean, stats[1].mean, stats[0].sd, stats[1].sd) }, groups };
+  const groupColumn = new Uint8Array(spec.size * 2), valueColumn = new Float64Array(spec.size * 2);
+  valueColumn.set(groups[0], 0); valueColumn.set(groups[1], spec.size); groupColumn.fill(0, 0, spec.size); groupColumn.fill(1, spec.size);
+  const dataset = { group: groupColumn, value: valueColumn };
+  return { summary: { spec: { ...spec }, groups: stats, truth: populationDifference(spec), cohensD: cohensD(stats[0].mean, stats[1].mean, stats[0].sd, stats[1].sd), dataset }, groups };
 }
 export function hypothesisNullTrue(truth: number, config: Pick<HypothesisConfig, 'alternative' | 'nullDifference'>): boolean {
   const difference = truth - config.nullDifference;

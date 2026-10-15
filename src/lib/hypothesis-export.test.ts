@@ -3,7 +3,7 @@ import ExcelJS from 'exceljs';
 import { createHypothesisPopulation, DEFAULT_HYPOTHESIS_SPEC, hypothesisSampler, type HypothesisConfig } from './hypothesis';
 import { exportHypothesis } from './hypothesis-export';
 
-it('roundtrips p-values, one-sided unbounded intervals, invalid draws, settings and both populations without demographic columns', async () => {
+it('exports p-values, settings and one long population dataset with a group column', async () => {
   const population = createHypothesisPopulation({ ...DEFAULT_HYPOTHESIS_SPEC, size: 10000, seed: '=1+1' });
   const config: HypothesisConfig = { population: population.summary.spec, nA: 80, nB: 120, repeats: 2, seed: 'export', alpha: .05, alternative: 'greater', nullDifference: 0 };
   const entry = hypothesisSampler(population, config)(0).entry;
@@ -26,13 +26,13 @@ it('roundtrips p-values, one-sided unbounded intervals, invalid draws, settings 
   expect(book.worksheets[0].getCell('AB2').value).toBe(entry.result!.seA);
   expect(book.worksheets[0].getCell('AC2').value).toBe(entry.result!.seB);
   expect(book.worksheets[0].getCell('L3').value).toBeNull();
-  expect(book.worksheets[2].rowCount).toBe(3);
+  expect(book.worksheets[2].rowCount).toBe(population.summary.spec.size * 2 + 1);
   const seeds = book.worksheets[1].getRows(2, book.worksheets[1].rowCount - 1)!.filter(row => row.getCell(2).value === '=1+1');
   expect(seeds).toHaveLength(1); expect(seeds[0].getCell(2).type).toBe(ExcelJS.ValueType.String);
   expect(book.worksheets[2].getCell('A2').value).toBe('Skupina A');
-  expect(book.worksheets[2].getCell('A3').value).toBe('Skupina B');
-  expect(book.worksheets[2].getCell('B2').value).toBe(population.summary.spec.size);
-  expect(book.worksheets[2].getCell('C3').value).toBe(population.summary.groups[1].mean);
+  expect(book.worksheets[2].getCell('B2').value).toBe(population.summary.dataset!.value[0]);
+  expect(book.worksheets[2].getCell('A10002').value).toBe('Skupina B');
+  expect(book.worksheets[2].getCell('B10002').value).toBe(population.summary.dataset!.value[population.summary.spec.size]);
   for (const sheet of book.worksheets) {
     expect(JSON.stringify(sheet.getRow(1).values)).not.toMatch(/pohlaví|váhy|věk/i);
   }

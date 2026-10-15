@@ -39,7 +39,13 @@ export async function exportHypothesis(population: HypothesisPopulationSummary, 
   ];
   rows.forEach(row => meta.addRow(row)); meta.getColumn(2).alignment = { wrapText: true };
   const targets = book.addWorksheet(t('hypothesis.xlsxPopulations'));
-  targets.columns = [t('simulator.skupina'), t('hypothesis.size'), t('hypothesis.xlsxPopulationMean'), t('hypothesis.xlsxPopulationSd')].map(header => ({ header, width: 28 }));
-  population.groups.forEach((group, g) => targets.addRow([t(g ? 'hypothesis.groupB' : 'hypothesis.groupA'), population.spec.size, group.mean, group.sd]));
+  if (population.dataset) {
+    targets.columns = [t('simulator.skupina'), t('hypothesis.xlsxMeasuredVariable')].map(header => ({ header, width: 28 }));
+    for (let i = 0; i < population.dataset.value.length; i++) targets.addRow([population.dataset.group[i] ? t('hypothesis.groupB') : t('hypothesis.groupA'), population.dataset.value[i]]);
+    targets.getColumn(2).numFmt = '0.000';
+  } else {
+    targets.columns = [t('simulator.skupina'), t('hypothesis.size'), t('hypothesis.xlsxPopulationMean'), t('hypothesis.xlsxPopulationSd')].map(header => ({ header, width: 28 }));
+    population.groups.forEach((group, g) => targets.addRow([t(g ? 'hypothesis.groupB' : 'hypothesis.groupA'), population.spec.size, group.mean, group.sd]));
+  }
   const bytes = await book.xlsx.writeBuffer(), buffer = new Uint8Array(bytes.byteLength); buffer.set(new Uint8Array(bytes)); return buffer.buffer;
 }
