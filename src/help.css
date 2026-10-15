@@ -1,6 +1,6 @@
 .category-actions{position:static;display:flex;gap:12px;align-items:center;margin:8px 0 4px 18px}
-.category-actions .add-button{background:#e8f1f7;border:1px solid #c4dcb8;border-radius:4px;padding:8px 11px;color:#315f4c;font-weight:600}
+.category-actions .add-button{background:#e8f1f7;border:1px solid #c4dcb8;border-radius:4px;padding:8px 11px;color:#234f6a;font-weight:600}
 .category-actions .text-button{padding:8px 4px}
 .card-kicker{position:relative;display:flex;align-items:center;gap:8px}
-.category-actions button:focus-visible,.card-kicker:focus-visible{outline:2px solid #b56832;outline-offset:2px}
+.category-actions button:focus-visible,.card-kicker:focus-visible{outline:2px solid #c34e4e;outline-offset:2px}
 @media(max-width:800px){.category-actions{position:static;margin:10px 16px 20px;padding-left:0}}

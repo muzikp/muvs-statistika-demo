@@ -10,10 +10,10 @@ export const DEFAULT_SHARES = [10, 10, 14, 14, 13, 13, 14, 12];
 export const MAX_POPULATION = 1_000_000;
 export const MAX_REPEATS = 10_000;
 export const METHODS = [
-  { id: 'random', name: t('sampling.nahodnyVyber'), color: '#287766', description: t('sampling.stejnaSanceProKazdehoClovekaVyberBezVraceni') },
-  { id: 'stratified', name: t('sampling.stratifikovanyVyber'), color: '#6776b4', description: t('sampling.nahodnyVyberUvnitrVekuPohlaviPriblizneUmernyVelikosti') },
-  { id: 'convenience', name: t('sampling.prilezitostnyVyber'), color: '#b56832', description: t('sampling.mladsiLideAZenyJsouDostupnejsiVolitelneCasteji') },
-  { id: 'weighted', name: t('sampling.prilezitostnyVazeni'), color: '#a65473', description: t('sampling.presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne') }
+  { id: 'random', name: t('sampling.nahodnyVyber'), color: '#397ec1', description: t('sampling.stejnaSanceProKazdehoClovekaVyberBezVraceni') },
+  { id: 'stratified', name: t('sampling.stratifikovanyVyber'), color: '#6b86b5', description: t('sampling.nahodnyVyberUvnitrVekuPohlaviPriblizneUmernyVelikosti') },
+  { id: 'convenience', name: t('sampling.prilezitostnyVyber'), color: '#c34e4e', description: t('sampling.mladsiLideAZenyJsouDostupnejsiVolitelneCasteji') },
+  { id: 'weighted', name: t('sampling.prilezitostnyVazeni'), color: '#6b86b5', description: t('sampling.presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne') }
 ] as const;
 export type Method = typeof METHODS[number]['id'];
 export interface Person { id: number; age: number; sex: number; education: number; phone: number; minutes: number; cell: number }

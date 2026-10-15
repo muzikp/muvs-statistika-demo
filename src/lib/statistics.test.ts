@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { addSample, confidenceInterval, createBatch, createGlobal, isOutside, mergeBatch, normalQuantile, realizePopulation, sampleWithoutReplacement, seededRandom, validate } from './statistics';
 import type { SimulationConfig } from './types';
 
-const config: SimulationConfig = { N: 10000, n: 100, confidence: .95, samplesPerBatch: 20, batches: 1000, method: 'wilson', seed: 'test', categories: [{ id: 1, name: 'Škoda', weight: 50, color: '#267461' }, { id: 2, name: 'Toyota', weight: 20, color: '#aa6530' }, { id: 3, name: 'Hyundai', weight: 30, color: '#5c65a3' }] };
+const config: SimulationConfig = { N: 10000, n: 100, confidence: .95, samplesPerBatch: 20, batches: 1000, method: 'wilson', seed: 'test', categories: [{ id: 1, name: 'Škoda', weight: 50, color: '#397ec1' }, { id: 2, name: 'Toyota', weight: 20, color: '#c34e4e' }, { id: 3, name: 'Hyundai', weight: 30, color: '#6b86b5' }] };
 describe('Populace a validace', () => {
   it('přidělí přesně N jednotek a shody rozhodne pořadím', () => {
     const categories = config.categories.map(c => ({ ...c, weight: 100 / 3 }));

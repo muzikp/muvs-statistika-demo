@@ -38,5 +38,5 @@
 <button type="button" class="help-button" data-help={topic} aria-label={t('tooltip.napovedaSamplinghelptopictitle', { SAMPLINGHELPTopicTitle: SAMPLING_HELP[topic].title })} use:tooltip={topic} onclick={event => { event.preventDefault(); event.stopPropagation(); }}>?</button>
 
 <style>
-  .help-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;vertical-align:middle;width:20px;height:20px;min-width:20px;margin:0 0 0 7px;padding:0;border:1px solid #8baec3;border-radius:50%;background:#f9fcf5;color:#3f6c4d;font:12px/1 'DM Sans',sans-serif;cursor:help;letter-spacing:0}.help-button:hover{background:#e8f1f7;border-color:#517b55}.help-button:focus-visible{outline:3px solid #b56832;outline-offset:3px}@media(pointer:coarse){.help-button{width:28px;height:28px;min-width:28px;font-size:14px}}
+  .help-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;vertical-align:middle;width:20px;height:20px;min-width:20px;margin:0 0 0 7px;padding:0;border:1px solid #91b7cf;border-radius:50%;background:#f9fcf5;color:#397ec1;font:12px/1 'DM Sans',sans-serif;cursor:help;letter-spacing:0}.help-button:hover{background:#e8f1f7;border-color:#2d66a0}.help-button:focus-visible{outline:3px solid #c34e4e;outline-offset:3px}@media(pointer:coarse){.help-button{width:28px;height:28px;min-width:28px;font-size:14px}}
 </style>

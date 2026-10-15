@@ -46,8 +46,8 @@
         <svg viewBox="0 0 400 250"><line x1="205" x2="205" y1="10" y2="240" stroke="#bdaeb2" stroke-dasharray="4 5" />
           {#each [0,1,2,3,4,5,6,7,8,9] as i}
             {@const start = [100,135,75,150,110,230,120,90,140,105][i]}
-            <line x1={start} x2={start+135} y1={22+i*23} y2={22+i*23} stroke={i === 5 ? '#c78491' : '#9ca9a4'} stroke-width="3" />
-            <circle cx={start+67.5} cy={22+i*23} r="5" fill={i === 5 ? '#c78491' : '#d7dfdb'} />
+            <line x1={start} x2={start+135} y1={22+i*23} y2={22+i*23} stroke={i === 5 ? '#d9838a' : '#9ca9a4'} stroke-width="3" />
+            <circle cx={start+67.5} cy={22+i*23} r="5" fill={i === 5 ? '#d9838a' : '#d7dfdb'} />
           {/each}
         </svg><div class="visual-bottom"><span>{t('app.kazdyVyberJinyInterval')}</span><strong>{t('app.stejnaSkutecnost')}</strong></div>
       </div>

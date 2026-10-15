@@ -1,6 +1,6 @@
 .setup-card label::after,.result-controls label::after,.forest-head label::after,.card-kicker::after,.chart-card h3::after,.kpi::after{display:none!important}
-.real-help{position:static!important;display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0 0 0 6px;border:1px solid #8baec3;border-radius:50%;background:transparent;color:#4e7893;font:10px 'DM Sans';cursor:help;vertical-align:middle}
-.real-help:focus-visible{outline:2px solid #b56832;outline-offset:2px}
+.real-help{position:static!important;display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0 0 0 6px;border:1px solid #91b7cf;border-radius:50%;background:transparent;color:#477fa8;font:10px 'DM Sans';cursor:help;vertical-align:middle}
+.real-help:focus-visible{outline:2px solid #c34e4e;outline-offset:2px}
 .tippy-box{font:11px/1.45 'DM Sans';background:#234f6a;color:#f7fbfd}.tippy-arrow{color:#234f6a}
 
 .tippy-box[data-theme~='learning']{max-width:min(440px,calc(100vw - 24px))!important;background:#234f6a;color:#f7fbfd;font:13px/1.75 'DM Sans',system-ui,sans-serif;box-shadow:0 10px 35px #234f6a40;border-radius:8px;text-align:left}
