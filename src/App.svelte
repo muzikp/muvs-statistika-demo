@@ -31,8 +31,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href={routeUrl('/')} onclick={e => navigate(e, '/')} aria-label={t('app.statistickaLaboratorUvod')}>
-      <span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span>{t('app.statisticka')}<span class="brand-sub">{t('app.laborator')} <b>{t('app.muvs')}</b></span></span>
+      <img class="brand-logo" src={`${base}/evalytics-logo.svg`} alt="Evalytics" />
     </a>
     <nav aria-label={t('app.hlavniNavigace')}><a class:active={path === '/'} href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><a class:active={isModule()} href={routeUrl('/ci-alfa-explained')} onclick={e => navigate(e, '/ci-alfa-explained')}>{t('app.intervalySpolehlivosti')}</a><a class:active={path === '/probability'} href={routeUrl('/probability')} onclick={e => navigate(e, '/probability')}>{t('app.pravdepodobnost')}</a><a class:active={path === '/hypothesis-testing'} href={routeUrl('/hypothesis-testing')} onclick={e => navigate(e, '/hypothesis-testing')}>{t('hypothesis.title')}</a></nav>
     <span class="header-note"><span class="status-dot"></span> {t('app.interaktivniVyukaStatistiky')}</span>
