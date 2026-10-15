@@ -38,10 +38,10 @@ nav a.active { color: #383838; border-color: #a50021; }
 .button.primary:hover { background: #87001b; }
 .button.secondary { background: #f7e8ec; color: #8f001d; }
 .button.ghost { border-color: #dfcbd0; color: #8f001d; }
-.hero-visual { background: #a50021; color: #f7e8ec; box-shadow: 18px 18px 0 #f0dfe3; }
-.visual-pill { background: #87001b; }
-.visual-bottom { border-color: #c86a7d; color: #f5d7de; }
-.visual-bottom strong { color: #f6c7d0; }
+.hero-visual { background: #fff; color: #383838; border: 1px solid #e5e0e1; box-shadow: 18px 18px 0 #f0dfe3; }
+.visual-pill { background: #f7e8ec; color: #8f001d; }
+.visual-bottom { border-color: #e4dadd; color: #777; }
+.visual-bottom strong { color: #8f001d; }
 .section-heading { border-color: #e4e1e2; }
 .topic-grid { gap: 18px; }
 .topic-card, .setup-card, .chart-card, .detail-card, .hyp-card { border-color: #e5e0e1; border-radius: 12px; }
