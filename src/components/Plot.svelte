@@ -3,7 +3,7 @@
 
   import { number } from '../lib/format';
   interface Point { x: number; y: number }
-  let { points, title, xLabel, yLabel, reference, referenceLabel = t('plot.skutecnaHodnota'), horizontal = false, kind = 'bar', color = '#287766', barOpacity = 1, secondaryPoints = [], secondaryColor = '#b56832', domain, barWidth, currentSample, totalSamples }: {
+  let { points, title, xLabel, yLabel, reference, referenceLabel = t('plot.skutecnaHodnota'), horizontal = false, kind = 'bar', color = '#2f6f8f', barOpacity = 1, secondaryPoints = [], secondaryColor = '#b56832', domain, barWidth, currentSample, totalSamples }: {
     points: Point[]; title: string; xLabel: string; yLabel: string; reference: number; referenceLabel?: string; horizontal?: boolean; kind?: 'bar' | 'line'; color?: string; barOpacity?: number; secondaryPoints?: Point[]; secondaryColor?: string; domain?: [number, number]; barWidth?: number; currentSample?: number; totalSamples?: number;
   } = $props();
   const left = 54, right = 590, top = 30, bottom = 228;

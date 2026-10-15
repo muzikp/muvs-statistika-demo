@@ -21,5 +21,5 @@
 </div>
 <p>{averages ? t('hypothesis.comparisonNote') : t('hypothesis.previewComparisonNote')}</p>
 <style>
-  h3{font-size:17px;margin:24px 0 12px}p{font-size:12px;line-height:1.8;color:#697c6d}.comparison-scroll{overflow-x:auto}.comparison-scroll:focus-visible{outline:3px solid #b56832;outline-offset:3px}table{width:100%;border-collapse:collapse;font-size:12px;min-width:580px}th,td{padding:14px 12px;border-bottom:1px solid var(--line);text-align:right;line-height:1.7}thead th{font-size:11px;color:#697c6d;font-weight:500;max-width:170px}th:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1}td{font-family:'DM Mono',monospace;white-space:nowrap}.actual{background:#edf4e6;color:#285c4a;font-weight:600}
+  h3{font-size:17px;margin:24px 0 12px}p{font-size:12px;line-height:1.8;color:#697c6d}.comparison-scroll{overflow-x:auto}.comparison-scroll:focus-visible{outline:3px solid #b56832;outline-offset:3px}table{width:100%;border-collapse:collapse;font-size:12px;min-width:580px}th,td{padding:14px 12px;border-bottom:1px solid var(--line);text-align:right;line-height:1.7}thead th{font-size:11px;color:#697c6d;font-weight:500;max-width:170px}th:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1}td{font-family:'DM Mono',monospace;white-space:nowrap}.actual{background:#e8f1f7;color:#2f6484;font-weight:600}
 </style>

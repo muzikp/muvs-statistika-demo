@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Interval } from '../lib/types';
   import { percent } from '../lib/format';
-  let { intervals, truth, color = '#287766' }: { intervals: Interval[]; truth: number; color?: string } = $props();
+  let { intervals, truth, color = '#2f6f8f' }: { intervals: Interval[]; truth: number; color?: string } = $props();
   let low = $derived(Math.max(0, Math.min(truth, ...intervals.map(i => i.low)) - .02));
   let high = $derived(Math.min(1, Math.max(truth, ...intervals.map(i => i.high)) + .02));
   const x = (p: number) => 65 + (p-low)/(high-low || 1)*475;
