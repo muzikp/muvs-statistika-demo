@@ -9,10 +9,11 @@ describe('Populace a validace', () => {
     expect(realizePopulation(20, categories).map(c => c.count)).toEqual([7, 7, 6]);
     for (let N = 1; N < 100; N++) expect(realizePopulation(N, config.categories).reduce((s, c) => s+c.count, 0)).toBe(N);
   });
-  it('odmítne nesprávný součet, NaN, zlomek, velký výběr a překročení rozpočtů', () => {
+  it('odmítne nesprávný součet, NaN, zlomek, velký výběr a neplatné počty opakování', () => {
     expect(validate(config)).toEqual([]);
     expect(validate({ ...config, categories: config.categories.map(c => ({ ...c, weight: 20 })) }).length).toBeGreaterThan(0);
-    for (const patch of [{ N: NaN }, { n: 1.5 }, { n: 501 }, { batches: 5001 }, { samplesPerBatch: 1001 }, { confidence: 1 }, { n: 500, batches: 5000 }]) expect(validate({ ...config, ...patch }).length).toBeGreaterThan(0);
+    for (const patch of [{ N: NaN }, { n: 1.5 }, { n: 501 }, { batches: 0 }, { batches: 1.5 }, { batches: Number.MAX_SAFE_INTEGER + 1 }, { samplesPerBatch: -1 }, { samplesPerBatch: NaN }, { confidence: 1 }]) expect(validate({ ...config, ...patch }).length).toBeGreaterThan(0);
+    expect(validate({ ...config, n: 500, batches: 5001, samplesPerBatch: 1001 })).toEqual([]);
   });
 });
 describe('Výběr bez vracení', () => {
