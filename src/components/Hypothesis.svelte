@@ -13,6 +13,7 @@
   import DensityPlot from './DensityPlot.svelte';
   import HypothesisForest from './HypothesisForest.svelte';
   import HypothesisComparison from './HypothesisComparison.svelte';
+  import { loadPreferences, savePreferences } from '../lib/preferences';
 
   let spec = $state({ ...DEFAULT_HYPOTHESIS_SPEC });
   let activeSpec = $state<typeof DEFAULT_HYPOTHESIS_SPEC | null>(null);
@@ -21,6 +22,7 @@
   let nA = $state(100), nB = $state(100), repeats = $state(200), alpha = $state(5), nullDifference = $state(0), seed = $state('testy-2026');
   let alternative = $state<Alternative>('two-sided');
   let draw = $state(0), speed = $state(4), showForest = $state(true);
+  let preferencesLoaded = $state(false);
   let preview = $state.raw<{ config: HypothesisConfig; population: HypothesisPopulationSummary; entry: HypothesisIteration } | null>(null);
   let previewPending = $state(false), previewError = $state(''), generated = $state(0), generating = $state(false);
   let previewWorker: Worker | null = null, previewRequest = 0, previewTimer: ReturnType<typeof setTimeout> | undefined;
@@ -152,7 +154,25 @@
     job.onerror = () => { error = t('export.exportSeNepodariloPripravitZkusteToZnovu'); exporting = false; job.terminate(); exportWorker = null; };
     job.postMessage({ population: sourcePopulation, config, history: entries });
   }
-  onMount(() => () => { clearTimeout(previewTimer); queuedPreview = null; previewWorker?.terminate(); simulationWorker?.terminate(); exportWorker?.terminate(); if (exportUrl) URL.revokeObjectURL(exportUrl); });
+  $effect(() => {
+    if (!preferencesLoaded) return;
+    savePreferences('hypothesis', { spec, nA, nB, repeats, alpha, nullDifference, seed, alternative, speed, showForest });
+  });
+  onMount(() => {
+    const saved = loadPreferences<Partial<{ spec: typeof DEFAULT_HYPOTHESIS_SPEC; nA: number; nB: number; repeats: number; alpha: number; nullDifference: number; seed: string; alternative: Alternative; speed: number; showForest: boolean }>>('hypothesis', {});
+    if (saved.spec && typeof saved.spec === 'object') spec = { ...spec, ...saved.spec };
+    if (Number.isFinite(saved.nA)) nA = saved.nA!;
+    if (Number.isFinite(saved.nB)) nB = saved.nB!;
+    if (Number.isFinite(saved.repeats)) repeats = saved.repeats!;
+    if (Number.isFinite(saved.alpha)) alpha = saved.alpha!;
+    if (Number.isFinite(saved.nullDifference)) nullDifference = saved.nullDifference!;
+    if (typeof saved.seed === 'string') seed = saved.seed;
+    if (saved.alternative && ['two-sided', 'greater', 'less'].includes(saved.alternative)) alternative = saved.alternative;
+    if (Number.isFinite(saved.speed)) speed = saved.speed!;
+    if (typeof saved.showForest === 'boolean') showForest = saved.showForest;
+    preferencesLoaded = true;
+    return () => { clearTimeout(previewTimer); queuedPreview = null; previewWorker?.terminate(); simulationWorker?.terminate(); exportWorker?.terminate(); if (exportUrl) URL.revokeObjectURL(exportUrl); };
+  });
 </script>
 
 <section class="hypothesis-lab" aria-label={t('hypothesis.title')}>

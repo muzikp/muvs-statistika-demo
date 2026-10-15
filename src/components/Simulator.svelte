@@ -9,6 +9,7 @@
   import SampleForest from './SampleForest.svelte';
   import ExportPanel from './ExportPanel.svelte';
   import { samplingHistogram } from '../lib/plots';
+  import { loadPreferences, savePreferences } from '../lib/preferences';
 
   let populationSize = $state(50000), populationSeed = $state('telefony-2026'), shares = $state([...DEFAULT_SHARES]);
   let population = $state.raw<Population>({ spec: { size: 50000, seed: 'telefony-2026', shares: [...DEFAULT_SHARES] }, people: [], cells: [], apple: 0, minutes: 0 });
@@ -23,6 +24,7 @@
   let runConfig = $state.raw<SamplingConfig | null>(null);
   let selectedMethod = $state<Method>('random'), speed = $state(4);
   let showForest = $state(true);
+  let preferencesLoaded = $state(false);
   let worker: Worker | null = null;
   const busy = $derived(status === 'running' || status === 'paused');
   const selected = $derived(METHODS.find(method => method.id === selectedMethod)!);
@@ -84,7 +86,28 @@
   function pause() { if (status === 'paused') { worker?.postMessage({ type: 'resume' }); status = 'running'; } else { worker?.postMessage({ type: 'pause' }); status = 'paused'; } }
   function stop() { worker?.terminate(); status = 'stopped'; preparingPopulation = false; }
   function setSpeed(value: number) { speed = value; if (busy) worker?.postMessage({ type: 'speed', speed }); }
-  onMount(() => { rebuild(); return () => { worker?.terminate(); populationWorker?.terminate(); }; });
+  $effect(() => {
+    if (!preferencesLoaded) return;
+    savePreferences('simulator', { populationSize, populationSeed, shares, n, repeats, confidence, seed, demographicBias, outcomeBias, selectedMethod, speed, showForest });
+  });
+  onMount(() => {
+    const saved = loadPreferences<Partial<{ populationSize: number; populationSeed: string; shares: number[]; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; selectedMethod: Method; speed: number; showForest: boolean }>>('simulator', {});
+    if (Number.isFinite(saved.populationSize)) populationSize = saved.populationSize!;
+    if (typeof saved.populationSeed === 'string') populationSeed = saved.populationSeed;
+    if (Array.isArray(saved.shares) && saved.shares.length === shares.length && saved.shares.every(value => Number.isFinite(value))) shares = saved.shares;
+    if (Number.isFinite(saved.n)) n = saved.n!;
+    if (Number.isFinite(saved.repeats)) repeats = saved.repeats!;
+    if (Number.isFinite(saved.confidence)) confidence = saved.confidence!;
+    if (typeof saved.seed === 'string') seed = saved.seed;
+    if (Number.isFinite(saved.demographicBias)) demographicBias = saved.demographicBias!;
+    if (Number.isFinite(saved.outcomeBias)) outcomeBias = saved.outcomeBias!;
+    if (saved.selectedMethod && METHODS.some(method => method.id === saved.selectedMethod)) selectedMethod = saved.selectedMethod;
+    if (Number.isFinite(saved.speed)) speed = saved.speed!;
+    if (typeof saved.showForest === 'boolean') showForest = saved.showForest;
+    preferencesLoaded = true;
+    rebuild();
+    return () => { worker?.terminate(); populationWorker?.terminate(); };
+  });
 </script>
 
 <section class="sampling-lab" aria-label={t('simulator.simulaceIntervaluSpolehlivosti')}>

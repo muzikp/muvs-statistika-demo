@@ -1,14 +1,17 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { t } from '../lib/texts';
 
   import { calculateProbability, operations, type Operation, type Region, type Relation } from '../lib/probability';
   import { number, percent } from '../lib/format';
+  import { loadPreferences, savePreferences } from '../lib/preferences';
 
   let a = $state<number | undefined>(0.5);
   let b = $state<number | undefined>(0.4);
   let intersection = $state<number | undefined>(0.2);
   let relation = $state<Relation>('known');
   let operation = $state<Operation>('union');
+  let preferencesLoaded = $state(false);
   const result = $derived(calculateProbability(a ?? NaN, b ?? NaN, intersection ?? NaN, relation, operation));
   const selected = $derived(operations.find(item => item.id === operation)!);
   const conditional = $derived(operation === 'givenB' ? 'B' : operation === 'givenA' ? 'A' : null);
@@ -17,6 +20,19 @@
   const valueText = (value: number) => `${decimal(value)} (${percent(value, 2)})`;
   const regionNames: Record<Region, string> = { onlyA: t('probability.pouzeA'), both: 'A ∩ B', onlyB: t('probability.pouzeB'), neither: t('probability.aniAAniB') };
   const regionOrder: Region[] = ['onlyA', 'both', 'onlyB', 'neither'];
+  $effect(() => {
+    if (!preferencesLoaded) return;
+    savePreferences('probability', { a, b, intersection, relation, operation });
+  });
+  onMount(() => {
+    const saved = loadPreferences<Partial<{ a: number; b: number; intersection: number; relation: Relation; operation: Operation }>>('probability', {});
+    if (Number.isFinite(saved.a)) a = saved.a;
+    if (Number.isFinite(saved.b)) b = saved.b;
+    if (Number.isFinite(saved.intersection)) intersection = saved.intersection;
+    if (saved.relation && ['known', 'independent', 'disjoint', 'unknown'].includes(saved.relation)) relation = saved.relation;
+    if (saved.operation && operations.some(item => item.id === saved.operation)) operation = saved.operation;
+    preferencesLoaded = true;
+  });
   const substitution = $derived.by(() => {
     const av = decimal(a ?? NaN), bv = decimal(b ?? NaN), iv = result.intersection === null ? 'P(A ∩ B)' : decimal(result.intersection);
     switch (operation) {
