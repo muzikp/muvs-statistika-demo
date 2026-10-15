@@ -239,10 +239,22 @@
     </div>
     {#if convergence && run && runPopulation && history.length}<section class="hyp-results">
       <section class="hyp-card convergence-card">
+        <h3>{t('hypothesis.intervalConvergence')}<Help topic="hypErrors" /></h3>
+        <p class="note">{t('hypothesis.intervalConvergenceNote', { alpha: percent(run.alpha), coverage: percent(1 - run.alpha) })}</p>
+        {#if convergence.valid}
+          <p class="note">{t('hypothesis.intervalFrequency', { missed: number(convergence.missed), total: number(convergence.valid), rate: percent(convergence.missed / convergence.valid) })}</p>
+          <div class="convergence-plot"><Plot points={convergence.interval} title={t('hypothesis.intervalConvergence')} xLabel={t('simulator.opakovanyVyber')} yLabel={t('hypothesis.intervalErrorAxis')} reference={run.alpha * 100} referenceLabel="α" horizontal kind="line" color="#397ec1" domain={[1, Math.max(2, run.repeats)]} currentSample={history.length} totalSamples={run.repeats} /></div>
+        {/if}
+        <p class="note">{t('hypothesis.intervalErrorDistinction')}</p>
+      </section>
+      <section class="hyp-card convergence-card">
         <h3>{nullTrue ? t('hypothesis.typeIConvergence') : t('hypothesis.typeIIConvergence')}<Help topic="hypErrors" /></h3>
         <p class="note">{nullTrue ? t('hypothesis.typeIExplanation') : t('hypothesis.typeIIExplanation')}</p>
         {#if nullTrue}<p class="note">{Math.abs(runPopulation.truth - run.nullDifference) <= 1e-10 ? t('hypothesis.typeIBoundaryExplanation', { alpha: percent(run.alpha) }) : t('hypothesis.typeIInteriorExplanation', { alpha: percent(run.alpha) })}</p>{/if}
-        {#if convergence.valid}<div class="convergence-plot"><Plot points={convergence.decision} title={nullTrue ? t('hypothesis.typeIConvergence') : t('hypothesis.typeIIConvergence')} xLabel={t('simulator.opakovanyVyber')} yLabel={t('simulator.mimo')} reference={nullTrue ? run.alpha * 100 : convergence.wrong / convergence.valid * 100} referenceLabel={nullTrue ? 'α' : t('hypothesis.observedBeta')} horizontal kind="line" color="#6676b4" domain={[1, Math.max(2, run.repeats)]} currentSample={history.length} totalSamples={run.repeats} /></div>{/if}
+        {#if convergence.valid}
+          <p class="note">{t(nullTrue ? 'hypothesis.typeIFrequency' : 'hypothesis.typeIIFrequency', { wrong: number(convergence.wrong), total: number(convergence.valid), rate: percent(convergence.wrong / convergence.valid) })}</p>
+          <div class="convergence-plot"><Plot points={convergence.decision} title={nullTrue ? t('hypothesis.typeIConvergence') : t('hypothesis.typeIIConvergence')} xLabel={t('simulator.opakovanyVyber')} yLabel={t('hypothesis.decisionErrorAxis')} reference={nullTrue ? run.alpha * 100 : convergence.wrong / convergence.valid * 100} referenceLabel={nullTrue ? 'α' : t('hypothesis.observedBeta')} horizontal kind="line" color="#6676b4" domain={[1, Math.max(2, run.repeats)]} currentSample={history.length} totalSamples={run.repeats} /></div>
+        {/if}
       </section>
       <HypothesisComparison population={runPopulation} current={history.at(-1)?.result ?? null} averages={convergence} />
       {#if showForest}<HypothesisForest {history} truth={runPopulation.truth} nullDifference={run.nullDifference} />{/if}
