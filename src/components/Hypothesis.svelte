@@ -227,7 +227,21 @@
           <section class="test-graph statistic-graph"><h3>{t('hypothesis.evidence')}<Help topic="hypP" /></h3>
             <DensityPlot series={testSeries} domain={testDomain} title={t('hypothesis.evidence')} xLabel={t('hypothesis.statisticAxis')} {regions} markers={[{ value: last.statistic, color: last.reject ? '#c34e4e' : '#153e36', label: `${t('hypothesis.observedT')}: ${number(last.statistic, 3)}` }]} />
             <div class="t-explanation">
-              <p class="t-formula">{t('hypothesis.tFormula')}</p>
+              <math class="t-formula" display="block" aria-label={t('hypothesis.tFormula')}>
+                <mi>t</mi><mo>=</mo>
+                <mfrac>
+                  <mrow>
+                    <mo>(</mo>
+                    <msub><mover><mi>x</mi><mo>¯</mo></mover><mi>B</mi></msub>
+                    <mo>−</mo>
+                    <msub><mover><mi>x</mi><mo>¯</mo></mover><mi>A</mi></msub>
+                    <mo>−</mo>
+                    <msub><mi>Δ</mi><mn>0</mn></msub>
+                    <mo>)</mo>
+                  </mrow>
+                  <mi>SE</mi>
+                </mfrac>
+              </math>
               <dl class="t-legend">
                 <dt>x̄<sub>A</sub>, x̄<sub>B</sub></dt><dd>{t('hypothesis.tMeans')}</dd>
                 <dt>Δ₀</dt><dd>{t('hypothesis.tNullDifference')}</dd>
