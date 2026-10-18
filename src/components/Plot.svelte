@@ -12,7 +12,7 @@
   let xMax = $derived(domain?.[1] ?? Math.max(1, ...points.map(p => p.x)));
   let yMax = $derived(Math.max(1, ...points.map(p => p.y), ...secondaryPoints.map(p => p.y), horizontal ? reference * 1.15 : 0) * 1.08);
   let yTickValues = $derived(horizontal
-    ? Array.from(new Set([0, yMax / 4, yMax / 2, yMax * 3 / 4, yMax, reference].filter(value => value >= 0 && value <= yMax))).sort((a, b) => a - b)
+    ? Array.from(new Set([0, reference, yMax].filter(value => value >= 0 && value <= yMax))).sort((a, b) => a - b)
     : kind === 'bar' ? Array.from(new Set([0, yMax / 4, yMax / 2, yMax * 3 / 4, yMax].map(Math.floor))) : [0, yMax / 4, yMax / 2, yMax * 3 / 4, yMax]);
   const x = (value: number) => left + (value - xMin) / (xMax - xMin || 1) * (right-left);
   const y = (value: number) => bottom - value / yMax * (bottom-top);
@@ -28,7 +28,7 @@
     <title>{title}</title>
     {#if currentSample !== undefined && totalSamples !== undefined}<text x={right} y="16" text-anchor="end" class="plot-progress">{t('plot.vyber')} {number(currentSample)} / {number(totalSamples)}</text>{/if}
       {#each yTickValues as value}
-        <line x1={left} x2={right} y1={y(value)} y2={y(value)} stroke="#e3e8e3"><title>{t('plot.pomocnaVodorovnaCaraProHodnotu')} {number(value, yMax < 10 ? 1 : 0)} {t('plot.naOse')} {yLabel}.</title></line>
+        {#if !horizontal}<line x1={left} x2={right} y1={y(value)} y2={y(value)} stroke="#e3e8e3"><title>{t('plot.pomocnaVodorovnaCaraProHodnotu')} {number(value, yMax < 10 ? 1 : 0)} {t('plot.naOse')} {yLabel}.</title></line>{/if}
         <text x={left-10} y={y(value)+4} text-anchor="end">{number(value, kind !== 'bar' && yMax < 10 ? 1 : 0)}<title>{t('plot.hodnota')} {number(value, kind !== 'bar' && yMax < 10 ? 1 : 0)} {t('plot.naOse')} {yLabel}.</title></text>
       {/each}
     {#each [0, 1, 2, 3, 4] as tick}

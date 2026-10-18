@@ -51,7 +51,7 @@
   const testSeries = $derived(last ? [{ points: Array.from({ length: 801 }, (_, i) => { const x = testDomain[0] + i / 800 * (testDomain[1] - testDomain[0]); return { x, y: studentDensity(x, last.df) }; }), label: t('hypothesis.nullCurve'), color: '#6b86b5' }] : []);
   const regions = $derived.by(() => {
     if (!last || !currentConfig) return [];
-    const critical = { color: last.reject ? '#c34e4e' : '#c34e4e', opacity: last.reject ? .3 : .25, label: t('hypothesis.criticalArea') }, p = { color: last.reject ? '#c34e4e' : '#397ec1', opacity: last.reject ? .3 : .25, label: t('hypothesis.pArea') };
+    const critical = { color: '#c34e4e', opacity: last.reject ? .3 : .25, label: t('hypothesis.criticalArea') }, p = { color: '#397ec1', opacity: .3, label: t('hypothesis.pArea') };
     return currentConfig.alternative === 'two-sided' ? [{ ...critical, from: -Infinity, to: -last.critical }, { ...critical, from: last.critical, to: Infinity }, { ...p, from: -Infinity, to: -Math.abs(last.statistic) }, { ...p, from: Math.abs(last.statistic), to: Infinity }] : currentConfig.alternative === 'greater' ? [{ ...critical, from: last.critical, to: Infinity }, { ...p, from: last.statistic, to: Infinity }] : [{ ...critical, from: -Infinity, to: -last.critical }, { ...p, from: -Infinity, to: last.statistic }];
   });
   const bound = (value: number) => Number.isFinite(value) ? number(value, 2) : value < 0 ? '−∞' : '+∞';
@@ -225,7 +225,7 @@
             <p class="note">{t('hypothesis.meanGraphNote')}</p>
           </section>
           <section class="test-graph statistic-graph"><h3>{t('hypothesis.evidence')}<Help topic="hypP" /></h3>
-            <DensityPlot series={testSeries} domain={testDomain} title={t('hypothesis.evidence')} xLabel={t('hypothesis.statisticAxis')} {regions} markers={[{ value: last.statistic, color: last.reject ? '#c34e4e' : '#162f40', label: `${t('hypothesis.observedT')}: ${number(last.statistic, 3)}` }]} />
+            <DensityPlot series={testSeries} domain={testDomain} title={t('hypothesis.evidence')} xLabel={t('hypothesis.statisticAxis')} {regions} legendNote={`${t('hypothesis.pValue')}: ${pText(last.p)}`} markers={[{ value: last.statistic, color: last.reject ? '#c34e4e' : '#162f40', label: `${t('hypothesis.observedT')}: ${number(last.statistic, 3)}` }]} />
             <div class="t-explanation">
               <math class="t-formula" display="block" aria-label={t('hypothesis.tFormula')}>
                 <mi>t</mi><mo>=</mo>
@@ -281,7 +281,7 @@
         {/if}
         <p class="note">{t('hypothesis.intervalErrorDistinction')}</p>
       </section>
-      <section class="hyp-card convergence-card">
+      {#if !nullTrue}<section class="hyp-card convergence-card">
         <h3>{nullTrue ? t('hypothesis.typeIConvergence') : t('hypothesis.typeIIConvergence')}<Help topic="hypErrors" /></h3>
         <p class="note">{nullTrue ? t('hypothesis.typeIExplanation') : t('hypothesis.typeIIExplanation')}</p>
         {#if nullTrue}<p class="note">{Math.abs(runPopulation.truth - run.nullDifference) <= 1e-10 ? t('hypothesis.typeIBoundaryExplanation', { alpha: percent(run.alpha) }) : t('hypothesis.typeIInteriorExplanation', { alpha: percent(run.alpha) })}</p>{/if}
@@ -289,7 +289,7 @@
           <p class="note">{t(nullTrue ? 'hypothesis.typeIFrequency' : 'hypothesis.typeIIFrequency', { wrong: number(convergence.wrong), total: number(convergence.valid), rate: percent(convergence.wrong / convergence.valid) })}</p>
           <div class="convergence-plot"><Plot points={convergence.decision} title={nullTrue ? t('hypothesis.typeIConvergence') : t('hypothesis.typeIIConvergence')} xLabel={t('simulator.opakovanyVyber')} yLabel={t('hypothesis.decisionErrorAxis')} reference={nullTrue ? run.alpha * 100 : convergence.wrong / convergence.valid * 100} referenceLabel={nullTrue ? 'α' : t('hypothesis.observedBeta')} horizontal kind="line" color="#6b86b5" domain={[1, Math.max(2, run.repeats)]} currentSample={history.length} totalSamples={run.repeats} /></div>
         {/if}
-      </section>
+      </section>{/if}
       <HypothesisComparison population={runPopulation} current={history.at(-1)?.result ?? null} averages={convergence} />
       {#if showForest}<HypothesisForest {history} truth={runPopulation.truth} nullDifference={run.nullDifference} />{/if}
     </section>{/if}

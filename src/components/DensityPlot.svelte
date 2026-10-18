@@ -5,7 +5,7 @@
   interface Series { points: DensityPoint[]; label: string; color: string; dashed?: boolean }
   interface Region { from: number; to: number; color: string; label: string; opacity?: number }
   interface Marker { value: number; label: string; color: string; dashed?: boolean; width?: number }
-  let { series, domain, title, xLabel, regions = [], markers = [], showMarkerLegend = false }: { series: Series[]; domain: [number, number]; title: string; xLabel: string; regions?: Region[]; markers?: Marker[]; showMarkerLegend?: boolean } = $props();
+  let { series, domain, title, xLabel, regions = [], markers = [], showMarkerLegend = false, legendNote = '' }: { series: Series[]; domain: [number, number]; title: string; xLabel: string; regions?: Region[]; markers?: Marker[]; showMarkerLegend?: boolean; legendNote?: string } = $props();
   let expanded = $state(false);
   const left = 55, right = 675, top = 20, bottom = 230;
   const maximum = $derived(Math.max(1e-9, ...series.flatMap(line => line.points.map(point => point.y))) * 1.12);
@@ -36,7 +36,7 @@
     {/each}
     <text x={left} y="12">{t('hypothesis.density')}</text><text x="365" y="275" text-anchor="middle">{xLabel}</text>
   </svg>
-  <div class="density-legend">{#each series as line}<span><i class:dashed={line.dashed} style:color={line.color}></i>{line.label}</span>{/each}{#each Array.from(new Map(regions.map(region => [region.label, region])).values()) as region}<span><i style:color={region.color}></i>{region.label}</span>{/each}{#if showMarkerLegend}{#each markers as marker}<span><i class:dashed={marker.dashed} style:color={marker.color}></i>{marker.label}</span>{/each}{/if}</div>
+  <div class="density-legend">{#each series as line}<span><i class:dashed={line.dashed} style:color={line.color}></i>{line.label}</span>{/each}{#each Array.from(new Map(regions.map(region => [region.label, region])).values()) as region}<span><i style:color={region.color}></i>{region.label}</span>{/each}{#if showMarkerLegend}{#each markers as marker}<span><i class:dashed={marker.dashed} style:color={marker.color}></i>{marker.label}</span>{/each}{/if}{#if legendNote}<span class="legend-note">{legendNote}</span>{/if}</div>
 </div>
 
 <style>

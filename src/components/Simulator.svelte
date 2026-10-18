@@ -170,7 +170,7 @@
         <label>{t('simulator.metodaVyberu')}<Help topic="method" /><select disabled={busy || generating} bind:value={selectedMethod}>{#each METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
         <label>{t('simulator.metodaIntervalu')}<Help topic="intervalMethod" /><select disabled={busy || generating} bind:value={intervalMethod}>{#each INTERVAL_METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
         <p class="sampling-note">{selected.description}</p>
-        <div class="sampling-fields"><label>{t('simulator.velikostKazdehoVzorkuN')}<Help topic="sampleSize" /><input disabled={busy || generating} type="number" min="80" max="2000" step="20" bind:value={n} /></label><label>{t('simulator.pocetOpakovani')}<Help topic="repetitions" /><input disabled={busy || generating} type="number" min="1" max={MAX_REPEATS} step="10" bind:value={repeats} /></label><label>{t('simulator.spolehlivost')}<Help topic="confidence" /><input disabled={busy || generating} type="number" min="80" max="99" step="1" bind:value={confidence} /></label><label>{t('simulator.seedVyberu')}<Help topic="sampleSeed" /><input disabled={busy || generating} bind:value={seed} /></label></div>
+        <div class="sampling-fields"><label>{t('simulator.velikostKazdehoVzorkuN')}<Help topic="sampleSize" /><input disabled={busy || generating} type="number" min="80" max="2000" step="20" bind:value={n} /></label><label>{t('simulator.pocetOpakovani')}<Help topic="repetitions" /><input disabled={busy || generating} type="number" min="1" max={MAX_REPEATS} step="1" bind:value={repeats} /></label><label>{t('simulator.spolehlivost')}<Help topic="confidence" /><input disabled={busy || generating} type="number" min="80" max="99" step="1" bind:value={confidence} /></label><label>{t('simulator.seedVyberu')}<Help topic="sampleSeed" /><input disabled={busy || generating} bind:value={seed} /></label></div>
         {#if nonprobability}
         <label>{t('simulator.demografickeZkresleniPrilezitostnehoSberu')}<Help topic="demographicBias" /> <output>{number(demographicBias, 1)}×</output><input disabled={busy || generating} type="range" min="0" max="2" step="0.25" bind:value={demographicBias} /></label>
         <p class="sampling-note">{t('simulator.text0BezDemografickePreferenceVyssiHodnotaZvyhodnujeMladsi')}</p>
@@ -194,7 +194,6 @@
         {#each variables as variable}
           {@const metric = summary[variable.id]}
           {@const last = summary.last?.estimates?.[variable.id]}
-          {@const distribution = samplingHistogram(history, variable.id, population[variable.id])}
           <article class="sampling-outcome">
             <h3>{variable.title}<Help topic={variable.id === 'apple' ? 'apple' : 'minutes'} /></h3>
             <div class="sampling-kpis">
@@ -203,7 +202,7 @@
               <div class="sampling-kpi"><span>{t('simulator.prumerVsechPlatnychOdhadu')}<Help topic="averageEstimate" /></span><strong>{metric.count ? fmt(average(metric), variable.id) : '—'}</strong><small>{metric.count ? t('simulator.odSkutecnostiDifferenceaveragemetricpopulationVariableunit', { differenceAverageMetricPopulation: difference(average(metric) - population[variable.id], variable.id), variableUnit: variable.unit }) : t('simulator.zatimZadnyPlatnyOdhad')}</small></div>
               <div class="sampling-kpi"><span>{t('simulator.intervalyMimoSkutecnost')}<Help topic="outside" /></span><strong>{metric.count ? percent((metric.count - metric.covered) / metric.count, 1) : '—'}</strong><small>{metric.count - metric.covered} {t('simulator.z')} {metric.count} {t('simulator.platnychIntervalu')}</small></div>
             </div>
-            <section class="sampling-histogram" aria-label={t('simulator.histogramOdhaduVariabletitle', { variableTitle: variable.title })}>
+            {#if runConfig.repeats > 1}{@const distribution = samplingHistogram(history, variable.id, population[variable.id])}<section class="sampling-histogram" aria-label={t('simulator.histogramOdhaduVariabletitle', { variableTitle: variable.title })}>
               <h4>{t('simulator.rozdeleni')} {variable.id === 'apple' ? t('simulator.odhaduPodiluApple') : t('simulator.vyberovychPrumeruCasu')}<Help topic="histogram" /></h4>
               <p>{t('simulator.histogramVsech')} {distribution.count} {t('simulator.platnychOdhaduKazdyVzorekPridavaJedenOdhadSirka')} {number(distribution.width, distribution.width < 1 ? 2 : 1)} {variable.unit}.</p>
               {#if distribution.count}
@@ -215,7 +214,7 @@
               <h4>{t('simulator.konvergencePodiluChybnychIntervalu')}<Help topic="convergence" /></h4>
               <p>{t('simulator.chybneIntervalyVsechnyDosavadniPlatneIntervalyOcekavanaHodnota')} {percent(1 - runConfig.confidence, 1)}.</p>
               {#if metric.count}<Plot points={samplingConvergence(history, variable.id)} domain={[1, Math.max(2, runConfig.repeats)]} reference={(1 - runConfig.confidence) * 100} referenceLabel={t('simulator.ocekavanyPodilMimo')} horizontal kind="line" color={current.color} title={t('simulator.konvergenceVariabletitle2', { variableTitle: variable.title })} xLabel={t('simulator.opakovanyVyber')} yLabel={t('simulator.mimo')} currentSample={completed} totalSamples={runConfig.repeats} />{:else}<p class="sampling-no-data">{t('simulator.zatimNeniKDispoziciPlatnyIntervalProVypocet')}</p>{/if}
-            </section>
+            </section>{/if}
             {#if showForest}<SampleForest {history} variable={variable.id} truth={population[variable.id]} color={current.color} />{/if}
           </article>
         {/each}
