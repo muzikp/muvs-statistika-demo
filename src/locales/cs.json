@@ -181,7 +181,7 @@
     "actualSdB": "Skutečná populační SD B (min)"
   },
   "meta": {
-    "description": "Interaktivní statistická laboratoř: výběry, intervaly spolehlivosti a teorie pravděpodobnosti."
+    "description": "Interaktivní statistická laboratoř"
   },
   "app": {
     "pageTitle": "{pageTitle} · MÚVS",
@@ -197,7 +197,7 @@
     "hlavniNavigace": "Hlavní navigace",
     "prehledTemat": "Přehled témat",
     "pravdepodobnost": "Pravděpodobnost",
-    "interaktivniVyukaStatistiky": "Interaktivní výuka statistiky",
+    "interaktivniVyukaStatistiky": "Statistická laboratoř",
     "odTeorieKPochopeni": "OD TEORIE K POCHOPENÍ",
     "statistikaDavaSmysl": "Statistika dává smysl.",
     "kdyzJiMuzeteZkouset": "Když ji můžete zkoušet.",
@@ -214,11 +214,11 @@
     "text01Odhadovani": "01 / ODHADOVÁNÍ",
     "dostupne": "Dostupné",
     "p": "[ p̂ ± ? ]",
-    "jakVyberLidiOvlivniOdhadPorovnejtePodilApple": "Jak metoda výběru vzorku ovlivní odhad? Porovnejte podíl Apple i čas na strávený na internetu",
+    "jakVyberLidiOvlivniOdhadPorovnejtePodilApple": "Co je to věcně interval spolehlivosti? Jak může nevhodná metoda sběru dat zkreslit výsledky?",
     "vyberyVazeniIntervaly": "Výběry · vážení · intervaly",
     "text02Pravdepodobnost": "02 / PRAVDĚPODOBNOST",
     "aB": "A ∩ B",
-    "prunikSjednoceniIPodminenaPravdepodobnostNastavteJevyProjdete": "Průnik, sjednocení i podmíněná pravděpodobnost. Nastavte jevy, projděte výpočet a prohlédněte si Vennův diagram.",
+    "prunikSjednoceniIPodminenaPravdepodobnostNastavteJevyProjdete": "Jednoduchá kalkulačka pravděpodobností s využitím Vennových diagramů.",
     "jevyVypoctyDiagramy": "Jevy · výpočty · diagramy",
     "text03Souvislosti": "03 / SOUVISLOSTI",
     "pripravujeme": "Připravujeme",
@@ -241,8 +241,8 @@
     "tutoStrankuTuNemame": "Tuto stránku tu nemáme.",
     "zpetNaPrehledTemat": "Zpět na přehled témat",
     "muvs2": "· MÚVS",
-    "experimentujtePtejteSeRozumejte": "Experimentujte. Ptejte se. Rozumějte.",
-    "vypoctyZustavajiVProhlizeci": "Výpočty zůstávají v prohlížeči."
+    "experimentujtePtejteSeRozumejte": "(c) Evalytics s.r.o. 2026",
+    "vypoctyZustavajiVProhlizeci": "Výpočty probíhají na Vašem zařízení."
   },
   "simulator": {
     "progress": "{completed} / {total} výběrů",
@@ -325,7 +325,7 @@
     "zastavit": "Zastavit",
     "vysledkySimulace": "Výsledky simulace",
     "obaUkazateleZeStejnychVzorku": "OBA UKAZATELE ZE STEJNÝCH VZORKŮ",
-    "konvergenceAIntervaly": "Konvergence a intervaly",
+    "konvergenceAIntervaly": "Simulace vícenásobných výběrů a vlivu na hladinu významnosti",
     "intervaly": "intervaly",
     "intervalyPrilezitostnehoSberuJsouPracovniAproximaciKteraNeobsahuje": "Intervaly příležitostného sběru jsou pracovní aproximací, která neobsahuje výběrové zkreslení. Konvergence ukazuje, jak často skutečně minou známou populační hodnotu.",
     "v": "V",
@@ -658,6 +658,17 @@
         "Vybranou metodu pou\u017e\u00edv\u00e1 cel\u00fd b\u011bh pro oba ukazatele. Pro nov\u00e9 porovn\u00e1n\u00ed dokon\u010dete nebo zastavte b\u011bh, zm\u011b\u0148te metodu a spus\u0165te simulaci znovu."
       ]
     },
+    "lawCurrentDeviation": {"title": "Aktu\u00e1ln\u00ed odchylka", "paragraphs": ["Ukazuje vzd\u00e1lenost posledn\u00edho kumulativn\u00edho pr\u016fm\u011bru od skute\u010dn\u00e9 hodnoty."]},
+    "lawExpectedSe": {"title": "O\u010dek\u00e1van\u00e1 sm\u011brodatn\u00e1 chyba", "paragraphs": ["Je to typick\u00e1 velikost kol\u00eds\u00e1n\u00ed pr\u016fm\u011bru."]},
+    "lawStabilizedAt": {"title": "Prvn\u00ed ust\u00e1len\u00ed", "paragraphs": ["Udav\u00e1 prvn\u00ed pokus, od kter\u00e9ho z\u00f9stane kumulativn\u00ed pr\u00f9m\u00ecr po stanovenou s\u00e9rii pokus\u016f v nastaven\u00e9 toleranci od skute\u00e8n\u00e9 st\u00f8edn\u00ed hodnoty. Neoznamen\u00e1 to, \u017ee u\u017e bude ka\u017ed\u00fd dal\u016f\u00ed bod v teoretick\u00e9m p\u00e1smu."]},
+    "lawVariableType": {"title": "Typ veli\u010diny", "paragraphs": ["Bin\u00e1rn\u00ed veli\u010dina m\u00e1 jen dv\u011b mo\u017enosti."]},
+    "lawTrials": {"title": "Po\u010det pokus\u016f", "paragraphs": ["Ka\u017ed\u00fd pokus p\u0159id\u00e1 jednu hodnotu."]},
+    "lawProbability": {"title": "Pravd\u011bpodobnost \u00fasp\u011bchu", "paragraphs": ["Kumulativn\u00ed pod\u00edl by se m\u011bl dlouhodob\u011b bl\u00ed\u017eit tomuto procentu."]},
+    "lawMean": {"title": "Skute\u010dn\u00fd pr\u016fm\u011br", "paragraphs": ["K t\u00e9to hodnot\u011b konverguje kumulativn\u00ed pr\u016fm\u011br."]},
+    "lawSd": {"title": "Sm\u011brodatn\u00e1 odchylka", "paragraphs": ["V\u011bt\u0161\u00ed odchylka znamen\u00e1 v\u011bt\u0161\u00ed kol\u00eds\u00e1n\u00ed pr\u016fm\u011bru."]},
+    "lawTolerance": {"title": "Tolerance odchylky", "paragraphs": ["Men\u0161\u00ed tolerance je p\u0159\u00edsn\u011bj\u0161\u00ed."]},
+    "lawSeed": {"title": "Seed", "paragraphs": ["Stejn\u00fd seed a nastaven\u00ed vytvo\u0159\u00ed stejn\u00fd graf."]},
+    "lawFunnel": {"title": "Konvergen\u010dn\u00ed p\u00e1smo", "paragraphs": ["P\u00e1smo se s po\u010dtem pokus\u016f zu\u017euje."]},
     "sampleSize": {
       "title": "Velikost vzorku n: kolik lidí oslovíme najednou",
       "paragraphs": [
@@ -969,7 +980,7 @@
     "sesitObsahujeZnamePopulacniCileVahyVyberuSe": "Sešit obsahuje známé populační cíle. Váhy výběrů se doplní až po dokončení alespoň jednoho výběru.",
     "intervalyPrilezitostnehoSberu": "Intervaly příležitostného sběru",
     "pracovniAproximaceNezahrnujiVyberoveZkresleni": "Pracovní aproximace; nezahrnují výběrové zkreslení.",
-    "statistickaLaboratorMuvs": "Statistická laboratoř MÚVS",
+    "statistickaLaboratorMuvs": "Statistická laboratoř",
     "populaceJesteNeniPripravena": "Populace ještě není připravena.",
     "populace": "Populace",
     "idOsoby": "ID osoby",
@@ -1124,5 +1135,58 @@
     "neplatnaPopulace": "Neplatná populace.",
     "neplatnaVelikostVzorku": "Neplatná velikost vzorku.",
     "pravdepodobnostMusiLezetMezi0A1": "Pravděpodobnost musí ležet mezi 0 a 1."
+  },
+  "clt": {
+    "eyebrow": "Experiment 05 · centrální limitní věta",
+    "title": "Centrální limitní věta",
+    "intro": "Průměry dostatečně velkých náhodných výběrů se přibližují normálnímu rozdělení bez ohledu na původní rozdělení. Pro podobu zvonu je rozhodující velikost jednoho výběru; počet opakování jen zpřesňuje histogram.",
+    "distribution": "Rozdělení proměnné",
+    "bernoulli": "Náhodná veličina (úspěch / neúspěch)",
+    "uniform": "Rovnoměrné rozdělení",
+    "normal": "Normální rozdělení",
+    "lognormal": "Lognormální rozdělení",
+    "exponential": "Exponenciální rozdělení",
+    "sampleSize": "Velikost jednoho výběru",
+    "repetitions": "Počet výběrů",
+    "probability": "Pravděpodobnost úspěchu (%)",
+    "mean": "Střední hodnota",
+    "sd": "Směrodatná odchylka",
+    "seed": "Seed",
+    "run": "Spustit simulaci",
+    "running": "Simuluji…",
+    "chartTitle": "Rozdělení výběrových průměrů",
+    "chartNote": "Každý sloupec představuje počet průměrů v daném intervalu. Červená křivka je normální aproximace. Větší počet opakování histogram vyhladí, ale sám o sobě nezmění tvar rozdělení průměru.",
+    "reference": "Teoretický průměr",
+    "axis": "Výběrový průměr",
+    "count": "Počet výběrů",
+    "readingNote": "Normální křivka slouží jako orientační aproximace. Tvar histogramu se mění hlavně s velikostí jednoho výběru, zatímco počet opakování pouze zpřesňuje jeho zobrazení.",
+    "empty": "Nastavte parametry a spusťte simulaci."
+  },
+  "law": {
+      "eyebrow": "Experiment 04 \u00b7 z\u00e1kon velk\u00fdch \u010d\u00edsel",
+      "title": "Z\u00e1kon velk\u00fdch \u010d\u00edsel",
+      "intro": "S rostouc\u00edm po\u010dtem pokus\u016f se kumulativn\u00ed pr\u016fm\u011br stabilizuje kolem skute\u010dn\u00e9 st\u0159edn\u00ed hodnoty.",
+      "variableType": "Typ n\u00e1hodn\u00e9 veli\u010diny",
+      "binary": "\u00dasp\u011bch / ne\u00fasp\u011bch",
+      "continuous": "Spojit\u00e1 prom\u011bnn\u00e1",
+      "trials": "Po\u010det pokus\u016f",
+      "probability": "Pravd\u011bpodobnost \u00fasp\u011bchu",
+      "percentUnit": "%",
+      "mean": "Skute\u010dn\u00fd pr\u016fm\u011br",
+      "sd": "Sm\u011brodatn\u00e1 odchylka",
+      "tolerance": "Tolerance odchylky",
+      "seed": "Seed",
+      "run": "Spustit pokus",
+      "reference": "Skute\u010dn\u00e1 st\u0159edn\u00ed hodnota",
+      "funnelLegend": "O\u010dek\u00e1van\u00e1 variabilita pr\u016fm\u011bru",
+      "chartTitle": "Konvergence kumulativn\u00edho pr\u016fm\u011bru",
+      "chartNote": "Ka\u017ed\u00fd bod ukazuje pr\u016fm\u011br v\u0161ech dosavadn\u00edch pokus\u016f. P\u0159eru\u0161ovan\u00e1 \u010d\u00e1ra je skute\u010dn\u00e1 st\u0159edn\u00ed hodnota rozd\u011blen\u00ed.",
+      "trialsAxis": "Po\u010det pokus\u016f",
+      "axisBinary": "Kumulativn\u00ed pod\u00edl \u00fasp\u011bch\u016f (%)",
+      "axisContinuous": "Kumulativn\u00ed pr\u016fm\u011br",
+      "empty": "Nastavte parametry a spus\u0165te pokus.",
+      "currentDeviation": "Aktu\u00e1ln\u00ed odchylka",
+      "expectedSe": "O\u010dek\u00e1van\u00e1 sm\u011brodatn\u00e1 chyba",
+      "stabilizedAt": "Prvn\u00ed ust\u00e1len\u00ed od pokusu"
   }
 }

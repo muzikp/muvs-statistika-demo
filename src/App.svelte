@@ -5,6 +5,8 @@
   import Simulator from './components/Simulator.svelte';
   import Probability from './components/Probability.svelte';
   import Hypothesis from './components/Hypothesis.svelte';
+  import LawOfLargeNumbers from './components/LawOfLargeNumbers.svelte';
+  import CentralLimitTheorem from './components/CentralLimitTheorem.svelte';
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const routeUrl = (target: string) => `${base}${target}`;
   const currentPath = () => {
@@ -24,7 +26,7 @@
     window.addEventListener('popstate', update);
     return () => window.removeEventListener('popstate', update);
   });
-  $effect(() => { document.title = t('app.pageTitle', { pageTitle: isModule() ? t('app.intervalySpolehlivosti') : path === '/hypothesis-testing' ? t('hypothesis.title') : path === '/probability' ? t('app.teoriePravdepodobnosti') : path === '/' ? t('app.statistickaLaborator') : t('app.strankaNenalezena') }); });
+  $effect(() => { document.title = t('app.pageTitle', { pageTitle: isModule() ? t('app.intervalySpolehlivosti') : path === '/hypothesis-testing' ? t('hypothesis.title') : path === '/probability' ? t('app.teoriePravdepodobnosti') : path === '/law-of-large-numbers' ? t('law.title') : path === '/central-limit-theorem' ? t('clt.title') : path === '/' ? t('app.statistickaLaborator') : t('app.strankaNenalezena') }); });
 </script>
 
 <a class="skip-link" href="#main">{t('app.prejitNaObsah')}</a>
@@ -33,7 +35,7 @@
     <a class="brand" href={routeUrl('/')} onclick={e => navigate(e, '/')} aria-label={t('app.statistickaLaboratorUvod')}>
       <img class="brand-logo" src={`${base}/evalytics-logo.svg`} alt="Evalytics" />
     </a>
-    <nav aria-label={t('app.hlavniNavigace')}><a class:active={path === '/'} href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><a class:active={isModule()} href={routeUrl('/ci-alfa-explained')} onclick={e => navigate(e, '/ci-alfa-explained')}>{t('app.intervalySpolehlivosti')}</a><a class:active={path === '/probability'} href={routeUrl('/probability')} onclick={e => navigate(e, '/probability')}>{t('app.pravdepodobnost')}</a><a class:active={path === '/hypothesis-testing'} href={routeUrl('/hypothesis-testing')} onclick={e => navigate(e, '/hypothesis-testing')}>{t('hypothesis.title')}</a></nav>
+    <nav aria-label={t('app.hlavniNavigace')}><a class:active={path === '/'} href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><a class:active={path === '/probability'} href={routeUrl('/probability')} onclick={e => navigate(e, '/probability')}>{t('app.pravdepodobnost')}</a><a class:active={path === '/law-of-large-numbers'} href={routeUrl('/law-of-large-numbers')} onclick={e => navigate(e, '/law-of-large-numbers')}>{t('law.title')}</a><a class:active={path === '/central-limit-theorem'} href={routeUrl('/central-limit-theorem')} onclick={e => navigate(e, '/central-limit-theorem')}>{t('clt.title')}</a><a class:active={isModule()} href={routeUrl('/ci-alfa-explained')} onclick={e => navigate(e, '/ci-alfa-explained')}>{t('app.intervalySpolehlivosti')}</a><a class:active={path === '/hypothesis-testing'} href={routeUrl('/hypothesis-testing')} onclick={e => navigate(e, '/hypothesis-testing')}>{t('hypothesis.title')}</a></nav>
     <span class="header-note"><span class="status-dot"></span> {t('app.interaktivniVyukaStatistiky')}</span>
   </div>
 </header>
@@ -58,6 +60,8 @@
         <a class="topic-card featured" href={routeUrl('/ci-alfa-explained')} onclick={e => navigate(e, '/ci-alfa-explained')}><div class="topic-top"><span class="topic-number">{t('app.text01Odhadovani')}</span><span class="tag">{t('app.dostupne')}</span></div><div class="topic-glyph" aria-hidden="true">{t('app.p')}</div><h3>{t('app.intervalySpolehlivosti')}</h3><p>{t('app.jakVyberLidiOvlivniOdhadPorovnejtePodilApple')}</p><div class="topic-bottom"><span>{t('app.vyberyVazeniIntervaly')}</span><span class="round-arrow" aria-hidden="true">↗</span></div></a>
         <a class="topic-card featured" href={routeUrl('/probability')} onclick={e => navigate(e, '/probability')}><div class="topic-top"><span class="topic-number">{t('app.text02Pravdepodobnost')}</span><span class="tag">{t('app.dostupne')}</span></div><div class="topic-glyph" aria-hidden="true">{t('app.aB')}</div><h3>{t('app.teoriePravdepodobnosti')}</h3><p>{t('app.prunikSjednoceniIPodminenaPravdepodobnostNastavteJevyProjdete')}</p><div class="topic-bottom"><span>{t('app.jevyVypoctyDiagramy')}</span><span class="round-arrow" aria-hidden="true">↗</span></div></a>
         <a class="topic-card featured" href={routeUrl('/hypothesis-testing')} onclick={e => navigate(e, '/hypothesis-testing')}><div class="topic-top"><span class="topic-number">{t('hypothesis.cardNumber')}</span><span class="tag">{t('app.dostupne')}</span></div><div class="topic-glyph" aria-hidden="true">{t('hypothesis.glyph')}</div><h3>{t('hypothesis.title')}</h3><p>{t('hypothesis.cardIntro')}</p><div class="topic-bottom"><span>{t('hypothesis.cardTopics')}</span><span class="round-arrow" aria-hidden="true">&#8599;</span></div></a>
+        <a class="topic-card featured" href={routeUrl('/law-of-large-numbers')} onclick={e => navigate(e, '/law-of-large-numbers')}><div class="topic-top"><span class="topic-number">{t('law.eyebrow')}</span><span class="tag">{t('app.dostupne')}</span></div><div class="topic-glyph" aria-hidden="true">n→∞</div><h3>{t('law.title')}</h3><p>{t('law.intro')}</p><div class="topic-bottom"><span>{t('law.chartTitle')}</span><span class="round-arrow" aria-hidden="true">&#8599;</span></div></a>
+        <a class="topic-card featured" href={routeUrl('/central-limit-theorem')} onclick={e => navigate(e, '/central-limit-theorem')}><div class="topic-top"><span class="topic-number">{t('clt.eyebrow')}</span><span class="tag">{t('app.dostupne')}</span></div><div class="topic-glyph" aria-hidden="true">x̄</div><h3>{t('clt.title')}</h3><p>{t('clt.intro')}</p><div class="topic-bottom"><span>{t('clt.chartTitle')}</span><span class="round-arrow" aria-hidden="true">&#8599;</span></div></a>
       </div>
     </section>
     <section class="learning-note page-width"><span class="note-symbol" aria-hidden="true">↔</span><div><h3>{t('app.ucteSeTimZeMenitePodminky')}</h3><p>{t('app.neexistujeJedenSpravnyExperimentZkusteMensiVzorekJinou')}</p></div><span class="small-label">{t('app.pozorovatPorozumet')}</span></section>
@@ -67,6 +71,10 @@
     <div class="page-width module-page"><div class="breadcrumb"><a href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><span>/</span><span>{t('hypothesis.title')}</span></div><div class="module-heading"><div><p class="eyebrow">{t('hypothesis.experiment')}</p><h1>{t('hypothesis.heading')}</h1><p class="lead">{t('hypothesis.intro')}</p></div><span class="module-badge">{t('hypothesis.glyph')}</span></div><Hypothesis /></div>
   {:else if path === '/probability'}
     <div class="page-width module-page"><div class="breadcrumb"><a href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><span>/</span><span>{t('app.teoriePravdepodobnosti')}</span></div><div class="module-heading"><div><p class="eyebrow">{t('app.experiment02PravdepodobnostDvouJevu')}</p><h1>{t('app.kdyzNastaneAACoB')}</h1><p class="lead">{t('app.nastavtePravdepodobnostiVyberteOtazkuASledujteJakSe')}</p></div><span class="module-badge">{t('app.pA')} <span>∩</span> {t('app.b')}</span></div><Probability /></div>
+  {:else if path === '/law-of-large-numbers'}
+    <div class="page-width module-page"><div class="breadcrumb"><a href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><span>/</span><span>{t('law.title')}</span></div><div class="module-heading"><div><p class="eyebrow">{t('law.eyebrow')}</p><h1>{t('law.title')}</h1><p class="lead">{t('law.intro')}</p></div><span class="module-badge">n → ∞</span></div><LawOfLargeNumbers /></div>
+  {:else if path === '/central-limit-theorem'}
+    <div class="page-width module-page"><div class="breadcrumb"><a href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.prehledTemat')}</a><span>/</span><span>{t('clt.title')}</span></div><div class="module-heading"><div><p class="eyebrow">{t('clt.eyebrow')}</p><h1>{t('clt.title')}</h1><p class="lead">{t('clt.intro')}</p></div><span class="module-badge">x̄ → N</span></div><CentralLimitTheorem /></div>
   {:else}
     <section class="page-width empty-page"><p class="eyebrow">404</p><h1>{t('app.tutoStrankuTuNemame')}</h1><a class="button primary" href={routeUrl('/')} onclick={e => navigate(e, '/')}>{t('app.zpetNaPrehledTemat')}</a></section>
   {/if}
