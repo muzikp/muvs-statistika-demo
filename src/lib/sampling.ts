@@ -13,7 +13,8 @@ export const METHODS = [
   { id: 'random', name: t('sampling.nahodnyVyber'), color: '#397ec1', description: t('sampling.stejnaSanceProKazdehoClovekaVyberBezVraceni') },
   { id: 'stratified', name: t('sampling.stratifikovanyVyber'), color: '#6b86b5', description: t('sampling.nahodnyVyberUvnitrVekuPohlaviPriblizneUmernyVelikosti') },
   { id: 'convenience', name: t('sampling.prilezitostnyVyber'), color: '#c34e4e', description: t('sampling.mladsiLideAZenyJsouDostupnejsiVolitelneCasteji') },
-  { id: 'weighted', name: t('sampling.prilezitostnyVazeni'), color: '#6b86b5', description: t('sampling.presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne') }
+  { id: 'weighted', name: t('sampling.prilezitostnyVazeni'), color: '#6b86b5', description: t('sampling.presneTentyzPrilezitostnyVzorekPrevazenyNaZnameSpolecne') },
+  { id: 'network', name: t('sampling.sitovyPrilezitostnyVyber'), color: '#7a5aa6', description: t('sampling.sitovyPrilezitostnyVyberPopis') }
 ] as const;
 export type Method = typeof METHODS[number]['id'];
 export const INTERVAL_METHODS = [
@@ -25,7 +26,8 @@ export const INTERVAL_METHODS = [
 export type IntervalMethod = typeof INTERVAL_METHODS[number]['id'];
 export interface Person { id: number; age: number; sex: number; education: number; phone: number; minutes: number; cell: number }
 export interface PopulationSpec { size: number; seed: string; shares: number[] }
-export interface Population { spec: PopulationSpec; people: Person[]; cells: number[][]; apple: number; minutes: number }
+export interface SocialNetwork { offsets: Uint32Array; neighbors: Uint32Array }
+export interface Population { spec: PopulationSpec; people: Person[]; cells: number[][]; apple: number; minutes: number; network?: SocialNetwork }
 export interface SamplingConfig { population: PopulationSpec; n: number; repeats: number; confidence: number; seed: string; demographicBias: number; outcomeBias: number; method: Method; intervalMethod?: IntervalMethod }
 export interface EstimatePair { apple: Interval; minutes: Interval }
 export interface MethodResult { estimates: EstimatePair | null; effectiveN: number | null; counts: number[]; weights: (number | null)[]; insufficient: number[] }
@@ -53,7 +55,7 @@ export function validateSampling(config: SamplingConfig): string[] {
   if (![config.demographicBias, config.outcomeBias].every(v => Number.isFinite(v) && v >= 0 && v <= 2)) errors.push(t('sampling.silaZkresleniMusiBytOd0Do2'));
   return errors;
 }
-export function createPopulation(spec: PopulationSpec, onProgress?: (completed: number, total: number) => void): Population {
+export function createPopulation(spec: PopulationSpec, onProgress?: (completed: number, total: number) => void, includeNetwork = false): Population {
   const errors = validatePopulation(spec);
   if (errors.length) throw new Error(errors[0]);
   const random = seededRandom(`population:${spec.seed}`);
@@ -80,7 +82,9 @@ export function createPopulation(spec: PopulationSpec, onProgress?: (completed: 
     }
   });
   if (people.length % 1000 !== 0) onProgress?.(people.length, spec.size);
-  return { spec: { ...spec, shares: [...spec.shares] }, people, cells, apple: appleCount / people.length, minutes: minutesSum / people.length };
+  const result: Population = { spec: { ...spec, shares: [...spec.shares] }, people, cells, apple: appleCount / people.length, minutes: minutesSum / people.length };
+  if (includeNetwork) result.network = createSocialNetwork(result, seededRandom(`social-network:${spec.seed}`));
+  return result;
 }
 
 // Floyd's algorithm gives a uniform subset without copying the population.
@@ -109,6 +113,37 @@ export function convenienceCDF(population: Population, demographicBias: number, 
     const logWeight = demographicBias * (-.55 * ageGroup - .22 * person.sex) + outcomeBias * (.8 * Number(person.phone === 0) + .65 * Math.log(person.minutes / 1500));
     sum += Math.exp(logWeight); return sum;
   });
+}
+export function createSocialNetwork(population: Population, random: () => number, degree = 24): SocialNetwork {
+  const n = population.people.length, offsets = new Uint32Array(n + 1), neighbors = new Uint32Array(n * degree);
+  for (let i = 0; i < n; i++) {
+    offsets[i] = i * degree;
+    const seen = new Set<number>(), person = population.people[i], cell = person.cell, group = Math.floor(cell / 2);
+    while (seen.size < degree) {
+      const mode = random(); let candidate: number;
+      if (mode < .65) candidate = population.cells[cell][Math.floor(random() * population.cells[cell].length)];
+      else if (mode < .85) { const siblingCell = group * 2 + (1 - person.sex); candidate = population.cells[siblingCell][Math.floor(random() * population.cells[siblingCell].length)]; }
+      else candidate = Math.floor(random() * n);
+      if (candidate !== i) seen.add(candidate);
+    }
+    let j = 0; for (const candidate of seen) neighbors[i * degree + j++] = candidate;
+  }
+  offsets[n] = neighbors.length;
+  return { offsets, neighbors };
+}
+function networkIndices(population: Population, n: number, random: () => number, graph: SocialNetwork): number[] {
+  const selected = new Set<number>(), frontier: number[] = [];
+  const add = (id: number) => { if (selected.size < n && !selected.has(id)) { selected.add(id); frontier.push(id); } };
+  add(Math.floor(random() * population.people.length));
+  while (selected.size < n && frontier.length) {
+    const source = frontier.splice(Math.floor(random() * frontier.length), 1)[0];
+    for (let i = graph.offsets[source]; i < graph.offsets[source + 1] && selected.size < n; i++) add(graph.neighbors[i]);
+  }
+  while (selected.size < n) add(Math.floor(random() * population.people.length));
+  return [...selected];
+}
+function ensureSocialNetwork(population: Population, seed: string) {
+  return population.network ??= createSocialNetwork(population, seededRandom(`${seed}:social-network`));
 }
 export function convenienceIndices(cdf: ArrayLike<number>, n: number, random: () => number): number[] {
   if (n > cdf.length) throw new Error(t('sampling.vzorekJeVetsiNezPopulace'));
@@ -214,7 +249,7 @@ export function estimateSample(population: Population, ids: number[], method: Me
 export function createSummary(): Summary {
   const metric = (): MomentSummary => ({ count: 0, sum: 0, squaredError: 0, widthSum: 0, covered: 0 });
   const method = (): MethodSummary => ({ apple: metric(), minutes: metric(), skipped: 0, effectiveSum: 0, last: null, recent: [] });
-  return { random: method(), stratified: method(), convenience: method(), weighted: method() };
+  return { random: method(), stratified: method(), convenience: method(), weighted: method(), network: method() };
 }
 export function addResult(summary: MethodSummary, result: MethodResult, population: Population) {
   summary.last = result;
@@ -233,8 +268,9 @@ export function compareOnce(population: Population, config: SamplingConfig, iter
   const stratifiedRandom = seededRandom(`${config.seed}:stratified:${iteration}`);
   const stratified = population.cells.flatMap((cell, h) => randomIndices(cell.length, allocation[h], stratifiedRandom).map(i => cell[i]));
   const convenience = convenienceIndices(cdf, config.n, seededRandom(`${config.seed}:convenience:${iteration}`));
+  const network = networkIndices(population, config.n, seededRandom(`${config.seed}:network:${iteration}`), ensureSocialNetwork(population, config.seed));
   const intervalMethod = config.intervalMethod ?? 'wald';
-  return { random: estimateSample(population, random, 'random', config.confidence, intervalMethod), stratified: estimateSample(population, stratified, 'stratified', config.confidence, intervalMethod), convenience: estimateSample(population, convenience, 'convenience', config.confidence, intervalMethod), weighted: estimateSample(population, convenience, 'weighted', config.confidence, intervalMethod) };
+  return { random: estimateSample(population, random, 'random', config.confidence, intervalMethod), stratified: estimateSample(population, stratified, 'stratified', config.confidence, intervalMethod), convenience: estimateSample(population, convenience, 'convenience', config.confidence, intervalMethod), weighted: estimateSample(population, convenience, 'weighted', config.confidence, intervalMethod), network: estimateSample(population, network, 'network', config.confidence, intervalMethod) };
 }
 
 export function simulateOnce(population: Population, config: SamplingConfig, iteration: number, cdf: number[], allocation: number[]): MethodResult {
@@ -245,6 +281,7 @@ export function simulateOnce(population: Population, config: SamplingConfig, ite
     const ids = population.cells.flatMap((cell, h) => randomIndices(cell.length, allocation[h], random).map(i => cell[i]));
     return estimateSample(population, ids, 'stratified', config.confidence, intervalMethod);
   }
+  if (config.method === 'network') return estimateSample(population, networkIndices(population, config.n, seededRandom(`${config.seed}:network:${iteration}`), ensureSocialNetwork(population, config.seed)), 'network', config.confidence, intervalMethod);
   const ids = convenienceIndices(cdf, config.n, seededRandom(`${config.seed}:convenience:${iteration}`));
   return estimateSample(population, ids, config.method, config.confidence, intervalMethod);
 }

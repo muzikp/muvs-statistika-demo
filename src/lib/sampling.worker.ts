@@ -9,7 +9,7 @@ self.onmessage = async ({ data }: MessageEvent<SamplingCommand>) => {
   if (data.type === 'generate') {
     if (busy) return;
     busy = true;
-    try { send({ type: 'population-ready', population: createPopulation(data.spec, populationProgress) }); }
+    try { send({ type: 'population-ready', population: createPopulation(data.spec, populationProgress, true) }); }
     catch (error) { send({ type: 'error', message: error instanceof Error ? error.message : String(error) }); }
     finally { busy = false; }
     return;

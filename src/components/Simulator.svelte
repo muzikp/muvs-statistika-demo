@@ -8,6 +8,7 @@
   import Help from './Help.svelte';
   import SampleForest from './SampleForest.svelte';
   import ExportPanel from './ExportPanel.svelte';
+  import NetworkViewer from './NetworkViewer.svelte';
   import { samplingHistogram } from '../lib/plots';
   import { loadPreferences, savePreferences } from '../lib/preferences';
 
@@ -29,7 +30,7 @@
   const busy = $derived(status === 'running' || status === 'paused');
   const selected = $derived(METHODS.find(method => method.id === selectedMethod)!);
   const current = $derived(METHODS.find(method => method.id === (runConfig?.method ?? selectedMethod))!);
-  const nonprobability = $derived(selectedMethod === 'convenience' || selectedMethod === 'weighted');
+  const nonprobability = $derived(selectedMethod === 'convenience' || selectedMethod === 'weighted' || selectedMethod === 'network');
   const pending = $derived(populationSize !== population.spec.size || populationSeed !== population.spec.seed || shares.some((share, i) => share !== population.spec.shares[i]));
   const shareTotal = $derived(shares.reduce((sum, value) => sum + Number(value), 0));
   const variables = [{ id: 'apple', title: t('simulator.podilUzivateluApple'), unit: 'p. b.' }, { id: 'minutes', title: t('simulator.prumerMinutNaInternetuZaTyden'), unit: t('simulator.min') }] as const;
@@ -115,7 +116,7 @@
     if (typeof saved.seed === 'string') seed = saved.seed;
     if (Number.isFinite(saved.demographicBias)) demographicBias = saved.demographicBias!;
     if (Number.isFinite(saved.outcomeBias)) outcomeBias = saved.outcomeBias!;
-    if (saved.selectedMethod && METHODS.some(method => method.id === saved.selectedMethod)) selectedMethod = saved.selectedMethod;
+    if (saved.selectedMethod && METHODS.some(method => method.id === saved.selectedMethod) && saved.selectedMethod !== 'convenience') selectedMethod = saved.selectedMethod;
     if (saved.intervalMethod && INTERVAL_METHODS.some(method => method.id === saved.intervalMethod)) intervalMethod = saved.intervalMethod;
     if (Number.isFinite(saved.speed)) speed = saved.speed!;
     if (typeof saved.showForest === 'boolean') showForest = saved.showForest;
@@ -163,11 +164,12 @@
               <section class="population-stat-block"><h4>{item.title}</h4><div class="population-bars">{#each categories as category}<div class="population-bar-row"><span>{category.label}</span><div><i style={`width:${category.share * 100}%`}></i></div><strong>{percent(category.share, 1)}</strong></div>{/each}</div></section>
             {/each}
           </div>
+          <NetworkViewer {population} />
         </details>
       {/if}
       <section class="sampling-card">
         <p class="card-kicker">{t('simulator.krok02Vybery')}<Help topic="samplingStep" /></p><h3>{t('simulator.jakBudemeLidiVybirat')}</h3>
-        <label>{t('simulator.metodaVyberu')}<Help topic="method" /><select disabled={busy || generating} bind:value={selectedMethod}>{#each METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
+        <label>{t('simulator.metodaVyberu')}<Help topic="method" /><select disabled={busy || generating} bind:value={selectedMethod}>{#each METHODS.filter(method => method.id !== 'convenience') as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
         <label>{t('simulator.metodaIntervalu')}<Help topic="intervalMethod" /><select disabled={busy || generating} bind:value={intervalMethod}>{#each INTERVAL_METHODS as method}<option value={method.id}>{method.name}</option>{/each}</select></label>
         <p class="sampling-note">{selected.description}</p>
         <div class="sampling-fields"><label>{t('simulator.velikostKazdehoVzorkuN')}<Help topic="sampleSize" /><input disabled={busy || generating} type="number" min="80" max="2000" step="20" bind:value={n} /></label><label>{t('simulator.pocetOpakovani')}<Help topic="repetitions" /><input disabled={busy || generating} type="number" min="1" max={MAX_REPEATS} step="1" bind:value={repeats} /></label><label>{t('simulator.spolehlivost')}<Help topic="confidence" /><input disabled={busy || generating} type="number" min="80" max="99" step="1" bind:value={confidence} /></label><label>{t('simulator.seedVyberu')}<Help topic="sampleSeed" /><input disabled={busy || generating} bind:value={seed} /></label></div>
@@ -188,7 +190,7 @@
   {#if completed && runConfig}
     <section class="sampling-results" aria-label={t('simulator.vysledkySimulace')}>
       <div class="sampling-section-title"><div><p class="eyebrow">{t('simulator.obaUkazateleZeStejnychVzorku')}</p><h2>{t('simulator.konvergenceAIntervaly')}</h2></div><span>{current.name} · {percent(runConfig.confidence, 0)} {t('simulator.intervaly')}</span></div>
-      {#if runConfig.method === 'weighted' || runConfig.method === 'convenience'}<p class="sampling-note">{t('simulator.intervalyPrilezitostnehoSberuJsouPracovniAproximaciKteraNeobsahuje')}</p>{/if}
+      {#if runConfig.method === 'weighted' || runConfig.method === 'convenience' || runConfig.method === 'network'}<p class="sampling-note">{t('simulator.intervalyPrilezitostnehoSberuJsouPracovniAproximaciKteraNeobsahuje')}</p>{/if}
       {#if summary.skipped}<p class="sampling-error">{t('simulator.v')} {summary.skipped} {t('simulator.z')} {completed} {t('simulator.vyberuNemelaNekteraSkupinaAlespon2OsobyOdhad')}</p>{/if}
       <div class="sampling-outcomes">
         {#each variables as variable}
@@ -213,18 +215,14 @@
             <section class="sampling-convergence" aria-label={t('simulator.konvergenceVariabletitle', { variableTitle: variable.title })}>
               <h4>{t('simulator.konvergencePodiluChybnychIntervalu')}<Help topic="convergence" /></h4>
               <p>{t('simulator.chybneIntervalyVsechnyDosavadniPlatneIntervalyOcekavanaHodnota')} {percent(1 - runConfig.confidence, 1)}.</p>
-              {#if metric.count}<Plot points={samplingConvergence(history, variable.id)} domain={[1, Math.max(2, runConfig.repeats)]} reference={(1 - runConfig.confidence) * 100} referenceLabel={t('simulator.ocekavanyPodilMimo')} horizontal kind="line" color={current.color} title={t('simulator.konvergenceVariabletitle2', { variableTitle: variable.title })} xLabel={t('simulator.opakovanyVyber')} yLabel={t('simulator.mimo')} currentSample={completed} totalSamples={runConfig.repeats} />{:else}<p class="sampling-no-data">{t('simulator.zatimNeniKDispoziciPlatnyIntervalProVypocet')}</p>{/if}
+              {#if metric.count}<Plot points={samplingConvergence(history, variable.id)} domain={[1, Math.max(2, runConfig.repeats)]} reference={(1 - runConfig.confidence) * 100} referenceLabel={t('simulator.ocekavanyPodilMimo')} finalValue={(metric.count - metric.covered) / metric.count * 100} finalLabel={t('simulator.skutecnaAlfaNaKonci')} horizontal kind="line" color={current.color} title={t('simulator.konvergenceVariabletitle2', { variableTitle: variable.title })} xLabel={t('simulator.opakovanyVyber')} yLabel={t('simulator.mimo')} currentSample={completed} totalSamples={runConfig.repeats} />{:else}<p class="sampling-no-data">{t('simulator.zatimNeniKDispoziciPlatnyIntervalProVypocet')}</p>{/if}
+              {#if status === 'completed' && metric.count}<p class="sampling-note">{t('simulator.konecnyPodilMimo', { missed: number(metric.count - metric.covered), total: number(metric.count), rate: percent((metric.count - metric.covered) / metric.count, 1) })}</p>{/if}
             </section>{/if}
             {#if showForest}<SampleForest {history} variable={variable.id} truth={population[variable.id]} color={current.color} />{/if}
           </article>
         {/each}
       </div>
     </section>
-  {/if}
-  {#if populationReady}
-  <details class="sampling-card population-details"><summary>{t('simulator.demografickeCileSlozeniVzorkuAVypocteneVahy')}<Help topic="weights" /></summary><p class="sampling-note">{t('simulator.uNahodnehoANevazenehoPrilezitostnehoVyberuMaKazda')}</p><div class="sampling-table-scroll"><table><caption class="sr-only">{t('simulator.populacniPodilyAVahyPoslednihoVzorku')}</caption><thead><tr><th scope="col">{t('simulator.skupina')}</th><th scope="col">{t('simulator.pocetVPopulaci')}</th><th scope="col">{t('simulator.cilovyPodil')}</th><th scope="col">{t('simulator.posledniVzorek')}</th><th scope="col">{t('simulator.pouzitaVahaOsoby')}</th></tr></thead><tbody>{#each population.cells as cell, h}<tr><th scope="row">{cellName(h)}</th><td>{number(cell.length)}</td><td>{percent(cell.length / population.people.length, 2)}</td><td>{#if summary.last && runConfig}{summary.last.counts[h]} · {percent(summary.last.counts[h] / runConfig.n, 1)}{:else}—{/if}</td><td>{summary.last ? `${number(current.id === 'weighted' || current.id === 'stratified' ? summary.last.weights[h] ?? 0 : 1, 2)}×` : '—'}</td></tr>{/each}</tbody></table></div>{#if summary.last && current.id === 'weighted'}<p class="sampling-note">{t('simulator.efektivniVelikostPoslednihoVazenehoVzorkuPodleKishe')}<Help topic="effectiveN" />: <strong>{summary.last.effectiveN === null ? t('simulator.nelzeUrcitPlatnyOdhad') : number(summary.last.effectiveN, 1)}</strong> {t('simulator.z')} {runConfig?.n} {t('simulator.osobPopisujeNerovnomernostVahNikoliOdstraneniZkresleniNepouzivame')}</p>{#if summary.last.insufficient.length}<p class="sampling-error">{t('simulator.nedostatecneSkupiny')} {summary.last.insufficient.map(cellName).join(', ')}.</p>{/if}{/if}</details>
-  <details class="sampling-card population-details"><summary>{t('simulator.nahlednoutDoSpolecnehoDatasetu')}<Help topic="dataset" /></summary><p class="sampling-note">{t('simulator.ukazkaJedneOsobyZKazdeSkupinyCelyDataset')}</p><div class="sampling-table-scroll"><table><caption class="sr-only">{t('simulator.ukazkaSyntetickePopulace')}</caption><thead><tr><th scope="col">{t('simulator.id')}</th><th scope="col">{t('simulator.vek')}</th><th scope="col">{t('simulator.pohlavi')}</th><th scope="col">{t('simulator.vzdelani')}</th><th scope="col">{t('simulator.telefon')}</th><th scope="col">{t('simulator.internetMinTyden')}</th></tr></thead><tbody>{#each population.cells as cell}{@const person = population.people[cell[0]]}<tr><td>{person.id}</td><td>{person.age}</td><td>{SEXES[person.sex]}</td><td>{EDUCATION[person.education]}</td><td>{PHONES[person.phone]}</td><td>{number(person.minutes)}</td></tr>{/each}</tbody></table></div></details>
-  <details class="sampling-card population-details"><summary>{t('simulator.jakPocitameOdhadyAIntervaly')}</summary><div class="sampling-methodology"><p>{t('simulator.vsechnyMetodyPracujiSeStejnouKonecnouPopulaciA')}</p><p><strong>{t('simulator.nahodnyVyber')}</strong> {t('simulator.prumerVzorkuARozptylSN1N')} <strong>{t('simulator.stratifikovanyVyber')}</strong> {t('simulator.odhadWYARozptylW1N')}</p><p><strong>{t('simulator.prilezitostnySber')}</strong> {t('simulator.postupneLosovaniBezVraceniSNerovnymiSancemiRelativni')}</p><p><strong>{t('simulator.vazeni')}</strong> {t('simulator.poststratifikacePrilezitostnehoVzorkuNaSpolecneSkupinyVekPohlavi')}</p><p>{t('simulator.intervalyMajiTvarOdhadZSeSNormalnim')}</p><p>{t('simulator.metodickePodklady')} <a href="https://www150.statcan.gc.ca/n1/pub/12-001-x/2019002/article/00006/02-eng.htm" target="_blank" rel="noreferrer">{t('simulator.stratifikovanyVyber2')}</a>, <a href="https://www150.statcan.gc.ca/n1/pub/12-001-x/2022002/article/00002/05-eng.htm" target="_blank" rel="noreferrer">{t('simulator.poststratifikaceNepravdepodobnostnichVzorku')}</a>.</p></div></details>
   {/if}
   <ExportPanel {population} config={runConfig} {history} {status} {generating} />
 </section>

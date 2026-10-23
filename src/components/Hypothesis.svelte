@@ -278,6 +278,7 @@
         {#if convergence.valid}
           <p class="note">{t('hypothesis.intervalFrequency', { missed: number(convergence.missed), total: number(convergence.valid), rate: percent(convergence.missed / convergence.valid) })}</p>
           <div class="convergence-plot"><Plot points={convergence.interval} title={t('hypothesis.intervalConvergence')} xLabel={t('simulator.opakovanyVyber')} yLabel={t('hypothesis.intervalErrorAxis')} reference={run.alpha * 100} referenceLabel="α" horizontal kind="line" color="#397ec1" domain={[1, Math.max(2, run.repeats)]} currentSample={history.length} totalSamples={run.repeats} /></div>
+          {#if status === 'completed'}<p class="note">{t('simulator.konecnyPodilMimo', { missed: number(convergence.missed), total: number(convergence.valid), rate: percent(convergence.missed / convergence.valid) })}</p>{/if}
         {/if}
         <p class="note">{t('hypothesis.intervalErrorDistinction')}</p>
       </section>

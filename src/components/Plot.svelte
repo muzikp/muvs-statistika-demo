@@ -3,8 +3,8 @@
 
   import { number } from '../lib/format';
   interface Point { x: number; y: number }
-  let { points, title, xLabel, yLabel, reference, referenceLabel = t('plot.skutecnaHodnota'), horizontal = false, kind = 'bar', color = '#397ec1', barOpacity = 1, secondaryPoints = [], secondaryColor = '#c34e4e', domain, barWidth, currentSample, totalSamples }: {
-    points: Point[]; title: string; xLabel: string; yLabel: string; reference: number; referenceLabel?: string; horizontal?: boolean; kind?: 'bar' | 'line'; color?: string; barOpacity?: number; secondaryPoints?: Point[]; secondaryColor?: string; domain?: [number, number]; barWidth?: number; currentSample?: number; totalSamples?: number;
+  let { points, title, xLabel, yLabel, reference, referenceLabel = t('plot.skutecnaHodnota'), horizontal = false, kind = 'bar', color = '#397ec1', barOpacity = 1, secondaryPoints = [], secondaryColor = '#c34e4e', domain, barWidth, currentSample, totalSamples, finalValue, finalLabel }: {
+    points: Point[]; title: string; xLabel: string; yLabel: string; reference: number; referenceLabel?: string; horizontal?: boolean; kind?: 'bar' | 'line'; color?: string; barOpacity?: number; secondaryPoints?: Point[]; secondaryColor?: string; domain?: [number, number]; barWidth?: number; currentSample?: number; totalSamples?: number; finalValue?: number; finalLabel?: string;
   } = $props();
   let expanded = $state(false);
   const left = 54, right = 590, top = 30, bottom = 228;
@@ -46,9 +46,9 @@
     {/if}
     <text x={left} y="16" class="axis-label">{yLabel}<title>{yLabel}{t('plot.coNaSvisleOseMerime')}</title></text><text x="322" y="278" text-anchor="middle" class="axis-label">{xLabel}<title>{xLabel}{t('plot.jakouHodnotuNaVodorovneOseSledujeme')}</title></text>
   </svg>
-  <div class="chart-legend"><span class="legend-dash"></span>{referenceLabel}: {number(reference, 2)}{horizontal ? ' %' : ''}</div>
+  <div class="chart-legend"><span><span class="legend-dash"></span>{referenceLabel}: {number(reference, 2)}{horizontal ? ' %' : ''}</span>{#if finalValue !== undefined && finalLabel}<span class="final-value">{finalLabel}: {number(finalValue, 2)} %</span>{/if}</div>
 </div>
 
 <style>
-  .plot-wrap{position:relative}.plot-wrap svg{display:block;width:100%;height:auto;cursor:zoom-in}.plot-expand{position:absolute;right:8px;top:8px;z-index:2;border:1px solid #cbdce8;border-radius:4px;background:rgba(255,255,255,.9);color:#397ec1;width:30px;height:30px;cursor:pointer;font-size:17px;line-height:1}.plot-expanded{position:fixed;inset:0;z-index:1000;background:rgba(18,45,60,.82);display:flex;flex-direction:column;justify-content:center;padding:clamp(16px,4vw,64px);box-sizing:border-box}.plot-expanded .plot-expand{right:clamp(16px,4vw,64px);top:clamp(16px,4vw,64px);width:38px;height:38px;background:white;font-size:24px}.plot-expanded svg{width:min(1200px,100%);max-height:calc(100vh - 130px);margin:0 auto;cursor:default;background:white;border-radius:4px}.plot-expanded .chart-legend{width:min(1200px,100%);margin:10px auto 0;color:white}.plot-expanded .legend-dash{background:white}@media(max-width:700px){.plot-expanded{padding:14px}.plot-expanded .plot-expand{right:14px;top:14px}}
+  .plot-wrap{position:relative}.plot-wrap svg{display:block;width:100%;height:auto;cursor:zoom-in}.plot-expand{position:absolute;right:8px;top:8px;z-index:2;border:1px solid #cbdce8;border-radius:4px;background:rgba(255,255,255,.9);color:#397ec1;width:30px;height:30px;cursor:pointer;font-size:17px;line-height:1}.plot-expanded{position:fixed;inset:0;z-index:1000;background:rgba(18,45,60,.82);display:flex;flex-direction:column;justify-content:center;padding:clamp(16px,4vw,64px);box-sizing:border-box}.plot-expanded .plot-expand{right:clamp(16px,4vw,64px);top:clamp(16px,4vw,64px);width:38px;height:38px;background:white;font-size:24px}.plot-expanded svg{width:min(1200px,100%);max-height:calc(100vh - 130px);margin:0 auto;cursor:default;background:white;border-radius:4px}.chart-legend{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.final-value{font-weight:600;color:#397ec1}.plot-expanded .chart-legend{width:min(1200px,100%);margin:10px auto 0;color:white}.plot-expanded .legend-dash{background:white}@media(max-width:700px){.plot-expanded{padding:14px}.plot-expanded .plot-expand{right:14px;top:14px}}
 </style>
